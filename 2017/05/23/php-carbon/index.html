@@ -1,0 +1,1476 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>刨刨 Carbon API | Redgo's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.1"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">刨刨 Carbon API</h1><a id="logo" href="/.">Redgo's Blog</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">刨刨 Carbon API</h1><div class="post-meta">May 23, 2017<span> | </span><span class="category"><a href="/categories/PHP/">PHP</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><!-- toc -->
+<ul>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#文件结构">文件结构</a></li>
+<li><a href="#api-细则">API 细则</a><ul>
+<li><a href="#carbon">Carbon</a><ul>
+<li><a href="#用途生成carbon实例">用途：生成<code>Carbon</code>实例</a></li>
+<li><a href="#用途修改carbon实例">用途：修改<code>Carbon</code>实例</a></li>
+<li><a href="#用途格式化时间">用途：格式化时间</a></li>
+<li><a href="#用途时间判断">用途：时间判断</a></li>
+<li><a href="#用途时间计算">用途：时间计算</a></li>
+<li><a href="#用途时间差值比较">用途：时间差值比较</a></li>
+<li><a href="#用途getter-setter">用途：Getter &amp; Setter</a></li>
+<li><a href="#用途其它">用途：其它</a></li>
+</ul>
+</li>
+<li><a href="#carboninterval">CarbonInterval</a><ul>
+<li><a href="#用途生成carboninterval实例">用途：生成<code>CarbonInterval</code>实例</a></li>
+<li><a href="#用途本地化">用途：本地化</a></li>
+<li><a href="#用途计算">用途：计算</a></li>
+<li><a href="#用途格式化">用途：格式化</a></li>
+<li><a href="#用途其它-1">用途：其它</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><code>Carbon</code>是对<code>PHP DateTime</code>模块的二次扩展；提供时间格式化，时间计算的功能；</p>
+<ul>
+<li>官方主页为 <a href="http://carbon.nesbot.com/" target="_blank" rel="external">http://carbon.nesbot.com/</a>; </li>
+<li><code>Github</code>地址为 <a href="https://github.com/briannesbitt/Carbon" target="_blank" rel="external">https://github.com/briannesbitt/Carbon</a>; </li>
+</ul>
+<h1 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h1><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>– src</td>
+<td><code>Carbon</code>源文件</td>
+</tr>
+<tr>
+<td>– src\Carbon</td>
+<td><code>Carbon</code>源文件</td>
+</tr>
+<tr>
+<td>– src\Carbon\CarbonInterval.php</td>
+<td><code>DateInterval</code>类的二次扩展类<code>CarbonInterval</code>；主要用于时差计算；</td>
+</tr>
+<tr>
+<td>– src\Carbon\Carbon.php</td>
+<td><code>DateTime</code>类的二次扩展类<code>Carbon</code>；提供时间计算，格式化输出的功能；</td>
+</tr>
+<tr>
+<td>– src\Carbon\Exceptions</td>
+<td>自定义异常文件夹</td>
+</tr>
+<tr>
+<td>– src\Carbon\Lang</td>
+<td>语言本地化文件夹；<code>Carbon</code>类的<code>diffForHumans</code>方法会用到；</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>– tests</td>
+<td><code>Carbon</code>测试用例文件</td>
+</tr>
+<tr>
+<td>– tests\AbstractTestCase.php</td>
+<td>所有测试文件的父类；提供了<code>执行前初始化</code>和<code>执行后清理</code>的功能, 及其它公共的API；</td>
+</tr>
+<tr>
+<td>– tests\Carbon</td>
+<td>针对<code>src\\Carbon\\Carbon.php</code>的测试用例组</td>
+</tr>
+<tr>
+<td>– tests\CarbonInterval</td>
+<td>针对<code>src\\Carbon\\CarbonInterval.php</code>的测试用例组</td>
+</tr>
+<tr>
+<td>– tests\Localization</td>
+<td>针对<code>src\\Carbon\\Lang</code>的测试用例组</td>
+</tr>
+</tbody>
+</table>
+<h1 id="api-细则"><a href="#API-细则" class="headerlink" title="API 细则"></a>API 细则</h1><p>本篇涉及 <code>API</code> 为 <code>Carbon</code> 1.22.1 版本；</p>
+<h2 id="carbon"><a href="#Carbon" class="headerlink" title="Carbon"></a>Carbon</h2><h3 id="用途生成carbon实例"><a href="#用途：生成Carbon实例" class="headerlink" title="用途：生成Carbon实例"></a>用途：生成<code>Carbon</code>实例</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__construct</td>
+<td>$time(null), $tz(null)</td>
+<td>根据格式化时间字符串和指定时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>instance（static）</td>
+<td>DateTime $dt</td>
+<td>根据 <code>DateTime</code>实例创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>parse（static）</td>
+<td>$time(null), $tz(null)</td>
+<td>根据格式化时间字符串和指定时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>create（static）</td>
+<td>$year(null), $month(null), $day(null), $hour(null), $minute(null), $second(null), $tz(null)</td>
+<td>根据日期和时间创建<code>Carbon</code>实例 如果指定参数为<code>null</code>，会默认使用当前时间的对应值</td>
+</tr>
+<tr>
+<td>createSafe（static）</td>
+<td>$year(null), $month(null), $day(null), $hour(null), $minute(null), $second(null), $tz(null)</td>
+<td>根据日期和时间创建<code>Carbon</code>实例 如果指定参数为<code>null</code>，会默认使用当前时间的对应值; 指定参数不符合规范，会返回异常；</td>
+</tr>
+<tr>
+<td>createFromDate（static）</td>
+<td>$year(null), $month(null), $day(null), $tz(null)</td>
+<td>根据日期创建<code>Carbon</code>实例如果指定参数为<code>null</code>，会默认使用当前时间的对应值</td>
+</tr>
+<tr>
+<td>createFromTime（static）</td>
+<td>$hour(null), $minute(null), $minute(null), $tz(null)</td>
+<td>根据时间创建<code>Carbon</code>实例如果指定参数为<code>null</code>，会默认使用当前时间的对应值</td>
+</tr>
+<tr>
+<td>createFromFormat（static）</td>
+<td>$format, $time, $tz（null）</td>
+<td>根据时间字符串及其对应的<code>format</code>字符串创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>createFromTimestamp（static）</td>
+<td>$timestamp, $tz(null)</td>
+<td>根据时间戳和指定时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>createFromTimestampUTC（static）</td>
+<td>$timestamp</td>
+<td>根据时间戳和<code>utc</code>时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>now（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>today（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间创建<code>Carbon</code>实例，时间重置为 0时0分0秒</td>
+</tr>
+<tr>
+<td>tomorrow（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间，加一天，创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>yesterday（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间， 减一天， 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>minValue（static）</td>
+<td></td>
+<td>创建系统支持的最小时间，并返回<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>maxValue（static）</td>
+<td></td>
+<td>创建系统支持的最大时间，并返回<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>copy</td>
+<td></td>
+<td>复制当前<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>fromSerialized（static）</td>
+<td>$value</td>
+<td>解析序列化字符串，创建<code>Carbon</code>实例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途修改carbon实例"><a href="#用途：修改Carbon实例" class="headerlink" title="用途：修改Carbon实例"></a>用途：修改<code>Carbon</code>实例</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>setDate</td>
+<td>$year, $month, $day</td>
+<td>设置当前实例的年，月，日</td>
+</tr>
+<tr>
+<td>setDateTime</td>
+<td>$year, $month, $day, $hour, $minute, $second(0)</td>
+<td>设置当前实例的年，月，日，时，分，秒</td>
+</tr>
+<tr>
+<td>setTimeFromTimeString</td>
+<td>$time</td>
+<td>根据 <code>H:i:s</code> 字符串设置当前实例时间</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>$value</td>
+<td>根据时间戳设置当前实例时间</td>
+</tr>
+<tr>
+<td>second</td>
+<td>$value</td>
+<td>设置当前实例时间指定秒</td>
+</tr>
+<tr>
+<td>minute</td>
+<td>$value</td>
+<td>设置当前实例时间指定分钟</td>
+</tr>
+<tr>
+<td>hour</td>
+<td>$value</td>
+<td>设置当前实例时间指定小时</td>
+</tr>
+<tr>
+<td>day</td>
+<td>$value</td>
+<td>设置当前实例时间指定天</td>
+</tr>
+<tr>
+<td>month</td>
+<td>$value</td>
+<td>设置当前实例时间指月份</td>
+</tr>
+<tr>
+<td>year</td>
+<td>$value</td>
+<td>设置当前实例时间指定年份</td>
+</tr>
+<tr>
+<td>startOfDay</td>
+<td></td>
+<td>重置当前实例时间为 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfDay</td>
+<td></td>
+<td>重置当前实例时间为 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfWeek</td>
+<td></td>
+<td>重置当前实例时间为 本周的第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfWeek</td>
+<td></td>
+<td>重置当前实例时间为 本周的最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfMonth</td>
+<td></td>
+<td>重置当前实例时间为 本月第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfMonth</td>
+<td></td>
+<td>重置当前实例时间为 本月最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfQuarter</td>
+<td></td>
+<td>重置当前实例时间为 本季度第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfQuarter</td>
+<td></td>
+<td>重置当前实例时间为 本季度最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfYear</td>
+<td></td>
+<td>重置当前实例时间为 本年第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfYear</td>
+<td></td>
+<td>重置当前实例时间为 本年最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfDecade</td>
+<td></td>
+<td>重置当前实例时间为 所在十年的第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfDecade</td>
+<td></td>
+<td>重置当前实例时间为 所在十年的最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfCentury</td>
+<td></td>
+<td>重置当前实例时间为 本世纪的第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfCentury</td>
+<td></td>
+<td>重置当前实例时间为 本世纪的最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>next</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 下一个指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>previous</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 上一个指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nextWeekday</td>
+<td></td>
+<td>重置当前实例时间为 下一个工作日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>previousWeekday</td>
+<td></td>
+<td>重置当前实例时间为 上一个工作日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nextWeekendDay</td>
+<td></td>
+<td>重置当前实例时间为 下一个双休日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>previousWeekendDay</td>
+<td></td>
+<td>重置当前实例时间为 上一个双休日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>firstOfMonth</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本月第一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nthOfMonth</td>
+<td>$nth, $dayOfWeek</td>
+<td>重置当前实例时间为 本月第<code>n</code>周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>lastOfMonth</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本月最后一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>firstOfQuarter</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 当前季度第一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nthOfQuarter</td>
+<td>$nth, $dayOfWeek</td>
+<td>重置当前实例时间为 当前季度第<code>n</code>周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>lastOfQuarter</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 当前季度最后一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>firstOfYear</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本年第一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nthOfYear</td>
+<td>$nth, $dayOfWeek</td>
+<td>重置当前实例时间为 本年第<code>n</code>周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>lastOfYear</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本年最后一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>average</td>
+<td>Carbon $dt</td>
+<td>重置当前实例时间为 与指定<code>Carbon</code>对象的中间时刻</td>
+</tr>
+<tr>
+<td>modify</td>
+<td>$modify</td>
+<td>按<code>modify</code>字符串重置当前实例时间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途格式化时间"><a href="#用途：格式化时间" class="headerlink" title="用途：格式化时间"></a>用途：格式化时间</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__toString</td>
+<td></td>
+<td>按变量<code>$toStringFormat</code>的格式输出</td>
+</tr>
+<tr>
+<td>toDateString</td>
+<td></td>
+<td>日期格式化输出</td>
+</tr>
+<tr>
+<td>toTimeString</td>
+<td></td>
+<td>时间格式化输出</td>
+</tr>
+<tr>
+<td>toDateTimeString</td>
+<td></td>
+<td>日期时间格式化输出</td>
+</tr>
+<tr>
+<td>toDayDateTimeString</td>
+<td></td>
+<td>格式化输出如 “Fri, Jan 3, 2013 10:50 PM”</td>
+</tr>
+<tr>
+<td>toAtomString</td>
+<td></td>
+<td>格式化输出如 “2012-10-20T14:12:26+00:00”</td>
+</tr>
+<tr>
+<td>toCookieString</td>
+<td></td>
+<td>格式化输出如 “Friday, 02-Jan-2012 14:20:39 UTC”</td>
+</tr>
+<tr>
+<td>toIso8601String</td>
+<td></td>
+<td>同 <code>toAtomString</code></td>
+</tr>
+<tr>
+<td>toRfc822String</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 05 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toRfc850String</td>
+<td></td>
+<td>格式化输出如 “Monday, 15-Aug-05 15:52:01 UTC”</td>
+</tr>
+<tr>
+<td>toRfc1036String</td>
+<td></td>
+<td>格式化输出如 “2005-08-15T15:52:01+0000”</td>
+</tr>
+<tr>
+<td>toRfc1123String</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 2005 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toRfc2822String</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 05 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toRfc3339String</td>
+<td></td>
+<td>同 <code>toAtomString</code></td>
+</tr>
+<tr>
+<td>toRssString</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 2005 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toW3cString</td>
+<td></td>
+<td>格式化输出如 “2005-08-15T15:52:01+00:00”</td>
+</tr>
+<tr>
+<td>toFormattedDateString</td>
+<td></td>
+<td>格式化输出如 “Jan 11, 1999”</td>
+</tr>
+<tr>
+<td>formatLocalized</td>
+<td>$format</td>
+<td>指定格式本地化输出</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途时间判断"><a href="#用途：时间判断" class="headerlink" title="用途：时间判断"></a>用途：时间判断</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>eq</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例与指定<code>Carbon</code>对象时间是否一样</td>
+</tr>
+<tr>
+<td>equalTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>eq</code> 方法</td>
+</tr>
+<tr>
+<td>ne</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例与指定<code>Carbon</code>对象时间是否不相同</td>
+</tr>
+<tr>
+<td>notEqualTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>ne</code> 方法</td>
+</tr>
+<tr>
+<td>gt</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否大于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>greaterThan</td>
+<td>Carbon $dt</td>
+<td>同 <code>gt</code> 方法</td>
+</tr>
+<tr>
+<td>gte</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否大于等于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>greaterThanOrEqualTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>gte</code> 方法</td>
+</tr>
+<tr>
+<td>lt</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否小于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>lessThan</td>
+<td>Carbon $dt</td>
+<td>同 <code>lt</code> 方法</td>
+</tr>
+<tr>
+<td>lte</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否小于等于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>lessThanOrEqualTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>lte</code> 方法</td>
+</tr>
+<tr>
+<td>between</td>
+<td>Carbon $dt1, Carbon $dt2, $equal(true)</td>
+<td>判断当前<code>Carbon</code>实例是否在指定<code>Carbon</code>对象时间之间， 第三个参数表示是否可以等于指定<code>Carbon</code>对象</td>
+</tr>
+<tr>
+<td>min</td>
+<td>Carbon $dt</td>
+<td>获取当前实例与指定<code>Carbon</code>对象中，最小的对象</td>
+</tr>
+<tr>
+<td>minimum</td>
+<td>Carbon $dt</td>
+<td>同<code>min</code></td>
+</tr>
+<tr>
+<td>max</td>
+<td>Carbon $dt</td>
+<td>获取当前实例与指定<code>Carbon</code>对象中，最大的对象</td>
+</tr>
+<tr>
+<td>maximum</td>
+<td>Carbon $dt</td>
+<td>同<code>max</code></td>
+</tr>
+<tr>
+<td>closest</td>
+<td>Carbon $dt1, Carbon $dt2</td>
+<td>获取最接近当前实例时间的<code>Carbon</code>对象</td>
+</tr>
+<tr>
+<td>farthest</td>
+<td>Carbon $dt1, Carbon $dt2</td>
+<td>获取最不接近当前实例时间的<code>Carbon</code>对象</td>
+</tr>
+<tr>
+<td>isSameAs</td>
+<td>$format, Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象的<code>format</code>格式化结果是否相同</td>
+</tr>
+<tr>
+<td>isSameDay</td>
+<td>Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象是否是同一天</td>
+</tr>
+<tr>
+<td>isSameMonth</td>
+<td>Carbon $dt(null), $ofSameYear(false)</td>
+<td>判断当前实例与指定<code>Carbon</code>对象月份是否相同</td>
+</tr>
+<tr>
+<td>isBirthday</td>
+<td>Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象月日数是否相同</td>
+</tr>
+<tr>
+<td>isSameYear</td>
+<td>Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象年份是否相同</td>
+</tr>
+<tr>
+<td>isSunday</td>
+<td></td>
+<td>判断当前实例是否是周日</td>
+</tr>
+<tr>
+<td>isMonday</td>
+<td></td>
+<td>判断当前实例是否是周一</td>
+</tr>
+<tr>
+<td>isTuesday</td>
+<td></td>
+<td>判断当前实例是否是周二</td>
+</tr>
+<tr>
+<td>isWednesday</td>
+<td></td>
+<td>判断当前实例是否是周三</td>
+</tr>
+<tr>
+<td>isThursday</td>
+<td></td>
+<td>判断当前实例是否是周四</td>
+</tr>
+<tr>
+<td>isFriday</td>
+<td></td>
+<td>判断当前实例是否是周五</td>
+</tr>
+<tr>
+<td>isSaturday</td>
+<td></td>
+<td>判断当前实例是否是周六</td>
+</tr>
+<tr>
+<td>isYesterday</td>
+<td></td>
+<td>判断当前实例是否是昨天</td>
+</tr>
+<tr>
+<td>isToday</td>
+<td></td>
+<td>判断当前实例是否是今天</td>
+</tr>
+<tr>
+<td>isTomorrow</td>
+<td></td>
+<td>判断当前实例是否是明天</td>
+</tr>
+<tr>
+<td>isWeekday</td>
+<td></td>
+<td>判断当前实例是否属于工作日</td>
+</tr>
+<tr>
+<td>isWeekend</td>
+<td></td>
+<td>判断当前实例是否属于周末双休</td>
+</tr>
+<tr>
+<td>isLastWeek</td>
+<td></td>
+<td>判断当前实例是否属于上周</td>
+</tr>
+<tr>
+<td>isNextWeek</td>
+<td></td>
+<td>判断当前实例是否属于下一周</td>
+</tr>
+<tr>
+<td>isLastMonth</td>
+<td></td>
+<td>判断当前实例是否属于上一个月</td>
+</tr>
+<tr>
+<td>isCurrentMonth</td>
+<td></td>
+<td>判断当前实例是否属于当前月</td>
+</tr>
+<tr>
+<td>isNextMonth</td>
+<td></td>
+<td>判断当前实例是否属于下一个月</td>
+</tr>
+<tr>
+<td>isLastYear</td>
+<td></td>
+<td>判断当前实例是否属于去年</td>
+</tr>
+<tr>
+<td>isCurrentYear</td>
+<td></td>
+<td>判断当前实例是否属于当前年</td>
+</tr>
+<tr>
+<td>isNextYear</td>
+<td></td>
+<td>判断当前实例是否属于下一年</td>
+</tr>
+<tr>
+<td>isLeapYear</td>
+<td></td>
+<td>判断当前实例是否属于闰年</td>
+</tr>
+<tr>
+<td>isLongYear</td>
+<td></td>
+<td>判断当前实例是否属于长年，即一年不只有52个星期</td>
+</tr>
+<tr>
+<td>isPast</td>
+<td></td>
+<td>判断当前实例是否属于过去</td>
+</tr>
+<tr>
+<td>isFuture</td>
+<td></td>
+<td>判断当前实例是否属于未来</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途时间计算"><a href="#用途：时间计算" class="headerlink" title="用途：时间计算"></a>用途：时间计算</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>addSecond</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的秒数，返回当前实例</td>
+</tr>
+<tr>
+<td>subSecond</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的秒数，返回当前实例</td>
+</tr>
+<tr>
+<td>addSeconds</td>
+<td>$value</td>
+<td>同<code>addSecond</code></td>
+</tr>
+<tr>
+<td>subSeconds</td>
+<td>$value</td>
+<td>同<code>subSecond</code></td>
+</tr>
+<tr>
+<td>addMinute</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的分钟数，返回当前实例</td>
+</tr>
+<tr>
+<td>subMinute</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的分钟数，返回当前实例</td>
+</tr>
+<tr>
+<td>addMinutes</td>
+<td>$value</td>
+<td>同<code>addMinute</code></td>
+</tr>
+<tr>
+<td>subMinutes</td>
+<td>$value</td>
+<td>同<code>subMinute</code></td>
+</tr>
+<tr>
+<td>addHour</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的小时数，返回当前实例</td>
+</tr>
+<tr>
+<td>subHour</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的小时数，返回当前实例</td>
+</tr>
+<tr>
+<td>addHours</td>
+<td>$value</td>
+<td>同<code>addHour</code></td>
+</tr>
+<tr>
+<td>subHours</td>
+<td>$value</td>
+<td>同<code>subHour</code></td>
+</tr>
+<tr>
+<td>addDay</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的天数，返回当前实例</td>
+</tr>
+<tr>
+<td>subDay</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的天数，返回当前实例</td>
+</tr>
+<tr>
+<td>addDays</td>
+<td>$value</td>
+<td>同<code>addDay</code></td>
+</tr>
+<tr>
+<td>subDays</td>
+<td>$value</td>
+<td>同<code>subDay</code></td>
+</tr>
+<tr>
+<td>addWeekday</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的工作日数，返回当前实例</td>
+</tr>
+<tr>
+<td>subWeekday</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的工作日数，返回当前实例</td>
+</tr>
+<tr>
+<td>addWeekdays</td>
+<td>$value</td>
+<td>同<code>addWeekday</code></td>
+</tr>
+<tr>
+<td>subWeekdays</td>
+<td>$value</td>
+<td>同<code>subWeekday</code></td>
+</tr>
+<tr>
+<td>addWeek</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的星期数，返回当前实例</td>
+</tr>
+<tr>
+<td>subWeek</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的星期数，返回当前实例</td>
+</tr>
+<tr>
+<td>addWeeks</td>
+<td>$value</td>
+<td>同<code>addWeek</code></td>
+</tr>
+<tr>
+<td>subWeeks</td>
+<td>$value</td>
+<td>同<code>subWeek</code></td>
+</tr>
+<tr>
+<td>addMonth</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数，返回当前实例</td>
+</tr>
+<tr>
+<td>subMonth</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的月数，返回当前实例</td>
+</tr>
+<tr>
+<td>addMonths</td>
+<td>$value</td>
+<td>同<code>addMonth</code></td>
+</tr>
+<tr>
+<td>subMonths</td>
+<td>$value</td>
+<td>同<code>subMonth</code></td>
+</tr>
+<tr>
+<td>addMonthWithOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>subMonthWithOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>addMonthsWithOverflow</td>
+<td>$value</td>
+<td>同<code>addMonthWithOverflow</code></td>
+</tr>
+<tr>
+<td>subMonthsWithOverflow</td>
+<td>$value</td>
+<td>同<code>subMonthWithOverflow</code></td>
+</tr>
+<tr>
+<td>addMonthNoOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（不可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>subMonthNoOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（不可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>addMonthsNoOverflow</td>
+<td>$value</td>
+<td>同<code>addMonthNoOverflow</code></td>
+</tr>
+<tr>
+<td>subMonthsNoOverflow</td>
+<td>$value</td>
+<td>同<code>subMonthNoOverflow</code></td>
+</tr>
+<tr>
+<td>addQuarter</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的季度数，返回当前实例</td>
+</tr>
+<tr>
+<td>subQuarter</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的季度数，返回当前实例</td>
+</tr>
+<tr>
+<td>addQuarters</td>
+<td>$value</td>
+<td>同<code>addQuarter</code></td>
+</tr>
+<tr>
+<td>subQuarters</td>
+<td>$value</td>
+<td>同<code>subQuarter</code></td>
+</tr>
+<tr>
+<td>addYear</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的年数，返回当前实例</td>
+</tr>
+<tr>
+<td>subYear</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的年数，返回当前实例</td>
+</tr>
+<tr>
+<td>addYears</td>
+<td>$value</td>
+<td>同<code>addYear</code></td>
+</tr>
+<tr>
+<td>subYears</td>
+<td>$value</td>
+<td>同<code>subYear</code></td>
+</tr>
+<tr>
+<td>addCentury</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的世纪数，返回当前实例</td>
+</tr>
+<tr>
+<td>subCentury</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的世纪数，返回当前实例</td>
+</tr>
+<tr>
+<td>addCenturies</td>
+<td>$value</td>
+<td>同<code>addCentury</code></td>
+</tr>
+<tr>
+<td>subCenturies</td>
+<td>$value</td>
+<td>同<code>subCentury</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途时间差值比较"><a href="#用途：时间差值比较" class="headerlink" title="用途：时间差值比较"></a>用途：时间差值比较</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diffInSeconds</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的秒数差，前者 - 后者； <code>abs</code>表示是否返回绝对值</td>
+</tr>
+<tr>
+<td>secondsSinceMidnight</td>
+<td></td>
+<td>获取当前实例时间的 0时0分0秒 与当前实例时间的秒差</td>
+</tr>
+<tr>
+<td>secondsUntilEndOfDay</td>
+<td></td>
+<td>获取当前实例时间的 23时59分59秒 与当前实例时间的秒差</td>
+</tr>
+<tr>
+<td>diffInMinutes</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的分钟差, 取整</td>
+</tr>
+<tr>
+<td>diffInHours</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的小时差, 取整</td>
+</tr>
+<tr>
+<td>diffInHoursFiltered</td>
+<td>Closure $callback, Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的(通过回调函数较验的)小时差, 取整</td>
+</tr>
+<tr>
+<td>diffInDays</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的天数差, 取整</td>
+</tr>
+<tr>
+<td>diffInDaysFiltered</td>
+<td>Closure $callback, Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的(通过回调函数较验的)天数差, 取整</td>
+</tr>
+<tr>
+<td>diffInWeekdays</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的工作日数差, 取整</td>
+</tr>
+<tr>
+<td>diffInWeekendDays</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的双休日数差, 取整</td>
+</tr>
+<tr>
+<td>diffInWeeks</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的星期数差, 取整</td>
+</tr>
+<tr>
+<td>diffInMonths</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的月数差, 取整</td>
+</tr>
+<tr>
+<td>diffInYears</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的年数差, 取整</td>
+</tr>
+<tr>
+<td>diffFiltered</td>
+<td>CarbonInterval $ci， Closure $callback, Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的(通过回调函数较验的)<code>$ci</code>差, 取整</td>
+</tr>
+<tr>
+<td>diffForHumans</td>
+<td>Carbon $other(null), $absolute(false), $short(false)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的时间差，以便于人类阅读的格式呈现</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途getter-amp-setter"><a href="#用途：Getter-amp-Setter" class="headerlink" title="用途：Getter &amp; Setter"></a>用途：Getter &amp; Setter</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getDays（static）</td>
+<td></td>
+<td>获取<code>days of the week</code></td>
+</tr>
+<tr>
+<td>getWeekStartsAt（static）</td>
+<td></td>
+<td>获取一周的第一天</td>
+</tr>
+<tr>
+<td>setWeekStartsAt（static）</td>
+<td>$day</td>
+<td>设置一周的第一天</td>
+</tr>
+<tr>
+<td>getWeekEndsAt（static）</td>
+<td></td>
+<td>获取一周的最后一天</td>
+</tr>
+<tr>
+<td>setWeekEndsAt（static）</td>
+<td>$day</td>
+<td>设置一周的最后一天</td>
+</tr>
+<tr>
+<td>getWeekendDays（static）</td>
+<td></td>
+<td>获取双休日（数组）</td>
+</tr>
+<tr>
+<td>setWeekendDays（static）</td>
+<td>$days</td>
+<td>设置双休日</td>
+</tr>
+<tr>
+<td>getTranslator（static）</td>
+<td></td>
+<td>获取<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>setTranslator（static）</td>
+<td>TranslatorInterface $translator</td>
+<td>设置<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>getLocale（static）</td>
+<td></td>
+<td>获取当前本地化语言</td>
+</tr>
+<tr>
+<td>setLocale（static）</td>
+<td>$locale</td>
+<td>设置当前本地化语言</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td>$value</td>
+<td>设置时区</td>
+</tr>
+<tr>
+<td>tz</td>
+<td>$value</td>
+<td>设置时区</td>
+</tr>
+<tr>
+<td>setTimezone</td>
+<td>$value</td>
+<td>设置时区</td>
+</tr>
+<tr>
+<td>setToStringFormat（static）</td>
+<td>$format</td>
+<td>设置变量<code>$toStringFormat</code></td>
+</tr>
+<tr>
+<td>resetToStringFormat（static）</td>
+<td></td>
+<td>设置变量<code>$toStringFormat</code>为默认值</td>
+</tr>
+<tr>
+<td>setTestNow（static）</td>
+<td>$testNow(null)</td>
+<td>设置变量<code>$testNow</code>，测试专用，初始化时的<code>$now</code></td>
+</tr>
+<tr>
+<td>getTestNow（static）</td>
+<td></td>
+<td>获取变量<code>$testNow</code></td>
+</tr>
+<tr>
+<td>hasTestNow（static）</td>
+<td></td>
+<td>判断<code>$testNow</code>是否为空</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途其它"><a href="#用途：其它" class="headerlink" title="用途：其它"></a>用途：其它</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>setUtf8（static）</td>
+<td>$utf8</td>
+<td>设置是否采用 utf8 编码方式</td>
+</tr>
+<tr>
+<td>getLastErrors（static）</td>
+<td></td>
+<td>获取无效时间的错误格式模板</td>
+</tr>
+<tr>
+<td>serialize</td>
+<td></td>
+<td>返回当前实例的序列化字符串</td>
+</tr>
+<tr>
+<td>hasRelativeKeywords（static）</td>
+<td>$time</td>
+<td>判断字符串中是否有指定的关键字</td>
+</tr>
+<tr>
+<td>shouldOverflowMonths（static）</td>
+<td></td>
+<td>获取变量<code>$monthsOverflow</code></td>
+</tr>
+<tr>
+<td>useMonthsOverflow（static）</td>
+<td>$monthsOverflow(true)</td>
+<td>设置变量<code>$monthsOverflow</code></td>
+</tr>
+<tr>
+<td>resetMonthsOverflow（static）</td>
+<td></td>
+<td>重置变量<code>$monthsOverflow</code>为 <code>true</code></td>
+</tr>
+<tr>
+<td>__get</td>
+<td>$name</td>
+<td>魔术方法</td>
+</tr>
+<tr>
+<td>__isset</td>
+<td>$name</td>
+<td>魔术方法</td>
+</tr>
+<tr>
+<td>__set</td>
+<td>$name, $value</td>
+<td>魔术方法</td>
+</tr>
+</tbody>
+</table>
+<h2 id="carboninterval"><a href="#CarbonInterval" class="headerlink" title="CarbonInterval"></a>CarbonInterval</h2><h3 id="用途生成carboninterval实例"><a href="#用途：生成CarbonInterval实例" class="headerlink" title="用途：生成CarbonInterval实例"></a>用途：生成<code>CarbonInterval</code>实例</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__construct</td>
+<td>$years(1), $months(null), $weeks(null), $days(null), $hours(null), $minutes(null), $seconds(null)</td>
+<td>创建<code>CarbonInterval</code>实例</td>
+</tr>
+<tr>
+<td>create（static）</td>
+<td>$years(1), $months(null), $weeks(null), $days(null), $hours(null), $minutes(null), $seconds(null)</td>
+<td>创建<code>CarbonInterval</code>实例</td>
+</tr>
+<tr>
+<td>second(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>seconds(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>minute(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>minutes(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>hour(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>hours(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>day(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>days(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>dayz(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>week(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>weeks(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>month(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>months(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>year(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>years(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>instance(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途本地化"><a href="#用途：本地化" class="headerlink" title="用途：本地化"></a>用途：本地化</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>translator（static）</td>
+<td></td>
+<td>初始化<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>getTranslator（static</td>
+<td></td>
+<td>获取<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>setTranslator（static）</td>
+<td>TranslatorInterface $translator</td>
+<td>设置<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>getLocale（static）</td>
+<td></td>
+<td>获取当前本地化语言</td>
+</tr>
+<tr>
+<td>setLocale（static）</td>
+<td>$locale</td>
+<td>设置当前本地化语言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途计算"><a href="#用途：计算" class="headerlink" title="用途：计算"></a>用途：计算</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>add</td>
+<td>DateInterval $interval</td>
+<td>将指定<code>DateInterval</code>的时间叠加到当前实例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途格式化"><a href="#用途：格式化" class="headerlink" title="用途：格式化"></a>用途：格式化</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spec</td>
+<td></td>
+<td>获取规范的间隔描述字符串</td>
+</tr>
+<tr>
+<td>forHumans</td>
+<td></td>
+<td>获取便于人类阅读的间隔描述字符串</td>
+</tr>
+<tr>
+<td>__toString</td>
+<td></td>
+<td>同<code>forHumans</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途其它"><a href="#用途：其它-1" class="headerlink" title="用途：其它"></a>用途：其它</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__get</td>
+<td></td>
+<td>魔术方法；可操作变量有<code>years</code>/<code>months</code>/<code>dayz</code>/<code>hours</code>/<code>minutes</code>/<code>seconds</code>/<code>weeks</code>/<code>daysExcludeWeeks</code>/<code>dayzExcludeWeeks</code></td>
+</tr>
+<tr>
+<td>__set</td>
+<td></td>
+<td>魔术方法；可操作变量有<code>years</code>/<code>months</code>/<code>dayz</code>/<code>hours</code>/<code>minutes</code>/<code>seconds</code>/<code>weeks</code>/<code>daysExcludeWeeks</code>/<code>dayzExcludeWeeks</code></td>
+</tr>
+<tr>
+<td>__call</td>
+<td></td>
+<td>魔术方法；可操作方法有<code>years</code>/<code>year</code>/<code>months</code>/<code>month</code>/<code>weeks</code>/<code>week</code>/<code>days</code>/<code>dayz</code>/<code>day</code>/<code>hours</code>/<code>hour</code>/<code>minutes</code>/<code>minute</code>/<code>seconds</code>/<code>second</code></td>
+</tr>
+<tr>
+<td>weeksAndDays</td>
+<td>$weeks, $days</td>
+<td>为当前实例的<code>dayz</code>变量赋值为<code>($weeks * Carbon::DAYS_PER_WEEK) + $days</code></td>
+</tr>
+</tbody>
+</table>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.1" async></script><a data-url="http://yoursite.com/2017/05/23/php-carbon/" data-id="cj5wan3rw000arpfuclxhe4o5" class="article-share-link">分享</a><div class="tags"><a href="/tags/php-plugin/">php-plugin</a></div><div class="post-nav"><a href="/2017/06/01/laravel-log/" class="pre">Laravel 大将之 日志 模块</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Laravel/">Laravel</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Laravel-5-4/" style="font-size: 15px;">Laravel-5.4</a> <a href="/tags/php-plugin/" style="font-size: 15px;">php-plugin</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/13/laravel-paginate/">Laravel 大将之 分页 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/07/laravel-redis/">Laravel 大将之 Redis 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/04/laravel-config/">Laravel 大将之 配置 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/03/laravel-encrypt/">Laravel 大将之 加密 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/01/laravel-log/">Laravel 大将之 日志 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/php-carbon/">刨刨 Carbon API</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://twiceyuan.com" title="Android Engineer 袁远 的博客" target="_blank">Android Engineer 袁远 的博客</a><ul></ul><a href="http://www.cjhang.com/" title="Python Engineer 陈军航 的博客" target="_blank">Python Engineer 陈军航 的博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/." rel="nofollow">Redgo's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.1" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.1"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.1"></script></div></body></html>
