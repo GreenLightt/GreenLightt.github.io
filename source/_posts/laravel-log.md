@@ -1,6 +1,7 @@
 ---
 title: Laravel 大将之 日志 模块
 date: 2017-06-01 12:31:38
+description: 介绍如何使用日志功能，手动记录信息
 tags:
 - Laravel-5.4
 categories:
