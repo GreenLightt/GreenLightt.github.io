@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Laravel 大将之 日志 模块 | Redgo's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.1"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Laravel 大将之 日志 模块</h1><a id="logo" href="/.">Redgo's Blog</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Laravel 大将之 日志 模块</h1><div class="post-meta">Jun 1, 2017<span> | </span><span class="category"><a href="/categories/Laravel/">Laravel</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><!-- toc -->
+<ul>
+<li><a href="#简介">简介</a></li>
+<li><a href="#配置">配置</a><ul>
+<li><a href="#配置文件">配置文件</a></li>
+<li><a href="#自定义配置">自定义配置</a></li>
+</ul>
+</li>
+<li><a href="#使用">使用</a><ul>
+<li><a href="#日志记录">日志记录</a></li>
+<li><a href="#事件监听">事件监听</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Laravel</code>的日志模块位于<code>Illuminate/Log</code>文件夹下；通过封装<code>Monolog</code>插件提供日志服务；</p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>在<code>config/app.php</code>文件中关于日志模块的配置项有两个，分别如下：</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">// 日志模式，可选择参数有 "single", "daily", "syslog", "errorlog"</span></div><div class="line"><span class="string">'log'</span> =&gt; env(<span class="string">'APP_LOG'</span>, <span class="string">'single'</span>),</div><div class="line"> <span class="comment">// 错误等级，为 "RFC 5424" 中定义的八种日志级</span></div><div class="line"><span class="string">'log_level'</span> =&gt; env(<span class="string">'APP_LOG_LEVEL'</span>, <span class="string">'debug'</span>),</div></pre></td></tr></table></figure>
+<ol>
+<li><p>日志模式不同的参数值有不同的含义：</p>
+<ul>
+<li>single<br>所有日志信息都会输出到<code>storage/log/laravel.log</code>文件中</li>
+<li>daily<br>每天的日志信息都会输出到<code>storage/log</code>文件夹下的日志文件中，日志文件名会包含当天的年月日信息；</li>
+<li>syslog<br>日志信息输出到系统的日志文件中；比如，笔者是<code>centos</code>系统，日志信息写到了<code>/var/log/message</code>文件中</li>
+<li>errorlog<br>相当于调用<code>PHP</code>的<code>error_log</code>语句，没有写入到文件</li>
+</ul>
+</li>
+<li><p>八种日志错误等级分别为：</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>错误等级</th>
+<th>描述</th>
+<th>整型值</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>debug</td>
+<td>代码引用为 “MonologLogger::DEBUG”</td>
+<td>100</td>
+<td>紧急，如系统挂掉</td>
+</tr>
+<tr>
+<td>info</td>
+<td>代码引用为 “MonologLogger::INFO”</td>
+<td>200</td>
+<td>需要立即采取行动，如数据库异常等</td>
+</tr>
+<tr>
+<td>notice</td>
+<td>代码引用为 “MonologLogger::NOTICE”</td>
+<td>250</td>
+<td>严重问题，如异常</td>
+</tr>
+<tr>
+<td>warning</td>
+<td>代码引用为 “MonologLogger::WARNING”</td>
+<td>300</td>
+<td>运行时错误，不需要立即处理但需要被记录和监控</td>
+</tr>
+<tr>
+<td>error</td>
+<td>代码引用为 “MonologLogger::ERROR”</td>
+<td>400</td>
+<td>警告但不是错误，比如使用了被废弃的API</td>
+</tr>
+<tr>
+<td>critical</td>
+<td>代码引用为 “MonologLogger::CRITICAL”</td>
+<td>500</td>
+<td>普通但值得注意的事件</td>
+</tr>
+<tr>
+<td>alert</td>
+<td>代码引用为 “MonologLogger::ALERT”</td>
+<td>550</td>
+<td>感兴趣的事件，比如登录、退出</td>
+</tr>
+<tr>
+<td>emergency</td>
+<td>代码引用为 “MonologLogger::EMERGENCY”</td>
+<td>600</td>
+<td>详细的调试信息</td>
+</tr>
+</tbody>
+</table>
+<p> 如果<code>log_level</code>的值为<code>critical</code>, 则日志只会输出<code>alert</code>和<code>emergency</code>这两种错误等级的信息；</p>
+<h2 id="自定义配置"><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h2><p>如果你想要在应用中完全控制<code>Monolog</code>的配置，可以使用应用的<code>configureMonologUsing</code>方法；<br>在<code>bootstrap/app.php</code>文件返回<code>$app</code>变量之前调用该方法;<br>比如，使用<code>daily</code>日志模式，但日志文件名想自定义，可以如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$app-&gt;configureMonologUsing(<span class="function"><span class="keyword">function</span><span class="params">(Monolog\Logger $log)</span> </span>&#123;</div><div class="line">    $filename = storage_path(<span class="string">'/logs/'</span> . php_sapi_name() . <span class="string">'.log'</span>);</div><div class="line">    $handler = <span class="keyword">new</span> Monolog\Handler\RotatingFileHandler($filename, <span class="number">0</span>, \Monolog\Logger::DEBUG, <span class="keyword">true</span>, <span class="number">0664</span>);</div><div class="line">    $handler-&gt;setFormatter(<span class="keyword">new</span> \Monolog\Formatter\LineFormatter(<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">true</span>, <span class="keyword">true</span>));  </div><div class="line">    $log-&gt;pushHandler($handler);                                                                    </div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="日志记录"><a href="#日志记录" class="headerlink" title="日志记录"></a>日志记录</h2><ol>
+<li><p>创建日志器实例</p>
+<p> 直接创建<code>Writer</code>实例，日志器实例还需要设置日志模式与错误等级;</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$writer = <span class="keyword">new</span> Illuminate\Log\Writer(<span class="keyword">new</span> Monolog\Logger(<span class="string">'channel_name'</span>));</div><div class="line">$writer-&gt;useErrorLog(<span class="string">'info'</span>);</div></pre></td></tr></table></figure>
+<p> 或者通过全局帮助函数，从服务容器获取实例;日志模式与错误等级已按照配置文件中的参数设置好了；</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash">writer = app(<span class="string">'log'</span>);</span></div></pre></td></tr></table></figure>
+<p> 还有一种直接通过门面模式<code>\Log</code>;比如要输出<code>debug</code>级信息，执行<code>\Log::debug(&#39;xxxx&#39;);</code></p>
+</li>
+<li><p>输出各种类型信息</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$writer-&gt;emergency(<span class="string">'消息内容'</span>, [<span class="string">'上下文环境，比如用户ID'</span> =&gt; <span class="string">'这里显示用户ID的值，比如78'</span>]);</div><div class="line">$writer-&gt;alert(<span class="string">'消息内容'</span>);</div><div class="line">$writer-&gt;critical(<span class="string">'消息内容'</span>);</div><div class="line">$writer-&gt;error(<span class="string">'消息内容'</span>);</div><div class="line">$writer-&gt;warning(<span class="string">'消息内容'</span>);</div><div class="line">$writer-&gt;notice(<span class="string">'消息内容'</span>);</div><div class="line">$writer-&gt;info(<span class="string">'消息内容'</span>);</div><div class="line">$writer-&gt;debug(<span class="string">'消息内容'</span>);</div><div class="line"></div><div class="line">$writer-&gt;log(<span class="string">'emergency'</span>, <span class="string">'消息内容'</span>， [<span class="string">'上下文'</span> =&gt; <span class="string">'环境'</span>]);</div><div class="line">$writer-&gt;log(<span class="string">'alert'</span>, <span class="string">'消息内容'</span>， [<span class="string">'上下文'</span> =&gt; <span class="string">'环境'</span>]);</div><div class="line">......</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h2><p>每次执行日志输出信息时，如果日志器包含事件分发器（即<code>event dispatcher</code>），则会触发<code>\Illuminate\Log\Events\MessageLogged::class</code>这个事件；</p>
+<p><code>\Illuminate\Log\Events\MessageLogged::class</code>这个事件的构造函数如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($level, $message, array $context = [])</span> </span>&#123;</div><div class="line">    <span class="keyword">$this</span>-&gt;level = $level;</div><div class="line">    <span class="keyword">$this</span>-&gt;message = $message; </div><div class="line">    <span class="keyword">$this</span>-&gt;context = $context;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先如何为日志器设置事件分发器，有两处，第一处是构造函数的第二个参数，可以传入事件分发器实例；第二处是通过调用<code>setEventDispatcher</code>方法；Laravel在服务容器注册绑定的日志器，带有事件分发器；</p>
+<p>现在，需要为日志写入事件安排一些监听器，通过调用<code>listen</code>方法，比如:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$dispatcher = $writer-&gt;getEventDispatcher();</div><div class="line">$dispatcher-&gt;listen(\Illuminate\Log\Events\MessageLogged::class, <span class="function"><span class="keyword">function</span> <span class="params">($event)</span> </span>&#123;</div><div class="line">        <span class="comment">// 监听器的内容</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.1" async></script><a data-url="http://yoursite.com/2017/06/01/laravel-log/" data-id="cj5vy2d2s000059fup174g1p4" class="article-share-link">分享</a><div class="tags"><a href="/tags/Laravel-5-4/">Laravel-5.4</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Laravel/">Laravel</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Laravel-5-4/" style="font-size: 15px;">Laravel-5.4</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/01/laravel-log/">Laravel 大将之 日志 模块</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://twiceyuan.com" title="Android Engineer 袁远 的博客" target="_blank">Android Engineer 袁远 的博客</a><ul></ul><a href="http://www.cjhang.com/" title="Python Engineer 陈军航 的博客" target="_blank">Python Engineer 陈军航 的博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/." rel="nofollow">Redgo's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.1" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.1"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.1"></script></div></body></html>
