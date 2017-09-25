@@ -1,25 +1,362 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Laravel 大将之 Redis 模块 | Redgo's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.1"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Laravel 大将之 Redis 模块</h1><a id="logo" href="/.">Redgo's Blog</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Laravel 大将之 Redis 模块</h1><div class="post-meta">Jun 7, 2017<span> | </span><span class="category"><a href="/categories/Laravel/">Laravel</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><!-- toc -->
-<ul>
-<li><a href="#简介">简介</a></li>
-<li><a href="#配置项">配置项</a></li>
-<li><a href="#使用">使用</a><ul>
-<li><a href="#简单">简单</a><ul>
-<li><a href="#入门级操作">入门级操作</a></li>
-<li><a href="#队列操作">队列操作</a></li>
-<li><a href="#set-集合操作">set 集合操作</a></li>
-<li><a href="#有序set表操作">有序set表操作</a></li>
-<li><a href="#hash表操作">Hash表操作</a></li>
-<li><a href="#排序操作">排序操作</a></li>
-<li><a href="#redis管理操作">Redis管理操作</a></li>
-</ul>
-</li>
-<li><a href="#集群">集群</a></li>
-<li><a href="#订阅">订阅</a></li>
-</ul>
-</li>
-</ul>
-<!-- tocstop -->
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Redis</code>模块负责与<code>Redis</code>数据库交互，并提供<code>Redis</code>的相关API支持；</p>
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.4," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍在 Laravel 中如何直接使用 redis 的原生命令">
+<meta name="keywords" content="Laravel-5.4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 大将之 Redis 模块">
+<meta property="og:url" content="http://yoursite.com/2017/06/07/laravel-redis/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="介绍在 Laravel 中如何直接使用 redis 的原生命令">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-09-25T06:57:47.504Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 大将之 Redis 模块">
+<meta name="twitter:description" content="介绍在 Laravel 中如何直接使用 redis 的原生命令">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/07/laravel-redis/"/>
+
+
+
+
+
+  <title>Laravel 大将之 Redis 模块 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/07/laravel-redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 大将之 Redis 模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-07T18:15:10+08:00">
+                2017-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍在 Laravel 中如何直接使用 redis 的原生命令
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Redis</code>模块负责与<code>Redis</code>数据库交互，并提供<code>Redis</code>的相关API支持；</p>
 <p><code>Redis</code>模块提供<code>redis</code>与<code>redis.connection</code>这两个服务；<code>redis.connection</code>服务提供<code>redis</code>连接对象；<code>redis</code>服务提供<code>Illuminate\Redis\RedisManager</code>对象，负责与<code>Redis</code>打交道的这部分管理工作；</p>
 <h1 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h1><p>以下是笔者的示例；<br><code>default</code>是默认的<code>Redis</code>连接对象名，值是连接对象的参数；<code>app(&#39;redis.connection&#39;)</code>返回的就是该默认连接对象；</p>
 <p><code>mydefine</code>是笔者定义的<code>Redis</code>连接对象名；通过执行<code>app(&#39;redis&#39;)-&gt;connection(&#39;mydefine&#39;)</code>可以获取该连接对象；</p>
@@ -103,4 +440,364 @@
 <h2 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h2><p>可以阅读<a href="http://d.laravel-china.org/docs/5.4/redis#pubsub" target="_blank" rel="external">Laravel 的 Redis 使用指南</a>中关于发布与订阅的章节，了解使用过程；</p>
 <p>订阅和发布本质上是一种监听触发；订阅功能可以监听指定频道的消息，基于长连接的通信，完成信息接收；而发布则是触发监听的开始；</p>
 <p>说明：上述涉及操作代码均来自<a href="http://www.open-open.com/lib/view/open1355830836135.html" target="_blank" rel="external">利用predis操作redis方法大全</a>文章；</p>
-</div><script type="text/javascript" src="/js/share.js?v=0.0.1" async></script><a data-url="http://yoursite.com/2017/06/07/laravel-redis/" data-id="cj5wan3rr0006rpfu0vccryfw" class="article-share-link">分享</a><div class="tags"><a href="/tags/Laravel-5-4/">Laravel-5.4</a></div><div class="post-nav"><a href="/2017/06/13/laravel-paginate/" class="pre">Laravel 大将之 分页 模块</a><a href="/2017/06/04/laravel-config/" class="next">Laravel 大将之 配置 模块</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Laravel/">Laravel</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Laravel-5-4/" style="font-size: 15px;">Laravel-5.4</a> <a href="/tags/php-plugin/" style="font-size: 15px;">php-plugin</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/13/laravel-paginate/">Laravel 大将之 分页 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/07/laravel-redis/">Laravel 大将之 Redis 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/04/laravel-config/">Laravel 大将之 配置 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/03/laravel-encrypt/">Laravel 大将之 加密 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/01/laravel-log/">Laravel 大将之 日志 模块</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/php-carbon/">刨刨 Carbon API</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://twiceyuan.com" title="Android Engineer 袁远 的博客" target="_blank">Android Engineer 袁远 的博客</a><ul></ul><a href="http://www.cjhang.com/" title="Python Engineer 陈军航 的博客" target="_blank">Python Engineer 陈军航 的博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/." rel="nofollow">Redgo's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.1" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.1"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.1"></script></div></body></html>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-4/" rel="tag"># Laravel-5.4</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/04/laravel-config/" rel="next" title="Laravel 大将之 配置 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 配置 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/13/laravel-paginate/" rel="prev" title="Laravel 大将之 分页 模块">
+                Laravel 大将之 分页 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置项"><span class="nav-number">2.</span> <span class="nav-text">配置项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单"><span class="nav-number">3.1.</span> <span class="nav-text">简单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#入门级操作"><span class="nav-number">3.1.1.</span> <span class="nav-text">入门级操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列操作"><span class="nav-number">3.1.2.</span> <span class="nav-text">队列操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set-集合操作"><span class="nav-number">3.1.3.</span> <span class="nav-text">set 集合操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有序set表操作"><span class="nav-number">3.1.4.</span> <span class="nav-text">有序set表操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash表操作"><span class="nav-number">3.1.5.</span> <span class="nav-text">Hash表操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排序操作"><span class="nav-number">3.1.6.</span> <span class="nav-text">排序操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis管理操作"><span class="nav-number">3.1.7.</span> <span class="nav-text">Redis管理操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群"><span class="nav-number">3.2.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#订阅"><span class="nav-number">3.3.</span> <span class="nav-text">订阅</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
