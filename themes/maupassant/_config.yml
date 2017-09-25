@@ -1,0 +1,58 @@
+fancybox: true ## 是否启用Fancybox图片灯箱效果
+duoshuo:       ## 你多说的用户名, e.g. username
+disqus:        ## 你 disqus 的用户名, e.g. username
+uyan:          ## 你友言评论的ID. e.g. 1234567
+gentie:        ## Your gentie_productKey, e.g. fc799538c7ad4cf5a5a0c2877a90cbd7
+changyan:      ## Your changyan appid
+changyan_conf: ## You changyan conf
+google_search: true ## 使用 Google 搜索引擎
+baidu_search:       ## 使用百度搜索引擎
+swiftype:      ## Your swiftype_key, e.g. m7b11ZrsT8Me7gzApciT
+tinysou:       ## Your tinysou_key, e.g. 4ac092ad8d749fdc6293
+self_search:   ## Use a jQuery-based local search engine, true/false.
+google_analytics: ## Your Google Analytics tracking id, e.g. UA-42425684-2
+baidu_analytics:  ## Your Baidu Analytics tracking id, e.g. 8006843039519956000
+show_category_count: false ## 是否显示侧边栏分类数目
+toc_number: true ## 是否显示文章中目录列表自动编号 
+shareto: true ## 是否使用分享按钮
+busuanzi: true ## 是否使用不蒜子页面访问计数
+widgets_on_small_screens: false ## 是否在移动设备屏幕底部显示侧边栏
+
+menu:
+  - page: home
+    directory: .
+    icon: fa-home
+  - page: archive
+    directory: archives/
+    icon: fa-archive
+  #- page: about
+  #  directory: about/
+  #  icon: fa-user
+  #- page: rss
+  #  directory: atom.xml
+  #  icon: fa-rss
+
+widgets: ## Six widgets in sidebar provided: search, category, tag, recent_posts, rencent_comments and links.
+  - search
+  - category
+  - tag
+  - recent_posts
+  - recent_comments
+  - links
+
+links:
+  - title: Android Engineer 袁远 的博客
+    url: https://twiceyuan.com
+  - title: Python Engineer 陈军航 的博客
+    url: http://www.cjhang.com/
+
+timeline:
+  - num: 1
+    word: 2017/08/03-建立博客
+
+# Static files
+js: js
+css: css
+
+# Theme version
+version: 0.0.1
