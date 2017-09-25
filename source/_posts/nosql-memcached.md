@@ -3,10 +3,9 @@ title: 认识 Memcached
 date: 2017-07-24 17:57:41
 description: 关于 Memcahed 的一次入门教程
 tags:
-- nosql
-- memcached
+- Memcached
 categories:
-- nosql
+- NoSQL
 ---
 
 # 简介
