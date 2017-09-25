@@ -8,8 +8,6 @@ categories:
 - Laravel
 ---
 
-<!-- toc -->
-
 # 简介
 分页模块的基本使用有两种：一种是基于查询构建器或`Eloquent`模型，调用`paginate`方法；另一种是手动创建分页器；
 

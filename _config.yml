@@ -7,7 +7,7 @@ title: Redgo's Blog # 网站的标题
 subtitle:           # 网站的子标题
 description:        # 关于网站的描述
 author: Redgo       # 网站所有者
-language: zh-CN     # 网站使用语言
+language: zh-Hans   # 网站使用语言
 timezone: Asia/Shanghai
 
 # URL
@@ -72,7 +72,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: maupassant # 主题目录
+theme: next # 主题目录
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

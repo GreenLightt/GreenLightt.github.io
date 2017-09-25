@@ -8,8 +8,6 @@ categories:
 - Laravel
 ---
 
-<!-- toc -->
-
 # 简介
 `Laravel`的日志模块位于`Illuminate/Log`文件夹下；通过封装`Monolog`插件提供日志服务；
 

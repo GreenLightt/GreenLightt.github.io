@@ -8,8 +8,6 @@ categories:
 - Laravel
 ---
 
-<!-- toc -->
-
 # 简介
 
 `Redis`模块负责与`Redis`数据库交互，并提供`Redis`的相关API支持；

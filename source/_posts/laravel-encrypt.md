@@ -8,8 +8,6 @@ categories:
 - Laravel
 ---
 
-<!-- toc -->
-
 # 简介
 加密模块包含两种加密方式，分别为`Encrypt`加密与`Hash`加密；
 

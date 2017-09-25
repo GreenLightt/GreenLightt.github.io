@@ -8,8 +8,6 @@ categories:
 - PHP
 ---
 
-<!-- toc -->
-
 # 介绍
 `Carbon`是对`PHP DateTime`模块的二次扩展；提供时间格式化，时间计算的功能；
 
