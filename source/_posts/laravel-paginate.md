@@ -143,6 +143,6 @@ public function register()
 ![][3]
 
 
-  [1]: /img/bVO72Q.png
-  [2]: /img/bVO73d.png
-  [3]: /img/bVO72Q.png
+  [1]: http://owk2q4gs5.bkt.clouddn.com/bVO72Q.png 
+  [2]: http://owk2q4gs5.bkt.clouddn.com/bVO73d.png
+  [3]: http://owk2q4gs5.bkt.clouddn.com/bVO72Q.png
