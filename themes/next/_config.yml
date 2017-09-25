@@ -90,8 +90,9 @@ scheme: Gemini
 # Social Links
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
-#social:
+social:
   #LinkLabel: Link
+  Segmentfault: https://segmentfault.com/u/greenlightt
 
 # Social Links Icons
 # Icon Mapping:
@@ -115,6 +116,7 @@ social_icons:
   Instagram: instagram
   StackOverflow: stack-overflow
   Weibo: weibo
+  Segmentfault: vcard
 
 # Blog rolls
 #links_title: Links
