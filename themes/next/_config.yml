@@ -205,8 +205,8 @@ post_meta:
 # Dependencies: https://github.com/willin/hexo-wordcount
 post_wordcount:
   item_text: true
+  min2read: false 
   wordcount: false
-  min2read: false
   separated_meta: true
 
 # Wechat Subscriber
@@ -545,7 +545,7 @@ use_motion: true
 fancybox: true
 
 # Progress bar in the top during page loading.
-pace: false
+pace: true
 # Themes list:
 #pace-theme-big-counter
 #pace-theme-bounce
