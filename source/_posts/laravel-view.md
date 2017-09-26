@@ -57,7 +57,7 @@ protected function parseToken($token) {
 在解析的过程中，`Blade`会先使用`token_get_all`函数获取视图文件中的被`PHP`解释器认为是`HTML`（`T_INLINE_HTML`）的部分，然后依次进行`Comments`、`Extensions`、`Statements` 和 `Echos`部分的正则替换；
 
 **注释部分**
-核心代码如下，将注释符号“{{-- --}}”包裹的代码替换为空字符串；
+核心代码如下，将注释符号“{% raw %}{{-- --}}{% endraw %}”包裹的代码替换为空字符串；
 ```
 preg_replace("/{{--(.*?)--}}/s", '', $value);
 ```
@@ -106,13 +106,13 @@ protected function compileExtensions($value) {
   指令包括：`@lang`、`@endlang`、`@choice`
 
 **Echo 替换**
-`echo`输出是针对`{!! !!}`、`{{ }}`、`{{{ }}}`三种括号进行正则替换；
+`echo`输出是针对`{!! !!}`、`{% raw %}{{ }}{% endraw %}`、`{% raw %}{{{ }}}{% endraw %}`三种括号进行正则替换；
 
 - `{!! !!}`输出未转义字符，用于输出原生带`html`标签的值；
-- `{{ }}`正常输出，支持三目运算符替换；
-- `{{{ }}}`输出转义字符，支持三目运算符替换；
+- `{% raw %}{{ }}{% endraw %}`正常输出，支持三目运算符替换；
+- `{% raw %}{{{ }}}{% endraw %}`输出转义字符，支持三目运算符替换；
 
-> 三目运算符替换是指：`{{ $a ?: "默认值" }}` (或者 `{{$a or "默认值"}}`) 换成 `{{ isset($a) ? $a : "默认值"}} `
+> 三目运算符替换是指：`{% raw %}{{ $a ?: "默认值" }}{% endraw %}` (或者 `{% raw %}{{$a or "默认值"}}{% endraw %}`) 换成 `{% raw %}{{ isset($a) ? $a : "默认值"}}{% endraw %} `
 
 
 
