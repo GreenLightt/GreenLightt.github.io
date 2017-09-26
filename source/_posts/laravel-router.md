@@ -1,6 +1,6 @@
 ---
 title: Laravel 大将之 路由 模块
-date: 2017-06-04 17:57:41
+date: 2017-08-01 17:57:41
 description: 介绍如何使用路由模块
 tags:
 - Laravel-5.4
@@ -48,7 +48,7 @@ public function register() {
 在项目启动后，会执行所有`ServiceProvider`的`loadRoutes`方法，也就是调用`map`方法，一般情况下`map`方法如下
 ```
 public function map(Router $router){
-        require __DIR__.'/routes.php';
+    require __DIR__.'/routes.php';
 }
 ```
 这时候，项目就会执行很多`Route::get`、`Route::post`、`Route::group`方法；
@@ -75,8 +75,8 @@ $this->router->dispatch($request)
 这里的`$this->router`，就是`Router`管理类；`dispatch`方法如下
 ```
 public function dispatch(Request $request) {
-        $this->currentRequest = $request;
-            return $this->dispatchToRoute($request);
+    $this->currentRequest = $request;
+    return $this->dispatchToRoute($request);
 }
 
 public function dispatchToRoute(Request $request) {
@@ -92,16 +92,16 @@ public function dispatchToRoute(Request $request) {
     $response = $this->runRouteWithinStack($route, $request);
     // 根据 request 请求设置 response 的响应头
     return $this->prepareResponse($request, $response);
-    }
+}
 ```
 
 1. *根据请求找匹配的路由*
-`RouteCollection`根据请求的`http`动作缩小要匹配的路由范围；在筛选出来的这些路由中依次遍历，找出第一个符合验证的路由（需要进行较验的验证在`Route`中的`getValidators`方法中声明）；
+    `RouteCollection`根据请求的`http`动作缩小要匹配的路由范围；在筛选出来的这些路由中依次遍历，找出第一个符合验证的路由（需要进行较验的验证在`Route`中的`getValidators`方法中声明）；
 2. *将路由绑定到请求上*
 3. *触发`RouteMatched`事件*
-初始化的`Laravel`项目没有对`RouteMatched`路由匹配事件进行任何的监听器绑定，如有需要，可以自定义监听器，在模块的`EventServiceProvider`中注册该事件监听；这样一旦请求匹配上某个路由，就可以执行自定义方法了；
+    初始化的`Laravel`项目没有对`RouteMatched`路由匹配事件进行任何的监听器绑定，如有需要，可以自定义监听器，在模块的`EventServiceProvider`中注册该事件监听；这样一旦请求匹配上某个路由，就可以执行自定义方法了；
 4. *通过 `Pipeline` 流水线执行路由上绑定的中间件及对应的方法*
-在`runRouteWithinStack`方法中，系统会判断是否需要执行中间件，如果`IOC`容器中设置了`middleware.disable`的值为`true`，则需要执行的中间件数组为空；否则会找到所有的中间件，并按照`middlewarePriority`对必要的一些中间件进行排序调整；然后执行`$route->run()`方法；
+    在`runRouteWithinStack`方法中，系统会判断是否需要执行中间件，如果`IOC`容器中设置了`middleware.disable`的值为`true`，则需要执行的中间件数组为空；否则会找到所有的中间件，并按照`middlewarePriority`对必要的一些中间件进行排序调整；然后执行`$route->run()`方法；
 5. *根据 request 请求设置 response 的响应头*
 
 > 项目中会用到的一些方法
@@ -241,11 +241,11 @@ public function back($status = 302, $headers = [], $fallback = false)
 第三个参数表示，如果没有前一次访问请求，访问哪个页面，具体源码如下：
 ```
 if ($url) {
-         return $url;
+     return $url;
 } elseif ($fallback) {
-        return $this->to($fallback);
+    return $this->to($fallback);
 } else {
-        return $this->to('/');
+    return $this->to('/');
 }
 ```
 
@@ -341,6 +341,7 @@ return response()->download($pathToFile, $name, $headers);
 
 ### 跳转
 这里的跳转方法，其实调用的还是跳转器中的方法，不过是在暴露更多的接口，方便调用与使用；
+
 | 方法名 | 调用 | 实际调用的是跳转器中的哪个方法 |
 |: --- :|: --- :|: --- :|
 |`redirectTo` | response()->redirectTo(...)| `to`方法 |
