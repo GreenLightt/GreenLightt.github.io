@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------
 
 # Put your favicon.ico into `hexo-site/source/` directory.
-favicon: /favicon.ico
+favicon: /img/koala.ico
 
 # Set default keywords (Use a comma to separate)
 keywords: "Hexo, NexT"
