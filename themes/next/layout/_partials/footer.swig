@@ -11,6 +11,10 @@
     <i class="fa fa-user-md"></i>
     本站访客数:<span id="busuanzi_value_site_uv"></span>
   </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共{{ totalcount(site) }}字
+  </span>
 </div>
 
 <!--
