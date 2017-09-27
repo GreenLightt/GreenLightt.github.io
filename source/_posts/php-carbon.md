@@ -3,7 +3,7 @@ title: 刨刨 Carbon API
 date: 2017-05-23 17:25:38
 description: 介绍 PHP 二次封装的时间库 Carbon，并列出 API；
 tags:
-- PHP-plugin
+- PHP-Plugin
 categories:
 - PHP
 ---

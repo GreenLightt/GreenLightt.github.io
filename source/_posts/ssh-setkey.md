@@ -3,7 +3,7 @@ title: ssh 公密钥设置标准步骤
 date: 2017-09-26 22:58:41
 description: 介绍如何规范化设置 ssh 公密钥
 tags:
-- ssh
+- Linux Tool
 categories:
 - Linux
 copyright: false

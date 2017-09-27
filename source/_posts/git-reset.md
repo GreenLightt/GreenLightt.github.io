@@ -5,7 +5,7 @@ description: 总结Git 回退时的命令
 tags:
 - Git
 categories:
-- Linux
+- Version Management
 copyright: false
 ---
 

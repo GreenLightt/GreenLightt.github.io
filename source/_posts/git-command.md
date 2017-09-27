@@ -5,7 +5,7 @@ description: 总结经常用的 Git 操作
 tags:
 - Git
 categories:
-- Linux
+- Version Management
 copyright: false
 ---
 
