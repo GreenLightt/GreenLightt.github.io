@@ -1,6 +1,6 @@
 ﻿---
 title: 搭建 LNMP 环境
-date: 2017-09-30 13:46:41
+date: 2017-10-02 16:46:41
 description: 在 Centos 6.8 上搭建 nginx + php7 + mysql 环境
 tags:
 categories:
