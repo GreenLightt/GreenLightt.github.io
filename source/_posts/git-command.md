@@ -108,6 +108,18 @@ git branch -d ~分支名
     git push origin A:B
  ```
 
+# 文件
+## 跟踪与取消跟踪
+取消跟踪
+```
+git update-index --assume-unchanged your_file_path
+```
+
+继续跟踪
+```
+git update-index --no-assume-unchanged your_file_path
+```
+
 # 标签
 ## 列出所有标签
 ```
