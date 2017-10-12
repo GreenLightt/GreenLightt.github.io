@@ -1,7 +1,7 @@
 ﻿---
-title: Linuc 下压缩与解压缩命令 zip 和 tar
+title: Linux 下压缩与解压缩命令 zip 和 tar
 date: 2017-10-12 23:42:00
-description: 总结常用的压缩与解压缩命令
+description: 总结常用的压缩与解压缩命令 zip 与 tar
 tags:
 - Linux Tool
 categories:
