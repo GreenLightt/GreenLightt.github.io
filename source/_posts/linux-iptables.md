@@ -89,7 +89,16 @@ copyright: false
 2. 显示扩展
   扩展各种模块；`-m multiport`表示启用多端口扩展，之后我们就可以启用比如` --dports 21,23,80`；
 
+# 常用命令
 
+## 永久关闭与开启防火墙
+关闭 `chkconfig iptables off`
+开启 `chkconfig iptables on`
+
+## 查看防火墙状态
+```
+service iptables status
+```
 
 # 参考阅读
 
