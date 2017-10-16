@@ -16,6 +16,7 @@ copyright: false
 `ctrl` + `w`：快速关闭一个 `tab`框；
 `alt` + `enter`：全屏；
 `ctrl` + &#96;：快速打开或关闭 `cmder` 面板；
+`shift` + 鼠标左键拖动：复制选择文本；
 `win` + `alt` + `p` 键快速打开 `settings`页面；
 
 
