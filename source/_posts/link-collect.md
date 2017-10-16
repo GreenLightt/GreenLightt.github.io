@@ -19,7 +19,9 @@ copyright: false
 
 - [MDN 开发者网络](https://developer.mozilla.org/zh-CN/)
 - [JQuery Api 中文文档](http://jquery.cuishifeng.cn/)
-
+- [Bootstrap中文网](http://www.bootcss.com/)
+- [生成二维码插件 Qrcode](http://code.ciaoca.com/javascript/qrcode/)
+- [字体库 FontAwesome](http://fontawesome.dashgame.com/)
 
 
 
