@@ -3,8 +3,8 @@ title: cmder 常用命令
 date: 2017-10-16 21:24:41
 description: Windows 下命令利器
 tags:
-categories:
 - Windows Tool
+categories:
 copyright: false
 ---
 
