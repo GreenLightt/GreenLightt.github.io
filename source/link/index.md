@@ -32,3 +32,4 @@ date: 2017-09-28 11:07:54
 ## JQuery
 
 - [JQuery Api 中文文档](http://jquery.cuishifeng.cn/)
+- [Jquery 插件多级联动 cxSelect](http://code.ciaoca.com/jquery/cxSelect/)
