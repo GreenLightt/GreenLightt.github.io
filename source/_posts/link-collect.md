@@ -7,6 +7,9 @@ categories:
 copyright: false
 ---
 
+# Linux 
+- [Linux 命令快速搜索](https://jaywcjlove.github.io/linux-command/)
+
 # PHP
 - [Laravel 学院](http://laravelacademy.org/)
 - [Laravel China](https://laravel-china.org/)
