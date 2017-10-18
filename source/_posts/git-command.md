@@ -120,6 +120,38 @@ git update-index --assume-unchanged your_file_path
 git update-index --no-assume-unchanged your_file_path
 ```
 
+## 子模块
+## 添加子模块
+项目当前未引入子模块，引入子模块：
+
+```
+git submodule add [url] [path]
+
+# 例如：
+# git submodule add git@git.aimoge.com:ncshop/ncshop-admin-foreign.git foreign
+```
+
+## 删除子模块
+项目当前存在一个要删除的子模块，目录是`foreign`，有 4 个步骤：
+1. 移出`git`管理：`git rm --cached foreign`
+2. 手动删除子模块所在目录：`rm -rf foreign`
+3. 编辑 `.gitmodules` 文件，将子模块的相关配置节点删除掉
+4. 编辑 `.git/config` 文件，将子模块的相关配置节点删除掉
+
+## 初始化子模块
+当使用 `git clone` 下来的工程中带有 `submodule` 时，初始的时候，`submodule` 的内容并不会自动下载下来的，此时，要执行以下命令
+
+```
+git submodule update --init --recursive
+```
+
+## 更新子模块
+
+```
+git submodule update
+```
+
+
 # 标签
 ## 列出所有标签
 ```
@@ -200,7 +232,3 @@ git commit --date="时间"
 ```
 git revert 提交ID
 ```
-
-
-
-
