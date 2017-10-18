@@ -1,10 +1,6 @@
-﻿---
-title: 日常链接集锦
-date: 2017-09-28 15:07:41
-description: 总结经常用的网站链接
-tags:
-categories:
-copyright: false
+---
+title: 日常链接
+date: 2017-09-28 11:07:54
 ---
 
 # Linux 
@@ -25,6 +21,3 @@ copyright: false
 - [Bootstrap中文网](http://www.bootcss.com/)
 - [生成二维码插件 Qrcode](http://code.ciaoca.com/javascript/qrcode/)
 - [字体库 FontAwesome](http://fontawesome.dashgame.com/)
-
-
-
