@@ -183,6 +183,22 @@ protected function resetPassword($user, $password) {
 3. 重置密码邮件中有一个链接（点击后会携带 token 到修改密码页面），同时数据库会保存这个 token 的哈希加密后的值；
 4. 填写“邮箱”，“密码”，“确认密码”三个字段后，携带 `token` 访问重置密码`API`，首页判断邮箱、密码、确认密码这三个字段，然后验证 `token`是否有效；如果是，则重置成功；
 
+## 登录次数限制
+这部分的代码逻辑实现在 `Illuminate\Foundation\Auth\ThrottlesLogins` 页面中；
+
+主要涉及以下因素：
+
+1. 限制的登录次数
+  阅读源代码中的 `maxLoginAttempts` 方法，可以获悉如果引用此 `ThrottlesLogins` 的 `AuthController`没有定义 `maxLoginAttempts` 属性，则默认值为 5；
+2. 超出登录次数的封锁时间
+  阅读源代码中的 `lockoutTime` 方法，可以获悉如果引用此 `ThrottlesLogins` 的 `AuthController`没有定义 `lockoutTime` 属性，则默认值为 60，（隐藏单位为秒）；
+
+如果要清除之前的登录限制，可在 `AuthController` 处理登录请求开始处执行以下语句：
+
+```
+$this->clearLoginAttempts($request);
+```
+  
 # 权限管理
 权限管理是依靠内存空间维护的一个数组变量`abilities`来维护，结构如下：
 ```
