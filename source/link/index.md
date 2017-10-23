@@ -14,11 +14,17 @@ date: 2017-09-28 11:07:54
 - [Laravel 学院](http://laravelacademy.org/)
 - [Laravel China](https://laravel-china.org/)
 
+# Database
+## Redis
+
+- [Redis 命令参考](http://doc.redisfans.com/)
+
 # 前端
 
 - [MDN 开发者网络](https://developer.mozilla.org/zh-CN/)
 - [生成二维码插件 Qrcode](http://code.ciaoca.com/javascript/qrcode/)
 - [字体库 FontAwesome](http://fontawesome.dashgame.com/)
+- [Web 弹窗层 Layer](http://layer.layui.com/)
 
 ## UI 库
 
