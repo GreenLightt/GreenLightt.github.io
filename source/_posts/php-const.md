@@ -1,5 +1,5 @@
 ﻿---
-title: 总结 PHP 常量的知识点
+title: 总结 PHP 常量
 date: 2017-10-23 23:54:38
 description: 总结 PHP 常量的知识点
 tags:
