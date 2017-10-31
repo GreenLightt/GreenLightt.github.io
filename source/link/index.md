@@ -29,6 +29,7 @@ date: 2017-09-28 11:07:54
 - [生成二维码插件 Qrcode](http://code.ciaoca.com/javascript/qrcode/)
 - [字体库 FontAwesome](http://fontawesome.dashgame.com/)
 - [Web 弹窗层 Layer](http://layer.layui.com/)
+- [日期插件 Datepicker](http://bootstrap-datepicker.readthedocs.io/en/latest/)
 
 ## UI 库
 
