@@ -92,6 +92,14 @@ echo 'eval "$(pyenv init -)"' >> ~/.bashrc
   pyenv install 2.7.1
   ```
 
+# FAQ
+## 支持 YouCompleteMe
+需要在 `.bashrc` 加入下面命令：
+
+```
+export PYTHON_CONFIGURE_OPTS="--enable-shared"
+```
+
 
 
 
