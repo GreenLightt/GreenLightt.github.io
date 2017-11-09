@@ -17,6 +17,7 @@ date: 2017-09-28 11:07:54
 # Python
 
 - [Python 官方文档](https://docs.python.org/2.7/library/index.html)
+- [Flask 教程](http://www.pythondoc.com/flask/index.html)
 
 # Database
 ## Redis
