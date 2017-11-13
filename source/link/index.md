@@ -13,6 +13,7 @@ date: 2017-09-28 11:07:54
 - [Laravel 5.1 LTS 速查表](https://cs.laravel-china.org/)
 - [Laravel 学院](http://laravelacademy.org/)
 - [Laravel China](https://laravel-china.org/)
+- [Laravel Excel Docs](http://www.maatwebsite.nl/laravel-excel/docs)
 
 # Python
 
