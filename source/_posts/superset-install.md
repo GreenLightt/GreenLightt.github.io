@@ -77,6 +77,29 @@ superset runserver
 # superset runserver -d
 ```
 
+# 入门操作
+## 连接 mysql
+
+**准备**
+
+`superset` 默认安装是没有准备连接 `mysql` 的环境，因为需要提前准备好连接 `mysql` 的一些工具包及驱动
+
+```
+pip install pymysql
+
+yum -y install mysql-devel
+pip install mysql-python
+```
+
+**新建 mysql 的数据库连接**
+“数据库” 》 “数据源” 》添加新记录
+ 
+数据库名 ： 起一个有标识度，自己能分辨的名称
+`SQLAlchemy URI` ： 例如 `mysql+mysqldb://root:111111@192.168.1.168/test?charset=utf8`
+在SQL工具箱中公开：勾选则可以在 `sql 工具箱`中操作；
+
+点击保存；
+
 
 
 
