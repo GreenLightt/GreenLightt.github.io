@@ -192,6 +192,11 @@ git checkout -b branch_name tags/tag_name
   git config  push.default simple
  ```
 
+3. 颜色
+ ```
+ git config color.ui auto
+ ```
+
 ## 中文文件名乱码
 `git` 默认中文文件名是 `\xxx\xxx` 等八进制形式，是因为对 `0x80` 以上的字符进行 `quote`，执行以下命令：
 
