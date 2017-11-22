@@ -99,11 +99,3 @@ pip install mysql-python
 在SQL工具箱中公开：勾选则可以在 `sql 工具箱`中操作；
 
 点击保存；
-
-
-
-
-
-
-
-
