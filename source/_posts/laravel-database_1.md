@@ -1,5 +1,5 @@
 ﻿---
-title: Laravel 大将之 Database 模块 之 原生 SQL 及 查询构建器
+title: Laravel 用法之 Database 模块 之 原生 SQL 及 查询构建器
 date: 2017-12-20 18:06:41
 description: 参考 Laravel 学院的数据库相关文章整理原生SQL命令及查询构建器的使用
 tags:
