@@ -11,6 +11,8 @@ categories:
 # 简介
 `Laravel`的日志模块位于`Illuminate/Log`文件夹下；通过封装`Monolog`插件提供日志服务；
 
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Log.html](https://laravel.com/api/5.4/Illuminate/Log.html)
+
 # 配置
 ## 配置文件
 在`config/app.php`文件中关于日志模块的配置项有两个，分别如下：

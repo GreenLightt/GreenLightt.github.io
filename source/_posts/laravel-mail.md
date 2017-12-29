@@ -13,6 +13,8 @@ copyright: false
 
 `Laravel` 基于目前流行的 `SwiftMailer` 库提供了一套干净清爽的邮件 `API`。`Laravel` 为 `SMTP`、`Mailgun`、`Mandrill`、`Amazon SES`、`PHP` 的 `mail` 函数，以及`sendmail`提供了驱动，从而允许你快速通过本地或云服务发送邮件。
 
+官方 `API` 地址 [https://laravel.com/api/5.1/Illuminate/Mail.html](https://laravel.com/api/5.1/Illuminate/Mail.html)
+
 # 文件结构
 `Mail` 模块的文件格局及功能如下图所示：
 

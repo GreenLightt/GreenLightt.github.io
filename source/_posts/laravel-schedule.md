@@ -11,6 +11,8 @@ copyright: false
 
 本文转载[[ Laravel 5.1 文档 ] 服务 —— 任务调度](http://laravelacademy.org/post/235.html)
 
+官方 `API` 地址 [https://laravel.com/api/5.1/Illuminate/Console/Scheduling.html](https://laravel.com/api/5.1/Illuminate/Console/Scheduling.html)
+
 在以前，开发者需要为每一个需要调度的任务编写一个 `Cron` 条目，这是很让人头疼的事。你的任务调度不在源码控制中，你必须使用 `SSH` 登录到服务器然后添加这些 `Cron` 条目。`Laravel` 命令调度器允许你平滑而又富有表现力地在 `Laravel` 中定义命令调度，并且服务器上只需要一个 `Cron` 条目即可。
 
 任务调度定义在 `app/Console/Kernel.php` 文件的 `schedule` 方法中，该方法中已经包含了一个示例。你可以自由地添加你需要的调度任务到 `Schedule` 对象。

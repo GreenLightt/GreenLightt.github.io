@@ -9,6 +9,7 @@ categories:
 ---
 
 # 简介
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Redis.html](https://laravel.com/api/5.4/Illuminate/Redis.html)
 
 `Redis`模块负责与`Redis`数据库交互，并提供`Redis`的相关API支持；
 

@@ -11,6 +11,8 @@ copyright: false
 
 本文转载 [[ Laravel 5.1 文档 ] 服务 —— 文件系统/云存储](http://laravelacademy.org/post/200.html#ipt_kb_toc_200_8)
 
+官方 `API` 地址 [https://laravel.com/api/5.1/Illuminate/Filesystem.html](https://laravel.com/api/5.1/Illuminate/Filesystem.html)
+
 基于`Frank de Jonge` 的PHP包 `Flysystem`，`Laravel` 提供了强大的文件系统抽象。Laravel文件系统集成提供了使用驱动处理本地文件系统的简单使用，这些驱动包括 `Amazon S3`，以及 `Rackspace` 云存储。此外在这些存储选项间切换非常简单，因为对每个系统而言，`API` 是一样的。
 
 # 基本使用

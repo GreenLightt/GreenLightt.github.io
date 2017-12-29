@@ -11,6 +11,8 @@ copyright: false
 
 本文是基于`Laravel 5.4`版本的广播模块代码进行分析书写；
 
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Broadcasting.html](https://laravel.com/api/5.4/Illuminate/Broadcasting.html)
+
 # 简介
 广播是指发送方发送一条消息，订阅频道的各个接收方都能及时收到消息；比如 `A`同学写了一篇文章，这时候 `B`同学在文章底下评论了，`A`同学在页面上是不用刷新就能收到提示`有文章被评论了`，这个本质上就是`A`同学收到了广播消息，这个广播消息是由`B`同学评论这个动作触发了发送广播消息；
 

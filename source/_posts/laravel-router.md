@@ -10,6 +10,8 @@ categories:
 
 本文是基于`Laravel 5.4`版本的路由模块代码进行分析书写；
 
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Routing.html](https://laravel.com/api/5.4/Illuminate/Routing.html)
+
 # 模块组成
 下图展示了路由模块中各个文件的关系，并进行简要说明；
 ![图片描述][1]

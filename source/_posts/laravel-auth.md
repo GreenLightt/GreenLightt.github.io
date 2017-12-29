@@ -11,6 +11,8 @@ copyright: false
 
 本文是基于`Laravel 5.4` 版本的`Auth`模块代码进行分析书写；
 
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Auth.html](https://laravel.com/api/5.4/Illuminate/Auth.html)
+
 # 模块组成
 `Auth`模块从功能上分为用户认证和权限管理两个部分；从文件组成上，`Illuminate\Auth\Passwords`目录下是密码重置或忘记密码处理的小模块，`Illuminate\Auth`是负责用户认证和权限管理的模块，`Illuminate\Foundation\Auth`提供了登录、修改密码、重置密码等一系统列具体逻辑实现；下图展示了`Auth`模块各个文件的关系，并进行简要说明；
 

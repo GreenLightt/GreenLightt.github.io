@@ -11,6 +11,8 @@ copyright: false
 
 本文转载 [[ Laravel 5.1 文档 ] 服务 —— 缓存](http://laravelacademy.org/post/176.html)；
 
+官方 `API` 地址 [https://laravel.com/api/5.1/Illuminate/Cache.html](https://laravel.com/api/5.1/Illuminate/Cache.html)
+
 # 配置
 `Laravel` 为不同的缓存系统提供了统一的 `API`。缓存配置位于 `config/cache.php`。
 

@@ -9,6 +9,8 @@ categories:
 ---
 
 # 简介
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Pagination.html](https://laravel.com/api/5.4/Illuminate/Pagination.html)
+
 分页模块的基本使用有两种：一种是基于查询构建器或`Eloquent`模型，调用`paginate`方法；另一种是手动创建分页器；
 
 `Laravel`框架的分页器不仅实现了数据的分页，而且支持生成`Bootstrap`的分页框，如下图所示

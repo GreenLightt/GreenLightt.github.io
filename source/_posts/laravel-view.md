@@ -11,6 +11,8 @@ copyright: false
 
 本文是基于`Laravel 5.4`版本的`View`模块代码进行分析书写；
 
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/View.html](https://laravel.com/api/5.4/Illuminate/View.html)
+
 # 文件结构
 `View`模块的文件格局及功能如下图所示：
 ![图片描述][1]

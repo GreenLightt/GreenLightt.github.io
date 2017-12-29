@@ -14,6 +14,8 @@ copyright: false
 - [[ Laravel 5.1 文档 ] Eloquent ORM —— 起步](http://laravelacademy.org/post/138.html)
 - [[ Laravel 5.1 文档 ] Eloquent ORM —— 关联关系](http://laravelacademy.org/post/140.html)
 
+官方 `API` 地址 [https://laravel.com/api/5.1/Illuminate/Database.html](https://laravel.com/api/5.1/Illuminate/Database.html);
+
 # 定义模型
 
 ```

@@ -10,6 +10,8 @@ copyright: false
 ---
 
 # 简介
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Container/Container.html](https://laravel.com/api/5.4/Illuminate/Container/Container.html)
+
 服务容器是一个用于管理类依赖和执行依赖注入的强大工具。是整个框架的核心；
 
 几乎所有的服务容器绑定都是在服务提供者中完成。

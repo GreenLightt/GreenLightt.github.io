@@ -12,6 +12,8 @@ copyright: false
 
 本文转载[[ Laravel 5.1 文档 ] 服务 —— 队列](http://laravelacademy.org/post/222.html)
 
+官方 `API` 地址 [https://laravel.com/api/5.1/Illuminate/Queue.html](https://laravel.com/api/5.1/Illuminate/Queue.html)
+
 `Laravel`队列服务为各种不同的后台队列提供了统一的 `API`。队列允许你推迟耗时任务（例如发送邮件）的执行，从而大幅提高`web`请求速度。
 
 队列配置文件存放在 `config/queue.php`。在该文件中你将会找到框架自带的每一个队列驱动的连接配置，包括数据库、`Beanstalkd`、 `IronMQ`、 `Amazon SQS`、 `Redis` 以及同步（本地使用）驱动。其中还包含了一个 `null` 队列驱动以拒绝队列任务。

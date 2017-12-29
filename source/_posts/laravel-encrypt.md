@@ -15,6 +15,11 @@ categories:
 
 在应用程序中使用哪一种加密方式取决于业务需求，基本原则如下：如果被保护数据仅仅用作比较验证，在以后不需要还原成明文形式，则使用`Hash`加密；如果被保护数据在以后需要被还原成明文，则需要使用`Encrypt`加密。
 
+官方 `API` 地址 
+
+- [https://laravel.com/api/5.4/Illuminate/Encryption.html](https://laravel.com/api/5.4/Illuminate/Encryption.html)
+- [https://laravel.com/api/5.4/Illuminate/Hashing.html](https://laravel.com/api/5.4/Illuminate/Hashing.html)
+
 # 使用
 ## `Encrypt`加密
 ### 创建实例

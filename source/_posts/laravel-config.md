@@ -10,6 +10,8 @@ copyright: false
 ---
 
 # 简介
+官方 `API` 地址 [https://laravel.com/api/5.4/Illuminate/Config.html](https://laravel.com/api/5.4/Illuminate/Config.html)
+
 `Laravel`的配置管理模块统一管理项目所需的配置，包括插件所需的配置，从而为容器服务提供支持；
 
 根据`src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php`文件,可以看出`Lavavel`的配置加载流程如下：
