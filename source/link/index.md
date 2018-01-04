@@ -22,6 +22,10 @@ date: 2017-09-28 11:07:54
 - [Flask 教程](http://www.pythondoc.com/flask/index.html)
 
 # Database
+## Mysql
+
+- [MySQL中文参考手册](http://www.yesky.com/imagesnew/software/mysql/manual_toc.html)
+
 ## Redis
 
 - [Redis 命令参考](http://doc.redisfans.com/)
