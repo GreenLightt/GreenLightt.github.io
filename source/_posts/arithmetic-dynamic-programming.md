@@ -3,8 +3,8 @@ title: 算法之动态规划
 date: 2018-01-04 01:35:41
 description: 以代码实例理解动态规划
 tags:
-- Arithmetic
 categories:
+- Arithmetic
 copyright: false
 ---
 
