@@ -1,7 +1,7 @@
 ﻿---
-title: CodeIgniter 框架初次上手
+title: CodeIgniter 框架搭建
 date: 2018-01-10 10:22:41
-description: ci 框架初次上手做记录
+description: ci 框架搭建做记录
 tags:
 - CodeIgniter
 categories:

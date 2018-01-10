@@ -1,7 +1,7 @@
 ﻿---
-title: ThinkPHP 框架初次上手
+title: ThinkPHP 框架搭建
 date: 2018-01-10 11:22:41
-description: thinkphp5 框架初次上手做记录
+description: thinkphp5 框架搭建做记录
 tags:
 - ThinkPHP
 categories:
