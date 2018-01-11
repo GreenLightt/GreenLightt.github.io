@@ -16,7 +16,7 @@ copyright: false
 深度优先搜索在搜索过程中访问某个顶点后，需要递归地访问此顶点的所有未访问过的相邻顶点。
 
 ## N 皇后问题
-**实例，以 `Leetcode 51`题**
+**实例，以 [`Leetcode 51`](https://leetcode.com/problems/n-queens/description/)题**
 
 题目， 在 `N * N`的棋盘上摆放 `N` 个皇后，使得任意两个皇后都不能处于同一行、同一列或同一斜线上；
 
@@ -90,7 +90,7 @@ class Solution(object):
 广度优先遍历是连通图的一种遍历策略。因为它的思想是从一个顶点 `V0` 开始，辐射状地优先遍历其周围较广的区域，故得名。
 
 ## 岛的数量
-**实例，以 `Leetcode 200`题**
+**实例，以 [`Leetcode 200`](https://leetcode.com/problems/number-of-islands/description/)题**
 
 题目， 在一个 2 维数组中， 1 表示岛，0 表示水，求被水环绕的岛的数量；
 
