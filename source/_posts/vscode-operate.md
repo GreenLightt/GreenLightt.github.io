@@ -4,7 +4,7 @@ date: 2018-01-11 21:44:41
 description: 整理 Vscode 日常操作
 tags:
 categories:
-- Editor
+- Develop Tool
 copyright: false
 ---
 
