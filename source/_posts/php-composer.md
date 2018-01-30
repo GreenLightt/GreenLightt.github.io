@@ -77,5 +77,12 @@ composer config repo.packagist composer https://packagist.laravel-china.org
 composer config -g --unset repos.packagist
 ```
 
+# 命令
+
+诊断 `composer` 状态
+
+```
+composer diagnose
+```
 
 
