@@ -8,6 +8,9 @@ date: 2017-09-28 11:07:54
 - [Linux 命令快速搜索](https://jaywcjlove.github.io/linux-command/)
 
 # PHP
+
+- [PHP 中文手册](http://php.net/manual/zh/)
+
 ## Laravel
 
 - [Laravel 5.1 LTS 速查表](https://cs.laravel-china.org/)
