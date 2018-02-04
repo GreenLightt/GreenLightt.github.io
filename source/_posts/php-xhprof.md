@@ -9,9 +9,6 @@ categories:
 - PHP
 ---
 
-# PHP 性能分析工具 xhprof
-
----
 
 `XHProf` 是 `facebook` 开发的一个 `php` 扩展，用于采集 `php` 程序中每个函数的性能开销。采集的数据包括：内存消耗、`CPU` 计算时间、函数执行时长等等。
 

@@ -227,6 +227,7 @@ docker ps -a --filter &quot;exited=1&quot;
 
 ```
 docker logs ${CID}
+# docker logs -f ${CID} 相当于 tailf 查看容器内的标准输出
 ```
 
 ## 运行
