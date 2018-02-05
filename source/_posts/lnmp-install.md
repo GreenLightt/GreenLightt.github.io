@@ -83,7 +83,7 @@ make install
 ```
 cd /usr/local/php7/etc
 
-cp /home/php/php-7.1.9/php.ini-development php.ini
+cp /home/php/php-7.1.9/php.ini-development ../lib/php.ini
 cp php-fpm.conf.default php-fpm.conf
 ```
 
