@@ -1,0 +1,2576 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PHP-Plugin," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍 PHP 二次封装的时间库 Carbon，并列出 API；">
+<meta name="keywords" content="PHP-Plugin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="刨刨 Carbon API">
+<meta property="og:url" content="http://yoursite.com/2017/05/23/php-carbon/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="介绍 PHP 二次封装的时间库 Carbon，并列出 API；">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.531Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="刨刨 Carbon API">
+<meta name="twitter:description" content="介绍 PHP 二次封装的时间库 Carbon，并列出 API；">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/23/php-carbon/"/>
+
+
+
+
+
+  <title>刨刨 Carbon API | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/23/php-carbon/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">刨刨 Carbon API</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T17:25:38+08:00">
+                2017-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍 PHP 二次封装的时间库 Carbon，并列出 API；
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><code>Carbon</code>是对<code>PHP DateTime</code>模块的二次扩展；提供时间格式化，时间计算的功能；</p>
+<ul>
+<li>官方主页为 <a href="http://carbon.nesbot.com/" target="_blank" rel="noopener">http://carbon.nesbot.com/</a>; </li>
+<li><code>Github</code>地址为 <a href="https://github.com/briannesbitt/Carbon" target="_blank" rel="noopener">https://github.com/briannesbitt/Carbon</a>; </li>
+</ul>
+<h1 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h1><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>– src</td>
+<td><code>Carbon</code>源文件</td>
+</tr>
+<tr>
+<td>– src\Carbon</td>
+<td><code>Carbon</code>源文件</td>
+</tr>
+<tr>
+<td>– src\Carbon\CarbonInterval.php</td>
+<td><code>DateInterval</code>类的二次扩展类<code>CarbonInterval</code>；主要用于时差计算；</td>
+</tr>
+<tr>
+<td>– src\Carbon\Carbon.php</td>
+<td><code>DateTime</code>类的二次扩展类<code>Carbon</code>；提供时间计算，格式化输出的功能；</td>
+</tr>
+<tr>
+<td>– src\Carbon\Exceptions</td>
+<td>自定义异常文件夹</td>
+</tr>
+<tr>
+<td>– src\Carbon\Lang</td>
+<td>语言本地化文件夹；<code>Carbon</code>类的<code>diffForHumans</code>方法会用到；</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>– tests</td>
+<td><code>Carbon</code>测试用例文件</td>
+</tr>
+<tr>
+<td>– tests\AbstractTestCase.php</td>
+<td>所有测试文件的父类；提供了<code>执行前初始化</code>和<code>执行后清理</code>的功能, 及其它公共的API；</td>
+</tr>
+<tr>
+<td>– tests\Carbon</td>
+<td>针对<code>src\\Carbon\\Carbon.php</code>的测试用例组</td>
+</tr>
+<tr>
+<td>– tests\CarbonInterval</td>
+<td>针对<code>src\\Carbon\\CarbonInterval.php</code>的测试用例组</td>
+</tr>
+<tr>
+<td>– tests\Localization</td>
+<td>针对<code>src\\Carbon\\Lang</code>的测试用例组</td>
+</tr>
+</tbody>
+</table>
+<h1 id="API-细则"><a href="#API-细则" class="headerlink" title="API 细则"></a>API 细则</h1><p>本篇涉及 <code>API</code> 为 <code>Carbon</code> 1.22.1 版本；</p>
+<h2 id="Carbon"><a href="#Carbon" class="headerlink" title="Carbon"></a>Carbon</h2><h3 id="用途：生成Carbon实例"><a href="#用途：生成Carbon实例" class="headerlink" title="用途：生成Carbon实例"></a>用途：生成<code>Carbon</code>实例</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__construct</td>
+<td>$time(null), $tz(null)</td>
+<td>根据格式化时间字符串和指定时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>instance（static）</td>
+<td>DateTime $dt</td>
+<td>根据 <code>DateTime</code>实例创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>parse（static）</td>
+<td>$time(null), $tz(null)</td>
+<td>根据格式化时间字符串和指定时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>create（static）</td>
+<td>$year(null), $month(null), $day(null), $hour(null), $minute(null), $second(null), $tz(null)</td>
+<td>根据日期和时间创建<code>Carbon</code>实例 如果指定参数为<code>null</code>，会默认使用当前时间的对应值</td>
+</tr>
+<tr>
+<td>createSafe（static）</td>
+<td>$year(null), $month(null), $day(null), $hour(null), $minute(null), $second(null), $tz(null)</td>
+<td>根据日期和时间创建<code>Carbon</code>实例 如果指定参数为<code>null</code>，会默认使用当前时间的对应值; 指定参数不符合规范，会返回异常；</td>
+</tr>
+<tr>
+<td>createFromDate（static）</td>
+<td>$year(null), $month(null), $day(null), $tz(null)</td>
+<td>根据日期创建<code>Carbon</code>实例如果指定参数为<code>null</code>，会默认使用当前时间的对应值</td>
+</tr>
+<tr>
+<td>createFromTime（static）</td>
+<td>$hour(null), $minute(null), $minute(null), $tz(null)</td>
+<td>根据时间创建<code>Carbon</code>实例如果指定参数为<code>null</code>，会默认使用当前时间的对应值</td>
+</tr>
+<tr>
+<td>createFromFormat（static）</td>
+<td>$format, $time, $tz（null）</td>
+<td>根据时间字符串及其对应的<code>format</code>字符串创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>createFromTimestamp（static）</td>
+<td>$timestamp, $tz(null)</td>
+<td>根据时间戳和指定时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>createFromTimestampUTC（static）</td>
+<td>$timestamp</td>
+<td>根据时间戳和<code>utc</code>时区, 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>now（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>today（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间创建<code>Carbon</code>实例，时间重置为 0时0分0秒</td>
+</tr>
+<tr>
+<td>tomorrow（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间，加一天，创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>yesterday（static）</td>
+<td>$tx(null)</td>
+<td>根据当前时间， 减一天， 创建<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>minValue（static）</td>
+<td></td>
+<td>创建系统支持的最小时间，并返回<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>maxValue（static）</td>
+<td></td>
+<td>创建系统支持的最大时间，并返回<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>copy</td>
+<td></td>
+<td>复制当前<code>Carbon</code>实例</td>
+</tr>
+<tr>
+<td>fromSerialized（static）</td>
+<td>$value</td>
+<td>解析序列化字符串，创建<code>Carbon</code>实例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：修改Carbon实例"><a href="#用途：修改Carbon实例" class="headerlink" title="用途：修改Carbon实例"></a>用途：修改<code>Carbon</code>实例</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>setDate</td>
+<td>$year, $month, $day</td>
+<td>设置当前实例的年，月，日</td>
+</tr>
+<tr>
+<td>setDateTime</td>
+<td>$year, $month, $day, $hour, $minute, $second(0)</td>
+<td>设置当前实例的年，月，日，时，分，秒</td>
+</tr>
+<tr>
+<td>setTimeFromTimeString</td>
+<td>$time</td>
+<td>根据 <code>H:i:s</code> 字符串设置当前实例时间</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>$value</td>
+<td>根据时间戳设置当前实例时间</td>
+</tr>
+<tr>
+<td>second</td>
+<td>$value</td>
+<td>设置当前实例时间指定秒</td>
+</tr>
+<tr>
+<td>minute</td>
+<td>$value</td>
+<td>设置当前实例时间指定分钟</td>
+</tr>
+<tr>
+<td>hour</td>
+<td>$value</td>
+<td>设置当前实例时间指定小时</td>
+</tr>
+<tr>
+<td>day</td>
+<td>$value</td>
+<td>设置当前实例时间指定天</td>
+</tr>
+<tr>
+<td>month</td>
+<td>$value</td>
+<td>设置当前实例时间指月份</td>
+</tr>
+<tr>
+<td>year</td>
+<td>$value</td>
+<td>设置当前实例时间指定年份</td>
+</tr>
+<tr>
+<td>startOfDay</td>
+<td></td>
+<td>重置当前实例时间为 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfDay</td>
+<td></td>
+<td>重置当前实例时间为 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfWeek</td>
+<td></td>
+<td>重置当前实例时间为 本周的第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfWeek</td>
+<td></td>
+<td>重置当前实例时间为 本周的最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfMonth</td>
+<td></td>
+<td>重置当前实例时间为 本月第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfMonth</td>
+<td></td>
+<td>重置当前实例时间为 本月最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfQuarter</td>
+<td></td>
+<td>重置当前实例时间为 本季度第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfQuarter</td>
+<td></td>
+<td>重置当前实例时间为 本季度最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfYear</td>
+<td></td>
+<td>重置当前实例时间为 本年第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfYear</td>
+<td></td>
+<td>重置当前实例时间为 本年最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfDecade</td>
+<td></td>
+<td>重置当前实例时间为 所在十年的第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfDecade</td>
+<td></td>
+<td>重置当前实例时间为 所在十年的最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>startOfCentury</td>
+<td></td>
+<td>重置当前实例时间为 本世纪的第一天，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>endOfCentury</td>
+<td></td>
+<td>重置当前实例时间为 本世纪的最后一天，同时设置 23时59分59秒</td>
+</tr>
+<tr>
+<td>next</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 下一个指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>previous</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 上一个指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nextWeekday</td>
+<td></td>
+<td>重置当前实例时间为 下一个工作日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>previousWeekday</td>
+<td></td>
+<td>重置当前实例时间为 上一个工作日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nextWeekendDay</td>
+<td></td>
+<td>重置当前实例时间为 下一个双休日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>previousWeekendDay</td>
+<td></td>
+<td>重置当前实例时间为 上一个双休日，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>firstOfMonth</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本月第一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nthOfMonth</td>
+<td>$nth, $dayOfWeek</td>
+<td>重置当前实例时间为 本月第<code>n</code>周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>lastOfMonth</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本月最后一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>firstOfQuarter</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 当前季度第一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nthOfQuarter</td>
+<td>$nth, $dayOfWeek</td>
+<td>重置当前实例时间为 当前季度第<code>n</code>周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>lastOfQuarter</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 当前季度最后一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>firstOfYear</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本年第一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>nthOfYear</td>
+<td>$nth, $dayOfWeek</td>
+<td>重置当前实例时间为 本年第<code>n</code>周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>lastOfYear</td>
+<td>$dayOfWeek(null)</td>
+<td>重置当前实例时间为 本年最后一周的指定<code>dayOfWeek</code>，同时设置 0时0分0秒</td>
+</tr>
+<tr>
+<td>average</td>
+<td>Carbon $dt</td>
+<td>重置当前实例时间为 与指定<code>Carbon</code>对象的中间时刻</td>
+</tr>
+<tr>
+<td>modify</td>
+<td>$modify</td>
+<td>按<code>modify</code>字符串重置当前实例时间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：格式化时间"><a href="#用途：格式化时间" class="headerlink" title="用途：格式化时间"></a>用途：格式化时间</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__toString</td>
+<td></td>
+<td>按变量<code>$toStringFormat</code>的格式输出</td>
+</tr>
+<tr>
+<td>toDateString</td>
+<td></td>
+<td>日期格式化输出</td>
+</tr>
+<tr>
+<td>toTimeString</td>
+<td></td>
+<td>时间格式化输出</td>
+</tr>
+<tr>
+<td>toDateTimeString</td>
+<td></td>
+<td>日期时间格式化输出</td>
+</tr>
+<tr>
+<td>toDayDateTimeString</td>
+<td></td>
+<td>格式化输出如 “Fri, Jan 3, 2013 10:50 PM”</td>
+</tr>
+<tr>
+<td>toAtomString</td>
+<td></td>
+<td>格式化输出如 “2012-10-20T14:12:26+00:00”</td>
+</tr>
+<tr>
+<td>toCookieString</td>
+<td></td>
+<td>格式化输出如 “Friday, 02-Jan-2012 14:20:39 UTC”</td>
+</tr>
+<tr>
+<td>toIso8601String</td>
+<td></td>
+<td>同 <code>toAtomString</code></td>
+</tr>
+<tr>
+<td>toRfc822String</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 05 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toRfc850String</td>
+<td></td>
+<td>格式化输出如 “Monday, 15-Aug-05 15:52:01 UTC”</td>
+</tr>
+<tr>
+<td>toRfc1036String</td>
+<td></td>
+<td>格式化输出如 “2005-08-15T15:52:01+0000”</td>
+</tr>
+<tr>
+<td>toRfc1123String</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 2005 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toRfc2822String</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 05 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toRfc3339String</td>
+<td></td>
+<td>同 <code>toAtomString</code></td>
+</tr>
+<tr>
+<td>toRssString</td>
+<td></td>
+<td>格式化输出如 “Mon, 15 Aug 2005 15:52:01 +0000”</td>
+</tr>
+<tr>
+<td>toW3cString</td>
+<td></td>
+<td>格式化输出如 “2005-08-15T15:52:01+00:00”</td>
+</tr>
+<tr>
+<td>toFormattedDateString</td>
+<td></td>
+<td>格式化输出如 “Jan 11, 1999”</td>
+</tr>
+<tr>
+<td>formatLocalized</td>
+<td>$format</td>
+<td>指定格式本地化输出</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：时间判断"><a href="#用途：时间判断" class="headerlink" title="用途：时间判断"></a>用途：时间判断</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>eq</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例与指定<code>Carbon</code>对象时间是否一样</td>
+</tr>
+<tr>
+<td>equalTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>eq</code> 方法</td>
+</tr>
+<tr>
+<td>ne</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例与指定<code>Carbon</code>对象时间是否不相同</td>
+</tr>
+<tr>
+<td>notEqualTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>ne</code> 方法</td>
+</tr>
+<tr>
+<td>gt</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否大于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>greaterThan</td>
+<td>Carbon $dt</td>
+<td>同 <code>gt</code> 方法</td>
+</tr>
+<tr>
+<td>gte</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否大于等于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>greaterThanOrEqualTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>gte</code> 方法</td>
+</tr>
+<tr>
+<td>lt</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否小于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>lessThan</td>
+<td>Carbon $dt</td>
+<td>同 <code>lt</code> 方法</td>
+</tr>
+<tr>
+<td>lte</td>
+<td>Carbon $dt</td>
+<td>判断当前<code>Carbon</code>实例是否小于等于指定<code>Carbon</code>对象时间</td>
+</tr>
+<tr>
+<td>lessThanOrEqualTo</td>
+<td>Carbon $dt</td>
+<td>同 <code>lte</code> 方法</td>
+</tr>
+<tr>
+<td>between</td>
+<td>Carbon $dt1, Carbon $dt2, $equal(true)</td>
+<td>判断当前<code>Carbon</code>实例是否在指定<code>Carbon</code>对象时间之间， 第三个参数表示是否可以等于指定<code>Carbon</code>对象</td>
+</tr>
+<tr>
+<td>min</td>
+<td>Carbon $dt</td>
+<td>获取当前实例与指定<code>Carbon</code>对象中，最小的对象</td>
+</tr>
+<tr>
+<td>minimum</td>
+<td>Carbon $dt</td>
+<td>同<code>min</code></td>
+</tr>
+<tr>
+<td>max</td>
+<td>Carbon $dt</td>
+<td>获取当前实例与指定<code>Carbon</code>对象中，最大的对象</td>
+</tr>
+<tr>
+<td>maximum</td>
+<td>Carbon $dt</td>
+<td>同<code>max</code></td>
+</tr>
+<tr>
+<td>closest</td>
+<td>Carbon $dt1, Carbon $dt2</td>
+<td>获取最接近当前实例时间的<code>Carbon</code>对象</td>
+</tr>
+<tr>
+<td>farthest</td>
+<td>Carbon $dt1, Carbon $dt2</td>
+<td>获取最不接近当前实例时间的<code>Carbon</code>对象</td>
+</tr>
+<tr>
+<td>isSameAs</td>
+<td>$format, Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象的<code>format</code>格式化结果是否相同</td>
+</tr>
+<tr>
+<td>isSameDay</td>
+<td>Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象是否是同一天</td>
+</tr>
+<tr>
+<td>isSameMonth</td>
+<td>Carbon $dt(null), $ofSameYear(false)</td>
+<td>判断当前实例与指定<code>Carbon</code>对象月份是否相同</td>
+</tr>
+<tr>
+<td>isBirthday</td>
+<td>Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象月日数是否相同</td>
+</tr>
+<tr>
+<td>isSameYear</td>
+<td>Carbon $dt</td>
+<td>判断当前实例与指定<code>Carbon</code>对象年份是否相同</td>
+</tr>
+<tr>
+<td>isSunday</td>
+<td></td>
+<td>判断当前实例是否是周日</td>
+</tr>
+<tr>
+<td>isMonday</td>
+<td></td>
+<td>判断当前实例是否是周一</td>
+</tr>
+<tr>
+<td>isTuesday</td>
+<td></td>
+<td>判断当前实例是否是周二</td>
+</tr>
+<tr>
+<td>isWednesday</td>
+<td></td>
+<td>判断当前实例是否是周三</td>
+</tr>
+<tr>
+<td>isThursday</td>
+<td></td>
+<td>判断当前实例是否是周四</td>
+</tr>
+<tr>
+<td>isFriday</td>
+<td></td>
+<td>判断当前实例是否是周五</td>
+</tr>
+<tr>
+<td>isSaturday</td>
+<td></td>
+<td>判断当前实例是否是周六</td>
+</tr>
+<tr>
+<td>isYesterday</td>
+<td></td>
+<td>判断当前实例是否是昨天</td>
+</tr>
+<tr>
+<td>isToday</td>
+<td></td>
+<td>判断当前实例是否是今天</td>
+</tr>
+<tr>
+<td>isTomorrow</td>
+<td></td>
+<td>判断当前实例是否是明天</td>
+</tr>
+<tr>
+<td>isWeekday</td>
+<td></td>
+<td>判断当前实例是否属于工作日</td>
+</tr>
+<tr>
+<td>isWeekend</td>
+<td></td>
+<td>判断当前实例是否属于周末双休</td>
+</tr>
+<tr>
+<td>isLastWeek</td>
+<td></td>
+<td>判断当前实例是否属于上周</td>
+</tr>
+<tr>
+<td>isNextWeek</td>
+<td></td>
+<td>判断当前实例是否属于下一周</td>
+</tr>
+<tr>
+<td>isLastMonth</td>
+<td></td>
+<td>判断当前实例是否属于上一个月</td>
+</tr>
+<tr>
+<td>isCurrentMonth</td>
+<td></td>
+<td>判断当前实例是否属于当前月</td>
+</tr>
+<tr>
+<td>isNextMonth</td>
+<td></td>
+<td>判断当前实例是否属于下一个月</td>
+</tr>
+<tr>
+<td>isLastYear</td>
+<td></td>
+<td>判断当前实例是否属于去年</td>
+</tr>
+<tr>
+<td>isCurrentYear</td>
+<td></td>
+<td>判断当前实例是否属于当前年</td>
+</tr>
+<tr>
+<td>isNextYear</td>
+<td></td>
+<td>判断当前实例是否属于下一年</td>
+</tr>
+<tr>
+<td>isLeapYear</td>
+<td></td>
+<td>判断当前实例是否属于闰年</td>
+</tr>
+<tr>
+<td>isLongYear</td>
+<td></td>
+<td>判断当前实例是否属于长年，即一年不只有52个星期</td>
+</tr>
+<tr>
+<td>isPast</td>
+<td></td>
+<td>判断当前实例是否属于过去</td>
+</tr>
+<tr>
+<td>isFuture</td>
+<td></td>
+<td>判断当前实例是否属于未来</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：时间计算"><a href="#用途：时间计算" class="headerlink" title="用途：时间计算"></a>用途：时间计算</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>addSecond</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的秒数，返回当前实例</td>
+</tr>
+<tr>
+<td>subSecond</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的秒数，返回当前实例</td>
+</tr>
+<tr>
+<td>addSeconds</td>
+<td>$value</td>
+<td>同<code>addSecond</code></td>
+</tr>
+<tr>
+<td>subSeconds</td>
+<td>$value</td>
+<td>同<code>subSecond</code></td>
+</tr>
+<tr>
+<td>addMinute</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的分钟数，返回当前实例</td>
+</tr>
+<tr>
+<td>subMinute</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的分钟数，返回当前实例</td>
+</tr>
+<tr>
+<td>addMinutes</td>
+<td>$value</td>
+<td>同<code>addMinute</code></td>
+</tr>
+<tr>
+<td>subMinutes</td>
+<td>$value</td>
+<td>同<code>subMinute</code></td>
+</tr>
+<tr>
+<td>addHour</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的小时数，返回当前实例</td>
+</tr>
+<tr>
+<td>subHour</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的小时数，返回当前实例</td>
+</tr>
+<tr>
+<td>addHours</td>
+<td>$value</td>
+<td>同<code>addHour</code></td>
+</tr>
+<tr>
+<td>subHours</td>
+<td>$value</td>
+<td>同<code>subHour</code></td>
+</tr>
+<tr>
+<td>addDay</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的天数，返回当前实例</td>
+</tr>
+<tr>
+<td>subDay</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的天数，返回当前实例</td>
+</tr>
+<tr>
+<td>addDays</td>
+<td>$value</td>
+<td>同<code>addDay</code></td>
+</tr>
+<tr>
+<td>subDays</td>
+<td>$value</td>
+<td>同<code>subDay</code></td>
+</tr>
+<tr>
+<td>addWeekday</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的工作日数，返回当前实例</td>
+</tr>
+<tr>
+<td>subWeekday</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的工作日数，返回当前实例</td>
+</tr>
+<tr>
+<td>addWeekdays</td>
+<td>$value</td>
+<td>同<code>addWeekday</code></td>
+</tr>
+<tr>
+<td>subWeekdays</td>
+<td>$value</td>
+<td>同<code>subWeekday</code></td>
+</tr>
+<tr>
+<td>addWeek</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的星期数，返回当前实例</td>
+</tr>
+<tr>
+<td>subWeek</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的星期数，返回当前实例</td>
+</tr>
+<tr>
+<td>addWeeks</td>
+<td>$value</td>
+<td>同<code>addWeek</code></td>
+</tr>
+<tr>
+<td>subWeeks</td>
+<td>$value</td>
+<td>同<code>subWeek</code></td>
+</tr>
+<tr>
+<td>addMonth</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数，返回当前实例</td>
+</tr>
+<tr>
+<td>subMonth</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的月数，返回当前实例</td>
+</tr>
+<tr>
+<td>addMonths</td>
+<td>$value</td>
+<td>同<code>addMonth</code></td>
+</tr>
+<tr>
+<td>subMonths</td>
+<td>$value</td>
+<td>同<code>subMonth</code></td>
+</tr>
+<tr>
+<td>addMonthWithOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>subMonthWithOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>addMonthsWithOverflow</td>
+<td>$value</td>
+<td>同<code>addMonthWithOverflow</code></td>
+</tr>
+<tr>
+<td>subMonthsWithOverflow</td>
+<td>$value</td>
+<td>同<code>subMonthWithOverflow</code></td>
+</tr>
+<tr>
+<td>addMonthNoOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（不可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>subMonthNoOverflow</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的月数（不可溢出），返回当前实例</td>
+</tr>
+<tr>
+<td>addMonthsNoOverflow</td>
+<td>$value</td>
+<td>同<code>addMonthNoOverflow</code></td>
+</tr>
+<tr>
+<td>subMonthsNoOverflow</td>
+<td>$value</td>
+<td>同<code>subMonthNoOverflow</code></td>
+</tr>
+<tr>
+<td>addQuarter</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的季度数，返回当前实例</td>
+</tr>
+<tr>
+<td>subQuarter</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的季度数，返回当前实例</td>
+</tr>
+<tr>
+<td>addQuarters</td>
+<td>$value</td>
+<td>同<code>addQuarter</code></td>
+</tr>
+<tr>
+<td>subQuarters</td>
+<td>$value</td>
+<td>同<code>subQuarter</code></td>
+</tr>
+<tr>
+<td>addYear</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的年数，返回当前实例</td>
+</tr>
+<tr>
+<td>subYear</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的年数，返回当前实例</td>
+</tr>
+<tr>
+<td>addYears</td>
+<td>$value</td>
+<td>同<code>addYear</code></td>
+</tr>
+<tr>
+<td>subYears</td>
+<td>$value</td>
+<td>同<code>subYear</code></td>
+</tr>
+<tr>
+<td>addCentury</td>
+<td>$value(1)</td>
+<td>当前实例添加指定数量的世纪数，返回当前实例</td>
+</tr>
+<tr>
+<td>subCentury</td>
+<td>$value(1)</td>
+<td>当前实例减去指定数量的世纪数，返回当前实例</td>
+</tr>
+<tr>
+<td>addCenturies</td>
+<td>$value</td>
+<td>同<code>addCentury</code></td>
+</tr>
+<tr>
+<td>subCenturies</td>
+<td>$value</td>
+<td>同<code>subCentury</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：时间差值比较"><a href="#用途：时间差值比较" class="headerlink" title="用途：时间差值比较"></a>用途：时间差值比较</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diffInSeconds</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的秒数差，前者 - 后者； <code>abs</code>表示是否返回绝对值</td>
+</tr>
+<tr>
+<td>secondsSinceMidnight</td>
+<td></td>
+<td>获取当前实例时间的 0时0分0秒 与当前实例时间的秒差</td>
+</tr>
+<tr>
+<td>secondsUntilEndOfDay</td>
+<td></td>
+<td>获取当前实例时间的 23时59分59秒 与当前实例时间的秒差</td>
+</tr>
+<tr>
+<td>diffInMinutes</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的分钟差, 取整</td>
+</tr>
+<tr>
+<td>diffInHours</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的小时差, 取整</td>
+</tr>
+<tr>
+<td>diffInHoursFiltered</td>
+<td>Closure $callback, Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的(通过回调函数较验的)小时差, 取整</td>
+</tr>
+<tr>
+<td>diffInDays</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的天数差, 取整</td>
+</tr>
+<tr>
+<td>diffInDaysFiltered</td>
+<td>Closure $callback, Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的(通过回调函数较验的)天数差, 取整</td>
+</tr>
+<tr>
+<td>diffInWeekdays</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的工作日数差, 取整</td>
+</tr>
+<tr>
+<td>diffInWeekendDays</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的双休日数差, 取整</td>
+</tr>
+<tr>
+<td>diffInWeeks</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的星期数差, 取整</td>
+</tr>
+<tr>
+<td>diffInMonths</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的月数差, 取整</td>
+</tr>
+<tr>
+<td>diffInYears</td>
+<td>Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的年数差, 取整</td>
+</tr>
+<tr>
+<td>diffFiltered</td>
+<td>CarbonInterval $ci， Closure $callback, Carbon $dt(null), $abs(true)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的(通过回调函数较验的)<code>$ci</code>差, 取整</td>
+</tr>
+<tr>
+<td>diffForHumans</td>
+<td>Carbon $other(null), $absolute(false), $short(false)</td>
+<td>获取指定<code>Carbon</code>对象与当前实例时间的时间差，以便于人类阅读的格式呈现</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：Getter-amp-Setter"><a href="#用途：Getter-amp-Setter" class="headerlink" title="用途：Getter &amp; Setter"></a>用途：Getter &amp; Setter</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getDays（static）</td>
+<td></td>
+<td>获取<code>days of the week</code></td>
+</tr>
+<tr>
+<td>getWeekStartsAt（static）</td>
+<td></td>
+<td>获取一周的第一天</td>
+</tr>
+<tr>
+<td>setWeekStartsAt（static）</td>
+<td>$day</td>
+<td>设置一周的第一天</td>
+</tr>
+<tr>
+<td>getWeekEndsAt（static）</td>
+<td></td>
+<td>获取一周的最后一天</td>
+</tr>
+<tr>
+<td>setWeekEndsAt（static）</td>
+<td>$day</td>
+<td>设置一周的最后一天</td>
+</tr>
+<tr>
+<td>getWeekendDays（static）</td>
+<td></td>
+<td>获取双休日（数组）</td>
+</tr>
+<tr>
+<td>setWeekendDays（static）</td>
+<td>$days</td>
+<td>设置双休日</td>
+</tr>
+<tr>
+<td>getTranslator（static）</td>
+<td></td>
+<td>获取<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>setTranslator（static）</td>
+<td>TranslatorInterface $translator</td>
+<td>设置<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>getLocale（static）</td>
+<td></td>
+<td>获取当前本地化语言</td>
+</tr>
+<tr>
+<td>setLocale（static）</td>
+<td>$locale</td>
+<td>设置当前本地化语言</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td>$value</td>
+<td>设置时区</td>
+</tr>
+<tr>
+<td>tz</td>
+<td>$value</td>
+<td>设置时区</td>
+</tr>
+<tr>
+<td>setTimezone</td>
+<td>$value</td>
+<td>设置时区</td>
+</tr>
+<tr>
+<td>setToStringFormat（static）</td>
+<td>$format</td>
+<td>设置变量<code>$toStringFormat</code></td>
+</tr>
+<tr>
+<td>resetToStringFormat（static）</td>
+<td></td>
+<td>设置变量<code>$toStringFormat</code>为默认值</td>
+</tr>
+<tr>
+<td>setTestNow（static）</td>
+<td>$testNow(null)</td>
+<td>设置变量<code>$testNow</code>，测试专用，初始化时的<code>$now</code></td>
+</tr>
+<tr>
+<td>getTestNow（static）</td>
+<td></td>
+<td>获取变量<code>$testNow</code></td>
+</tr>
+<tr>
+<td>hasTestNow（static）</td>
+<td></td>
+<td>判断<code>$testNow</code>是否为空</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：其它"><a href="#用途：其它" class="headerlink" title="用途：其它"></a>用途：其它</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>setUtf8（static）</td>
+<td>$utf8</td>
+<td>设置是否采用 utf8 编码方式</td>
+</tr>
+<tr>
+<td>getLastErrors（static）</td>
+<td></td>
+<td>获取无效时间的错误格式模板</td>
+</tr>
+<tr>
+<td>serialize</td>
+<td></td>
+<td>返回当前实例的序列化字符串</td>
+</tr>
+<tr>
+<td>hasRelativeKeywords（static）</td>
+<td>$time</td>
+<td>判断字符串中是否有指定的关键字</td>
+</tr>
+<tr>
+<td>shouldOverflowMonths（static）</td>
+<td></td>
+<td>获取变量<code>$monthsOverflow</code></td>
+</tr>
+<tr>
+<td>useMonthsOverflow（static）</td>
+<td>$monthsOverflow(true)</td>
+<td>设置变量<code>$monthsOverflow</code></td>
+</tr>
+<tr>
+<td>resetMonthsOverflow（static）</td>
+<td></td>
+<td>重置变量<code>$monthsOverflow</code>为 <code>true</code></td>
+</tr>
+<tr>
+<td>__get</td>
+<td>$name</td>
+<td>魔术方法</td>
+</tr>
+<tr>
+<td>__isset</td>
+<td>$name</td>
+<td>魔术方法</td>
+</tr>
+<tr>
+<td>__set</td>
+<td>$name, $value</td>
+<td>魔术方法</td>
+</tr>
+</tbody>
+</table>
+<h2 id="CarbonInterval"><a href="#CarbonInterval" class="headerlink" title="CarbonInterval"></a>CarbonInterval</h2><h3 id="用途：生成CarbonInterval实例"><a href="#用途：生成CarbonInterval实例" class="headerlink" title="用途：生成CarbonInterval实例"></a>用途：生成<code>CarbonInterval</code>实例</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__construct</td>
+<td>$years(1), $months(null), $weeks(null), $days(null), $hours(null), $minutes(null), $seconds(null)</td>
+<td>创建<code>CarbonInterval</code>实例</td>
+</tr>
+<tr>
+<td>create（static）</td>
+<td>$years(1), $months(null), $weeks(null), $days(null), $hours(null), $minutes(null), $seconds(null)</td>
+<td>创建<code>CarbonInterval</code>实例</td>
+</tr>
+<tr>
+<td>second(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>seconds(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>minute(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>minutes(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>hour(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>hours(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>day(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>days(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>dayz(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>week(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>weeks(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>month(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>months(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>year(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>years(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+<tr>
+<td>instance(static)</td>
+<td>$value</td>
+<td>创建 <code>CarbonInterval</code> 实例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：本地化"><a href="#用途：本地化" class="headerlink" title="用途：本地化"></a>用途：本地化</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>translator（static）</td>
+<td></td>
+<td>初始化<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>getTranslator（static</td>
+<td></td>
+<td>获取<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>setTranslator（static）</td>
+<td>TranslatorInterface $translator</td>
+<td>设置<code>translator</code>实例</td>
+</tr>
+<tr>
+<td>getLocale（static）</td>
+<td></td>
+<td>获取当前本地化语言</td>
+</tr>
+<tr>
+<td>setLocale（static）</td>
+<td>$locale</td>
+<td>设置当前本地化语言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：计算"><a href="#用途：计算" class="headerlink" title="用途：计算"></a>用途：计算</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>add</td>
+<td>DateInterval $interval</td>
+<td>将指定<code>DateInterval</code>的时间叠加到当前实例</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：格式化"><a href="#用途：格式化" class="headerlink" title="用途：格式化"></a>用途：格式化</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spec</td>
+<td></td>
+<td>获取规范的间隔描述字符串</td>
+</tr>
+<tr>
+<td>forHumans</td>
+<td></td>
+<td>获取便于人类阅读的间隔描述字符串</td>
+</tr>
+<tr>
+<td>__toString</td>
+<td></td>
+<td>同<code>forHumans</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="用途：其它-1"><a href="#用途：其它-1" class="headerlink" title="用途：其它"></a>用途：其它</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>__get</td>
+<td></td>
+<td>魔术方法；可操作变量有<code>years</code>/<code>months</code>/<code>dayz</code>/<code>hours</code>/<code>minutes</code>/<code>seconds</code>/<code>weeks</code>/<code>daysExcludeWeeks</code>/<code>dayzExcludeWeeks</code></td>
+</tr>
+<tr>
+<td>__set</td>
+<td></td>
+<td>魔术方法；可操作变量有<code>years</code>/<code>months</code>/<code>dayz</code>/<code>hours</code>/<code>minutes</code>/<code>seconds</code>/<code>weeks</code>/<code>daysExcludeWeeks</code>/<code>dayzExcludeWeeks</code></td>
+</tr>
+<tr>
+<td>__call</td>
+<td></td>
+<td>魔术方法；可操作方法有<code>years</code>/<code>year</code>/<code>months</code>/<code>month</code>/<code>weeks</code>/<code>week</code>/<code>days</code>/<code>dayz</code>/<code>day</code>/<code>hours</code>/<code>hour</code>/<code>minutes</code>/<code>minute</code>/<code>seconds</code>/<code>second</code></td>
+</tr>
+<tr>
+<td>weeksAndDays</td>
+<td>$weeks, $days</td>
+<td>为当前实例的<code>dayz</code>变量赋值为<code>($weeks * Carbon::DAYS_PER_WEEK) + $days</code></td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP-Plugin/" rel="tag"><i class="fa fa-tag"></i> PHP-Plugin</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/01/laravel-log/" rel="prev" title="Laravel 大将之 日志 模块">
+                Laravel 大将之 日志 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件结构"><span class="nav-number">2.</span> <span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API-细则"><span class="nav-number">3.</span> <span class="nav-text">API 细则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Carbon"><span class="nav-number">3.1.</span> <span class="nav-text">Carbon</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：生成Carbon实例"><span class="nav-number">3.1.1.</span> <span class="nav-text">用途：生成Carbon实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：修改Carbon实例"><span class="nav-number">3.1.2.</span> <span class="nav-text">用途：修改Carbon实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：格式化时间"><span class="nav-number">3.1.3.</span> <span class="nav-text">用途：格式化时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：时间判断"><span class="nav-number">3.1.4.</span> <span class="nav-text">用途：时间判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：时间计算"><span class="nav-number">3.1.5.</span> <span class="nav-text">用途：时间计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：时间差值比较"><span class="nav-number">3.1.6.</span> <span class="nav-text">用途：时间差值比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：Getter-amp-Setter"><span class="nav-number">3.1.7.</span> <span class="nav-text">用途：Getter &amp; Setter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：其它"><span class="nav-number">3.1.8.</span> <span class="nav-text">用途：其它</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CarbonInterval"><span class="nav-number">3.2.</span> <span class="nav-text">CarbonInterval</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：生成CarbonInterval实例"><span class="nav-number">3.2.1.</span> <span class="nav-text">用途：生成CarbonInterval实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：本地化"><span class="nav-number">3.2.2.</span> <span class="nav-text">用途：本地化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：计算"><span class="nav-number">3.2.3.</span> <span class="nav-text">用途：计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：格式化"><span class="nav-number">3.2.4.</span> <span class="nav-text">用途：格式化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途：其它-1"><span class="nav-number">3.2.5.</span> <span class="nav-text">用途：其它</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Superset," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Superset 理解示例中的分片">
+<meta name="keywords" content="Superset">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Superset 分析示例数据">
+<meta property="og:url" content="http://yoursite.com/2017/11/22/superset-demo-example/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="Superset 理解示例中的分片">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.532Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Superset 分析示例数据">
+<meta name="twitter:description" content="Superset 理解示例中的分片">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/22/superset-demo-example/"/>
+
+
+
+
+
+  <title>Superset 分析示例数据 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/superset-demo-example/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Superset 分析示例数据</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T23:51:00+08:00">
+                2017-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  Superset 理解示例中的分片
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>superset</code> 默认提供 <code>main</code> 数据库（<code>sqlite db</code>），这个数据库存放整个 <code>superset</code> 系统的用户、角色、权限、数据集等数据，还存放预备的示例数据；</p>
+<p>在数据表栏，默认暴露的数据表有 <code>multiformat_time_series</code>、 <code>birth_france_by_region</code>、 <code>long_lat</code>、 <code>random_time_series</code>、 <code>birth_names</code>、 <code>wb_health_population</code>、 <code>energy_usage</code> 六个；只有管理员才有权利暴露数据库中的哪些数据表可以在 <code>superset</code>中作图表展示；</p>
+<p>切片是每一个要展示图表的最小操作单元，基于暴露的数据表作分析；目前直接在切片页面进行创建，只支持单表；但是在 <code>SQL 工具箱</code>自己写 <code>sql</code> 来创建分片是支持多表关联；</p>
+<p>一系列切片可以放在一个看板（也叫 仪表盘）集中展示；</p>
+<p>下面开始分析各个切片；</p>
+<h1 id="基于-multiformat-time-series-数据表的例子"><a href="#基于-multiformat-time-series-数据表的例子" class="headerlink" title="基于 multiformat_time_series 数据表的例子"></a>基于 <code>multiformat_time_series</code> 数据表的例子</h1><p><code>multiformat_time_series</code> 表记录时间的各种形式；</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ds</td>
+<td>date</td>
+<td>记录创建时间 （只有日期）</td>
+</tr>
+<tr>
+<td>ds2</td>
+<td>datetime</td>
+<td>记录创建时间 （日期加时间）</td>
+</tr>
+<tr>
+<td>epoch_ms</td>
+<td>bigint</td>
+<td>记录时间时的毫秒</td>
+</tr>
+<tr>
+<td>epoch_s</td>
+<td>bigint</td>
+<td>记录时间时的秒</td>
+</tr>
+<tr>
+<td>string0</td>
+<td>varchar(100)</td>
+<td>记录时间，格式如 <code>2017-07-19 06:23:33.000000</code></td>
+</tr>
+<tr>
+<td>string1</td>
+<td>varchar(100)</td>
+<td>记录时间，格式如 <code>2017-07-19^06:23:33</code></td>
+</tr>
+<tr>
+<td>string2</td>
+<td>varchar(100)</td>
+<td>记录时间，格式如 <code>20170719-062333</code></td>
+</tr>
+<tr>
+<td>string3</td>
+<td>varchar(100)</td>
+<td>记录时间，格式如 <code>2017/07/1906:23:33.000000</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h2><h3 id="Calendar-Heatmap-multiformat-0"><a href="#Calendar-Heatmap-multiformat-0" class="headerlink" title="Calendar Heatmap multiformat 0"></a><code>Calendar Heatmap multiformat 0</code></h3><p>图表类型：时间热力图<br>图表意义：类似于 <code>github</code> 上的打卡记录；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>ds</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>1 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br>度量选择 <code>count(*)</code>；</li>
+<li><code>Options</code> 列<br><code>Domain</code> 选择 <code>month</code>， <code>subdomain</code> 选择 <code>day</code>；</li>
+</ol>
+<h1 id="基于-birth-france-by-region-数据表的例子"><a href="#基于-birth-france-by-region-数据表的例子" class="headerlink" title="基于 birth_france_by_region 数据表的例子"></a>基于 <code>birth_france_by_region</code> 数据表的例子</h1><p><code>birth_france_by_region</code> 表记录法国各城市在历年的人口出生数量；</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEPT_ID</td>
+<td>varchar(10)</td>
+<td>法国城市代号</td>
+</tr>
+<tr>
+<td>…</td>
+<td>bigint</td>
+<td>2003 年 2014 年的数据</td>
+</tr>
+<tr>
+<td>date</td>
+<td>date</td>
+<td>记录的创建时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="切片-1"><a href="#切片-1" class="headerlink" title="切片"></a>切片</h2><h3 id="Birth-in-France-by-department-in-2016"><a href="#Birth-in-France-by-department-in-2016" class="headerlink" title="Birth in France by department in 2016"></a><code>Birth in France by department in 2016</code></h3><p>图表类型：国家地图<br>图表意义：直接在国家地图上展现人口数量；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>无穷</code>， <code>Until</code> 选择 <code>无穷</code> </li>
+<li><code>Query</code> 列<br><code>ISO 3166-2</code> 选择 <code>DEPT_ID</code>，  度量选择 <code>avg_2004</code>；</li>
+<li><code>Options</code> 列<br><code>Country Name</code> 选择 <code>France</code>；</li>
+</ol>
+<h1 id="基于-random-time-series-数据表的例子"><a href="#基于-random-time-series-数据表的例子" class="headerlink" title="基于 random_time_series 数据表的例子"></a>基于 <code>random_time_series</code> 数据表的例子</h1><p><code>random_time_series</code> 表只有一列，记录时间；</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ds</td>
+<td>datetime</td>
+<td>时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="切片-2"><a href="#切片-2" class="headerlink" title="切片"></a>切片</h2><h3 id="Calendar-Heatmap"><a href="#Calendar-Heatmap" class="headerlink" title="Calendar Heatmap"></a><code>Calendar Heatmap</code></h3><p>图表类型：时间热力图<br>图表意义：类似于 <code>github</code> 上的打卡记录；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>1 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br>度量选择 <code>count(*)</code>；</li>
+<li><code>Options</code> 列<br><code>Domain</code> 选择 <code>month</code>， <code>subdomain</code> 选择 <code>day</code>；</li>
+</ol>
+<h1 id="基于-birth-names-数据表的例子"><a href="#基于-birth-names-数据表的例子" class="headerlink" title="基于 birth_names 数据表的例子"></a>基于 <code>birth_names</code> 数据表的例子</h1><p><code>birth_names</code> 表记录一些学生的姓名、姓名、居住地、出生日期等信息；</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ds</td>
+<td>datetime</td>
+<td>出生日期</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>varchar(16)</td>
+<td>性别</td>
+</tr>
+<tr>
+<td>name</td>
+<td>varchar(255)</td>
+<td>姓名</td>
+</tr>
+<tr>
+<td>num</td>
+<td>bigint</td>
+<td>数量</td>
+</tr>
+<tr>
+<td>state</td>
+<td>varchar(10)</td>
+<td>所在州</td>
+</tr>
+<tr>
+<td>sum_boys</td>
+<td>bigint</td>
+<td>相同姓名男生的数量</td>
+</tr>
+<tr>
+<td>sum_girls</td>
+<td>bigint</td>
+<td>相同姓名女生的数量</td>
+</tr>
+</tbody>
+</table>
+<h2 id="切片-3"><a href="#切片-3" class="headerlink" title="切片"></a>切片</h2><h3 id="Number-of-Girls"><a href="#Number-of-Girls" class="headerlink" title="Number of Girls"></a><code>Number of Girls</code></h3><p>图表类型：数字<br>图表意义：直接显示女生数量；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br>度量选择 <code>sum__num</code>；</li>
+<li><code>Chart Options</code> 列<br><code>Subheader</code> 选择 <code>total female participants</code></li>
+<li>筛选列<br><code>gender</code>  <code>in</code> <code>girl</code></li>
+</ol>
+<h3 id="Pivot-Table"><a href="#Pivot-Table" class="headerlink" title="Pivot Table"></a><code>Pivot Table</code></h3><p>图表类型：透视表<br>图表意义：二维表展示各州各个姓名的人数；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br><code>Group by</code> 选择 <code>name</code>， <code>columns</code> 选择 <code>state</code>， <code>Metrics</code> 选择 <code>sum__num</code></li>
+<li><code>Pivot Options</code> 列<br><code>Aggregation function</code> 选择 <code>sum</code></li>
+</ol>
+<h3 id="Name-Cloud"><a href="#Name-Cloud" class="headerlink" title="Name Cloud"></a><code>Name Cloud</code></h3><p>图表类型：词汇云<br>图表意义：优雅地展示姓名，字体大小反映使用次数的多寡；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br><code>Series</code> 使用 <code>name</code>， 度量使用 <code>sum__num</code>， <code>Series limit</code> 使用 100</li>
+<li><code>Options</code> 列<br><code>Font Size From</code> 使用 10， <code>Font Size To</code> 使用 70， <code>Rotation</code> 使用 <code>square</code>；</li>
+</ol>
+<h3 id="Title"><a href="#Title" class="headerlink" title="Title"></a><code>Title</code></h3><p>图表类型：标记<br>图表意义：可以显示自定义的 <code>html</code> 代码；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><p><code>Code</code><br><code>Markup Type</code> 选择 <code>html</code><br><code>Code</code> 选择</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"text-align:center"</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Birth Names Dashboard<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">       The source dataset came from</span><br><span class="line">       <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://github.com/hadley/babynames"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span>[here]<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"/static/assets/images/babytux.jpg"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Average-and-Sum-Trends"><a href="#Average-and-Sum-Trends" class="headerlink" title="Average and Sum Trends"></a><code>Average and Sum Trends</code></h3><p>图表类型：<code>Dual Axis Line Chart</code><br>图表意义：反映姓名使用率的平均值与总值随着时间的变化；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Y Axis 1</code> 列<br><code>Left Axis Metrics</code> 选择 <code>avg__num</code>；</li>
+<li><code>Y Axis 2</code> 列<br><code>Right Axis Metrics</code> 选择 <code>sum__num</code>；</li>
+</ol>
+<h3 id="Trends"><a href="#Trends" class="headerlink" title="Trends"></a><code>Trends</code></h3><p>图表类型：时间序列 - 折线图<br>图表意义：反映姓名随着时间的使用率；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br><code>Metrics</code> 选择 <code>sum__num</code>， <code>Group By</code> 选择 <code>name</code>， <code>Series limit</code> 选择 25 （显示多少组数据）；</li>
+</ol>
+<h3 id="Genders-by-State"><a href="#Genders-by-State" class="headerlink" title="Genders by State"></a><code>Genders by State</code></h3><p>图表类型：分布柱状图<br>图表意义：统计各州的男女人数；</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>ds</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br> <code>Metrics</code> 依次选择 <code>sum__sum_girls</code>、<code>sum__sum_boys</code>，<code>Series</code> 选择 <code>state</code>， <code>Row limit</code> 选择 50000;</li>
+<li>筛选列<br><code>state</code>  <code>not in</code> <code>other</code></li>
+</ol>
+<h3 id="Genders"><a href="#Genders" class="headerlink" title="Genders"></a><code>Genders</code></h3><p>图表类型：Pie Chart<br>图表意义：饼图直接反映男女人数的比例大小；</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>ds</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br> <code>Metrics</code> 选择 <code>sum__num</code>，<code>Group By</code> 选择 <code>gender</code>;</li>
+</ol>
+<h3 id="Participants"><a href="#Participants" class="headerlink" title="Participants"></a><code>Participants</code></h3><p>图表类型：数字和趋势线<br>图表意义：直观地反映每年参与的人数走势；</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>ds</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br> 度量选择 <code>sum__num</code></li>
+</ol>
+<h3 id="Boys"><a href="#Boys" class="headerlink" title="Boys"></a><code>Boys</code></h3><p>图表类型：表视图<br>图表意义：表格形式展现男生姓名及人数；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>ds</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>GROUP BY</code> 列<br><code>Group By</code> 选择 <code>name</code>， <code>Metrics</code> 选择 <code>sum__num</code></li>
+<li><code>Options</code> 列<br><code>Row limit</code> 选择 <code>50000</code>， <code>Page Length</code> 选择 <code>0</code></li>
+<li>筛选列<br><code>gender</code> <code>in</code> <code>boy</code> </li>
+</ol>
+<h3 id="Girls"><a href="#Girls" class="headerlink" title="Girls"></a><code>Girls</code></h3><p>图表类型：表视图<br>图表意义：表格形式展现女生姓名及人数；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>ds</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>100 years ago</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>GROUP BY</code> 列<br><code>Group By</code> 选择 <code>name</code>， <code>Metrics</code> 选择 <code>sum__num</code></li>
+<li><code>Options</code> 列<br><code>Row limit</code> 选择 <code>50000</code>， <code>Page Length</code> 选择 <code>0</code></li>
+<li>筛选列<br><code>gender</code> <code>in</code> <code>girl</code> </li>
+</ol>
+<h1 id="基于-wb-health-population-数据表的例子"><a href="#基于-wb-health-population-数据表的例子" class="headerlink" title="基于 wb_health_population 数据表的例子"></a>基于 <code>wb_health_population</code> 数据表的例子</h1><p><code>wb_health_population</code> 表记录不同地域不同国家历年来的人口数量；</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>country_code</td>
+<td>varchar(3)</td>
+<td>国家代号</td>
+</tr>
+<tr>
+<td>country_name</td>
+<td>varchar(255)</td>
+<td>国家名</td>
+</tr>
+<tr>
+<td>region</td>
+<td>varchar(255)</td>
+<td>地区</td>
+</tr>
+<tr>
+<td>year</td>
+<td>datetime</td>
+<td>年份</td>
+</tr>
+<tr>
+<td>…</td>
+<td>float</td>
+<td>该国家在该年份的统计数据</td>
+</tr>
+</tbody>
+</table>
+<h2 id="切片-4"><a href="#切片-4" class="headerlink" title="切片"></a>切片</h2><h3 id="Parallel-Coordinates"><a href="#Parallel-Coordinates" class="headerlink" title="Parallel Coordinates"></a><code>Parallel Coordinates</code></h3><p>图表类型：平行坐标<br>图表意义：未知；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2011-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2011-01-01 00:00:00</code> </li>
+<li><code>Query</code> 列<br><code>Series</code> 选择 <code>country_name</code>， <code>Metrics</code> 依次选择 <code>sum__SP_POP_TOTL</code> 、<code>sum__SP_RUR_TOTL_ZS</code> 和 <code>sum__SH_DYN_AIDS</code>；</li>
+</ol>
+<h3 id="Treemap"><a href="#Treemap" class="headerlink" title="Treemap"></a><code>Treemap</code></h3><p>图表类型：树状图<br>图表意义：根据国家所占长方形面积的大小，直观看出各国家总人口占世界总人口的比例；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>1960-01-01 00:00:00</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br><code>Metrics</code> 选择 <code>sum__SP_POP_TOTAL</code>， <code>Group By</code> 选择 <code>region</code> 和 <code>country_name</code>；也就是以地区和国家分组，统计总人数；</li>
+</ol>
+<h3 id="Box-plot"><a href="#Box-plot" class="headerlink" title="Box plot"></a><code>Box plot</code></h3><p>图表类型：箱线图<br>图表意义：粗略地看出每年地区的人口数是否具有有对称性，分布的分散程度等信息；</p>
+<blockquote>
+<p>箱线图是用数据中的五个统计量：最小值、第一四分位数（Q1）、中位数（Q2）、第三四分位数（Q3）与最大值来描述数据的一种方法</p>
+</blockquote>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>1960-01-01 00:00:00</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br><code>Metrics</code> 选择 <code>sum__SP_POP_TOTAL</code>， <code>Group By</code> 选择 <code>region</code>， <code>Series limit</code> 选择 25 （显示多少组数据）；</li>
+</ol>
+<h3 id="World-39-s-Pop-Growth"><a href="#World-39-s-Pop-Growth" class="headerlink" title="World&#39;s Pop Growth"></a><code>World&#39;s Pop Growth</code></h3><p>图表类型：时间序列-堆积图<br>图表意义：以年为维度，体现世界总人口的变化，以及每个区域人口在任意一个时间大概的占比；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>1960-01-01 00:00:00</code>， <code>Until</code> 选择 <code>now</code> </li>
+<li><code>Query</code> 列<br><code>Metrics</code> 选择 <code>sum__SP_POP_TOTAL</code>， <code>Group By</code> 选择 <code>region</code>， <code>Series limit</code> 选择 25 （显示多少组数据）；</li>
+</ol>
+<h3 id="Rural-Breakdown"><a href="#Rural-Breakdown" class="headerlink" title="Rural Breakdown"></a><code>Rural Breakdown</code></h3><p>图表类型：环状层次图<br>图表意义：查看某一年，国家人口占世界人口的百分比，国家人口占地域人口的百分比，国家农村人口占国家总人口的百分比；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2011-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2011-01-01 00:00:00</code> </li>
+<li><code>Query</code> 列<br><code>Hierarchy</code> 依次选择 <code>region</code>、<code>country_name</code>,   <code>Primary Metric</code> 选择 <code>sum__SP_POP_TOTAL</code>，  <code>Secondary Metric</code> 选择 <code>sum__SP_RUR_TOTAL</code>， <code>Row limit</code> 选择 50000 （数据记录 <code>Limit</code> 值）；</li>
+</ol>
+<h3 id="Life-Expectancy-VS-Rural"><a href="#Life-Expectancy-VS-Rural" class="headerlink" title="Life Expectancy VS Rural %"></a><code>Life Expectancy VS Rural %</code></h3><p>图表类型：气泡图<br>图表意义：未知；<br>国表特点：根据国家的两个数据作 <code>x轴</code> 和 <code>y轴</code> 的定位，气泡大小取决于给定的 <code>sum__SP_POP_TOTL</code> 值</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2011-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2011-01-02 00:00:00</code> </li>
+<li><code>Query</code> 列<br><code>Series</code> 选择 <code>region</code>， <code>Entity</code> 选择 <code>country_name</code>， <code>Bubble Size</code> 选择 <code>sum_SP_POP_TOTL</code>， <code>Series limit</code>选择 0（列出所有组数据）</li>
+<li>筛选列<br><code>country_code</code> <code>not in</code>  [ <code>TCA</code>、 <code>MNP</code>、 <code>DMA</code>、 <code>MHL</code>、<code>MCO</code>、<code>SXM</code>、<code>CYM</code>、 <code>TUV</code>、<code>IMY</code>、<code>KNA</code>、<code>ASM</code>、<code>ADO</code>、<code>AMA</code>、<code>PLW</code> ]</li>
+<li><code>Bubbles</code> 列<br><code>Bubbles Size</code> 选择 <code>sum__SP_POP_TOTL</code>， <code>Max Bubble Size</code> 选择 25</li>
+<li><code>X Axis</code> 列<br><code>X Axis</code> 选择 <code>sum__SP_RUR_TOTL_ZS</code></li>
+<li><code>Y Axis</code> 列<br><code>Y Axis</code> 选择 <code>sum__SP_DYN_LE00_IN</code></li>
+</ol>
+<h3 id="Rural"><a href="#Rural" class="headerlink" title="% Rural"></a><code>% Rural</code></h3><p>图表类型：世界地图<br>图表意义：以世界地图的方式展现国家总人口和农村人口比例；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2014-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2014-01-02 00:00:00</code> </li>
+<li><code>Query</code> 列<br><code>Country Control</code> 选择 <code>country_code</code>， <code>Country Field Type</code> 选择 <code>code ISO 3166-1 alpha-3(cca3)</code>， <code>Metric for color</code> 选择 <code>sum_SP_RUR_TOTL_ZS</code>；</li>
+<li><code>Bubbles</code> 列<br><code>Bubbles Size</code> 选择 <code>sum__SP_POP_TOTL</code>， <code>Max Bubble Size</code> 选择 25； 气泡显示国家总人口；</li>
+</ol>
+<h3 id="Growth-Rate"><a href="#Growth-Rate" class="headerlink" title="Growth Rate"></a><code>Growth Rate</code></h3><p>图表类型：时间序列-折线图<br>图表意义：折线的方式体现各个国家人口增长的走势；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>1960-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2014-01-02 00:00:00</code> </li>
+<li><code>Query</code> 列<br><code>Metrics</code> 选择 <code>sum__SP_POP_TOTAL</code>， <code>Group By</code> 选择 <code>country_name</code>， <code>Series limit</code> 选择 25 （显示多少组数据）；</li>
+<li><code>Advanced Analytics</code> 列<br><code>Peroid Ratio</code> 选择 <code>10</code> (意义还不清楚)；</li>
+</ol>
+<h3 id="Most-Populated-Countries"><a href="#Most-Populated-Countries" class="headerlink" title="Most Populated Countries"></a><code>Most Populated Countries</code></h3><p>图表类型：表视图<br>图表意义：表格形式展现国家人口；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2000-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2014-01-02 00:00:00</code> </li>
+<li><code>GROUP BY</code> 列<br><code>Group By</code> 选择 <code>country_name</code>， <code>Metrics</code> 选择 <code>sum__SP_POP_TOTAL</code></li>
+<li><code>Options</code> 列<br><code>Row limit</code> 选择 <code>50000</code>， <code>Page Length</code> 选择 <code>0</code></li>
+</ol>
+<h3 id="World-39-s-Population"><a href="#World-39-s-Population" class="headerlink" title="World&#39;s Population"></a><code>World&#39;s Population</code></h3><p>图表类型：数字和趋势线<br>图表意义：暴力展示世界总人口的走势和数字；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2014-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2014-01-02 00:00:00</code> </li>
+<li><code>Query</code> 列<br>度量选择 <code>sum__SP_POP_TOTAL</code></li>
+<li><code>Chart Options</code> 列<br><code>Comparison Period Lag</code> 选择 <code>1</code>， <code>Comparison suffix</code> 选择 <code>年增长率</code></li>
+</ol>
+<h3 id="Region-Filter"><a href="#Region-Filter" class="headerlink" title="Region Filter"></a><code>Region Filter</code></h3><p>图表类型：<code>Filter Box</code><br>图表显示：一个输入框，列出地域名（阴影表示人口数）或国家名（阴影表示人口数）；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Time</code> 列<br> 对指定的时间列作筛选，时间字段选择 <code>year</code> ， <code>Time Grain</code> 时间间隔选择 <code>Time Column</code>值（也就是每一个记录值都是一个时间节点）， <code>Since</code> 选择 <code>2014-01-01 00:00:00</code>， <code>Until</code> 选择 <code>2014-01-02 00:00:00</code> </li>
+<li><code>Query</code> 列<br><code>Filter controls</code> 选择 <code>region</code> 和 <code>country_name</code>； 度量选择 <code>sum_SP_POP_TOTAL</code></li>
+</ol>
+<h1 id="基于-energy-usage-数据表的例子"><a href="#基于-energy-usage-数据表的例子" class="headerlink" title="基于 energy_usage 数据表的例子"></a>基于 <code>energy_usage</code> 数据表的例子</h1><p><code>energy_usage</code> 表记录能源的流通；</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>source</td>
+<td>varchar(255)</td>
+<td>能源的来源</td>
+</tr>
+<tr>
+<td>target</td>
+<td>varchar(255)</td>
+<td>能源周转后的形态</td>
+</tr>
+<tr>
+<td>value</td>
+<td>float</td>
+<td>值</td>
+</tr>
+</tbody>
+</table>
+<h2 id="切片-5"><a href="#切片-5" class="headerlink" title="切片"></a>切片</h2><h3 id="Heatmap"><a href="#Heatmap" class="headerlink" title="Heatmap"></a><code>Heatmap</code></h3><p>图表类型：热力图<br>图表意义：看出能源互转的热度与比例；</p>
+<p>复盘：</p>
+<ol>
+<li><code>Query</code> 列<br><code>X</code> 轴选择 <code>source</code>，<code>Y</code> 轴选择 <code>target</code>， 度量选择 <code>sum__value</code></li>
+</ol>
+<h3 id="Energy-Force-Layout"><a href="#Energy-Force-Layout" class="headerlink" title="Energy Force Layout"></a><code>Energy Force Layout</code></h3><p>图表类型：有向图<br>图表意义： 直观地看出能源互转</p>
+<p>复盘：</p>
+<ol>
+<li><code>Query</code> 列<br><code>Source / Target</code> 依次选择 <code>source</code> 和 <code>target</code>， 度量选择 <code>sum__value</code>，<br><code>Row limit</code> 选择 5000 （表示读取多少数据作分析）</li>
+</ol>
+<h3 id="Energy-Sankey"><a href="#Energy-Sankey" class="headerlink" title="Energy Sankey"></a><code>Energy Sankey</code></h3><p>图表类型：蛇形图<br>图表意义： 更好地体现能源周转的值与比例</p>
+<p>复盘：</p>
+<ol>
+<li><code>Query</code> 列<br><code>Source / Target</code> 依次选择 <code>source</code> 和 <code>target</code>， 度量选择 <code>sum__value</code>，<br><code>Row limit</code> 选择 5000 （表示读取多少数据作分析）</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Superset/" rel="tag"><i class="fa fa-tag"></i> Superset</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/21/superset-install/" rel="next" title="Superset 介绍与环境搭建">
+                <i class="fa fa-chevron-left"></i> Superset 介绍与环境搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/27/symfony-finder/" rel="prev" title="Symfony 组件之 Finder">
+                Symfony 组件之 Finder <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-multiformat-time-series-数据表的例子"><span class="nav-number">1.</span> <span class="nav-text">基于 multiformat_time_series 数据表的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切片"><span class="nav-number">1.1.</span> <span class="nav-text">切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Calendar-Heatmap-multiformat-0"><span class="nav-number">1.1.1.</span> <span class="nav-text">Calendar Heatmap multiformat 0</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-birth-france-by-region-数据表的例子"><span class="nav-number">2.</span> <span class="nav-text">基于 birth_france_by_region 数据表的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切片-1"><span class="nav-number">2.1.</span> <span class="nav-text">切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Birth-in-France-by-department-in-2016"><span class="nav-number">2.1.1.</span> <span class="nav-text">Birth in France by department in 2016</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-random-time-series-数据表的例子"><span class="nav-number">3.</span> <span class="nav-text">基于 random_time_series 数据表的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切片-2"><span class="nav-number">3.1.</span> <span class="nav-text">切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Calendar-Heatmap"><span class="nav-number">3.1.1.</span> <span class="nav-text">Calendar Heatmap</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-birth-names-数据表的例子"><span class="nav-number">4.</span> <span class="nav-text">基于 birth_names 数据表的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切片-3"><span class="nav-number">4.1.</span> <span class="nav-text">切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Number-of-Girls"><span class="nav-number">4.1.1.</span> <span class="nav-text">Number of Girls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pivot-Table"><span class="nav-number">4.1.2.</span> <span class="nav-text">Pivot Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Name-Cloud"><span class="nav-number">4.1.3.</span> <span class="nav-text">Name Cloud</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Title"><span class="nav-number">4.1.4.</span> <span class="nav-text">Title</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Average-and-Sum-Trends"><span class="nav-number">4.1.5.</span> <span class="nav-text">Average and Sum Trends</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trends"><span class="nav-number">4.1.6.</span> <span class="nav-text">Trends</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Genders-by-State"><span class="nav-number">4.1.7.</span> <span class="nav-text">Genders by State</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Genders"><span class="nav-number">4.1.8.</span> <span class="nav-text">Genders</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Participants"><span class="nav-number">4.1.9.</span> <span class="nav-text">Participants</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boys"><span class="nav-number">4.1.10.</span> <span class="nav-text">Boys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Girls"><span class="nav-number">4.1.11.</span> <span class="nav-text">Girls</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-wb-health-population-数据表的例子"><span class="nav-number">5.</span> <span class="nav-text">基于 wb_health_population 数据表的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切片-4"><span class="nav-number">5.1.</span> <span class="nav-text">切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Parallel-Coordinates"><span class="nav-number">5.1.1.</span> <span class="nav-text">Parallel Coordinates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Treemap"><span class="nav-number">5.1.2.</span> <span class="nav-text">Treemap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Box-plot"><span class="nav-number">5.1.3.</span> <span class="nav-text">Box plot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#World-39-s-Pop-Growth"><span class="nav-number">5.1.4.</span> <span class="nav-text">World&#39;s Pop Growth</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rural-Breakdown"><span class="nav-number">5.1.5.</span> <span class="nav-text">Rural Breakdown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Life-Expectancy-VS-Rural"><span class="nav-number">5.1.6.</span> <span class="nav-text">Life Expectancy VS Rural %</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rural"><span class="nav-number">5.1.7.</span> <span class="nav-text">% Rural</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Growth-Rate"><span class="nav-number">5.1.8.</span> <span class="nav-text">Growth Rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Most-Populated-Countries"><span class="nav-number">5.1.9.</span> <span class="nav-text">Most Populated Countries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#World-39-s-Population"><span class="nav-number">5.1.10.</span> <span class="nav-text">World&#39;s Population</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Region-Filter"><span class="nav-number">5.1.11.</span> <span class="nav-text">Region Filter</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-energy-usage-数据表的例子"><span class="nav-number">6.</span> <span class="nav-text">基于 energy_usage 数据表的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切片-5"><span class="nav-number">6.1.</span> <span class="nav-text">切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Heatmap"><span class="nav-number">6.1.1.</span> <span class="nav-text">Heatmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Energy-Force-Layout"><span class="nav-number">6.1.2.</span> <span class="nav-text">Energy Force Layout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Energy-Sankey"><span class="nav-number">6.1.3.</span> <span class="nav-text">Energy Sankey</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

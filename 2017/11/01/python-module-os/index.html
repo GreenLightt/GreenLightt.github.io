@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="整理 Python os 模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 模块之 os">
+<meta property="og:url" content="http://yoursite.com/2017/11/01/python-module-os/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="整理 Python os 模块">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.532Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python 模块之 os">
+<meta name="twitter:description" content="整理 Python os 模块">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/01/python-module-os/"/>
+
+
+
+
+
+  <title>Python 模块之 os | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/python-module-os/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python 模块之 os</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-01T11:04:41+08:00">
+                2017-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  整理 Python os 模块
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>os</code> 模块包含普遍的操作系统功能，与具体的平台无关，比如操作文件、目录等；本篇笔记基于 <code>Python 2.7.1</code> 进行描述；</p>
+<h1 id="运行参数"><a href="#运行参数" class="headerlink" title="运行参数"></a>运行参数</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.environ</td>
+<td>一个 <code>mapping</code> 对象表示环境</td>
+</tr>
+<tr>
+<td>os.chdir(path)</td>
+<td>改变当前工作目录到指定的路径</td>
+</tr>
+<tr>
+<td>os.fchdir(fd)</td>
+<td>通过文件描述符改变当前工作目录</td>
+</tr>
+<tr>
+<td>os.getcwd()</td>
+<td>返回当前工作目录</td>
+</tr>
+<tr>
+<td>os.ctermid()</td>
+<td>返回进程控制终端的文件名</td>
+</tr>
+<tr>
+<td>os.getegid()</td>
+<td>返回当前进程有效的 <code>group</code> 的 <code>id</code>；对应于当前进程的可执行文件的”<code>set id</code> “的bit位。</td>
+</tr>
+<tr>
+<td>os.geteuid()</td>
+<td>返回当前进程有效的 <code>user</code> 的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.getgid()</td>
+<td>返回当前进程当前 <code>group</code> 的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.getgroups()</td>
+<td>返回当前进程支持的 <code>groups</code> 的 <code>id</code> 列表</td>
+</tr>
+<tr>
+<td>os.initgroups(username, gid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.getlogin()</td>
+<td>返回进程控制终端登陆用户的名字</td>
+</tr>
+<tr>
+<td>os.getpgid(pid)</td>
+<td>返回 <code>pid</code> 进程的 <code>group id</code>。如果 <code>pid</code> 为 0，返回当前进程的 <code>group id</code></td>
+</tr>
+<tr>
+<td>os.getpgrp()</td>
+<td>返回当前进程组的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.getpid()</td>
+<td>返回当前进程的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.getppid()</td>
+<td>返回当前父进程的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.getresuid()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.getresgid()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.getuid()</td>
+<td>返回当前当前进程用户的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.getenv(varname[, value])</td>
+<td>返回 <code>environment</code> 变量 <code>varname</code> 的值，如果 <code>value</code> 不存在，默认为 <code>None</code></td>
+</tr>
+<tr>
+<td>os.putenv(varname, value)</td>
+<td>设置 <code>varname</code> 环境变量为 <code>value</code> 值。此改变影响以<code>os.system()</code>， <code>popen()</code> 或 <code>fork()</code>和<code>execv()</code>启动的子进程</td>
+</tr>
+<tr>
+<td>os.setegid(egid)</td>
+<td>设置当前进程有效组的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.seteuid(euid)</td>
+<td>设置当前进程有效用户的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.setgid(gid)</td>
+<td>设置当前进程组的 <code>id</code></td>
+</tr>
+<tr>
+<td>os.setgroups(groups)</td>
+<td>设置当前进程支持的 <code>groups id</code> 列表</td>
+</tr>
+<tr>
+<td>os.setpgrp()</td>
+<td>调用 <code>system</code> 的 <code>setpgrp()</code> 或 <code>setpgrp(0, 0)()</code> ，依赖于使用的是哪个版本的 <code>system</code></td>
+</tr>
+<tr>
+<td>os.setpgid(pid, pgrp)</td>
+<td>调用 <code>system</code> 的 <code>setpgid()</code> 设置 <code>pid</code> 进程 <code>group</code> 的 <code>id</code> 为 <code>pgrp</code>。</td>
+</tr>
+<tr>
+<td>os.setregid(rgid, egid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.setresgid(rgid, egid, sgid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.setresuid(ruid, euid, suid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.setreuid(ruid, euid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.getsid(pid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.setsid()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.setuid(uid)</td>
+<td>设置当前 <code>user id</code></td>
+</tr>
+<tr>
+<td>os.strerror(code)</td>
+<td>返回程序中错误 <code>code</code> 的错误信息</td>
+</tr>
+<tr>
+<td>os.umask(mask)</td>
+<td>设置当前权限掩码，同时返回先前的权限掩码</td>
+</tr>
+<tr>
+<td>os.uname()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.unsetenv(varname)</td>
+<td>删除 <code>varname</code> 环境变量</td>
+</tr>
+</tbody>
+</table>
+<h1 id="文件对象创建"><a href="#文件对象创建" class="headerlink" title="文件对象创建"></a>文件对象创建</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.fdopen(fd[, mode[, bufsize]])</td>
+<td>返回一个文件描述符号为 <code>fd</code> 的打开的文件对象。<code>mode</code> 和 <code>bufsize</code> 参数，和内建的 <code>open()</code> 函数是同一个意思</td>
+</tr>
+<tr>
+<td>os.popen(command[, mode[, bufsize]])</td>
+<td>给或从一个 <code>command</code> 打开一个管理。返回一个打开的连接到管道文件对象，文件对象可以读或写</td>
+</tr>
+<tr>
+<td>os.tmpfile()</td>
+<td>返回一个打开的模式为( <code>w+b</code> )的文件对象 .这文件对象没有文件夹入口，没有文件描述符，将会自动删除.</td>
+</tr>
+<tr>
+<td>os.popen2(cmd[, mode[, bufsize]])</td>
+<td></td>
+</tr>
+<tr>
+<td>os.popen3(cmd[, mode[, bufsize]])</td>
+<td></td>
+</tr>
+<tr>
+<td>os.popen4(cmd[, mode[, bufsize]])</td>
+</tr>
+</tbody>
+</table>
+<h1 id="文件描述符操作"><a href="#文件描述符操作" class="headerlink" title="文件描述符操作"></a>文件描述符操作</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.close(fd)</td>
+<td>关闭文件描述符 <code>fd</code></td>
+</tr>
+<tr>
+<td>os.closerange(fd_low, fd_high)</td>
+<td>关闭从<code>fd_low</code>（包含）到 <code>fd_high</code>（不包含）所有的文件描述符</td>
+</tr>
+<tr>
+<td>os.dup(fd)</td>
+<td>返回文件描述符 <code>fd</code> 的 <code>cope</code></td>
+</tr>
+<tr>
+<td>os.dup2(fd, fd2)</td>
+<td>复制文件描述符 <code>fd</code> 到 <code>fd2</code>， 如果有需要首先关闭 <code>fd2</code></td>
+</tr>
+<tr>
+<td>os.fchmod(fd, mode)</td>
+<td>改变文件描述符为 <code>fd</code> 的文件 “<code>mode</code>“ 为 <code>mode</code></td>
+</tr>
+<tr>
+<td>os.fchown(fd, uid, gid)</td>
+<td>改变文件描述符为 <code>fd</code> 的文件的所有者和 <code>group</code> 的 <code>id</code> 为  <code>uid</code> 和 <code>gid</code></td>
+</tr>
+<tr>
+<td>os.fdatasync(fd)</td>
+<td>强制将文件描述符为 <code>fd</code> 的文件写入硬盘. 不强制更新 <code>metadata</code></td>
+</tr>
+<tr>
+<td>os.fpathconf(fd, name)</td>
+<td>返回一个打开的文件的系统配置信息。 <code>name</code> 为检索的系统配置的值，它也许是一个定义系统值的字符串</td>
+</tr>
+<tr>
+<td>os.fstat(fd)</td>
+<td>返回文件描述符 <code>fd</code> 的状态</td>
+</tr>
+<tr>
+<td>os.fstatvfs(fd)</td>
+<td>返回包含文件描述符 <code>fd</code> 的文件的文件系统的信息，像 <code>statvfs()</code></td>
+</tr>
+<tr>
+<td>os.fsync(fd)</td>
+<td>强制将文件描述符为 <code>fd</code> 的文件写入硬盘</td>
+</tr>
+<tr>
+<td>os.ftruncate(fd, length)</td>
+<td>裁剪文件描述符 <code>fd</code> 对应的文件, 所以它最大不能超过文件大小</td>
+</tr>
+<tr>
+<td>os.isatty(fd)</td>
+<td>如果文件描述符 <code>fd</code> 是打开的，同时与 <code>tty(-like)</code>设备相连，则返回 <code>true</code>, 否则 <code>False</code></td>
+</tr>
+<tr>
+<td>os.lseek(fd, pos, how)</td>
+<td>设置文件描述符 <code>fd</code> 当前位置为 <code>pos</code>, <code>how</code>方式修改: <br> <code>SEEK_SET</code> 或者 0 设置从文件开始的计算的 <code>pos</code>; <br> <code>SEEK_CUR</code> 或者 1 则从当前位置计算; <br> <code>os.SEEK_END</code> 或者2则从文件尾部开始</td>
+</tr>
+<tr>
+<td>os.SEEK_SET</td>
+<td></td>
+</tr>
+<tr>
+<td>os.SEEK_CUR</td>
+<td></td>
+</tr>
+<tr>
+<td>os.SEEK_END</td>
+<td></td>
+</tr>
+<tr>
+<td>os.open(file, flags[, mode])</td>
+<td>打开 <code>file</code> 同时根据 <code>flags</code> 设置变量 <code>flags</code> ，如果有 <code>mode</code>，则设置它的<code>mode</code>。 默认的 <code>mode</code> 是 0777 (八进制)</td>
+</tr>
+<tr>
+<td>os.openpty()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.pipe()</td>
+<td>创建一个管道。 返回一对文件描述符(<code>r</code>, <code>w</code>) 分别为读和写</td>
+</tr>
+<tr>
+<td>os.read(fd, n)</td>
+<td>从文件描述符 <code>fd</code> 中读取最多 <code>n</code> 个字节。返回包含读取字节的 <code>string</code>。 文件描述符 <code>fd</code> 对应文件已达到结尾， 返回一个空 <code>string</code></td>
+</tr>
+<tr>
+<td>os.tcgetpgrp(fd)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.tcsetpgrp(fd, pg)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.ttyname(fd)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.write(fd, str)</td>
+<td>写入字符串到文件描述符 <code>fd</code> 中。 返回实际写入的字符串长度</td>
+</tr>
+</tbody>
+</table>
+<h1 id="文件和目录"><a href="#文件和目录" class="headerlink" title="文件和目录"></a>文件和目录</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.access(path, mode)</td>
+<td>使用现在的 <code>uid</code>/<code>gid</code> 尝试访问 <code>path</code></td>
+</tr>
+<tr>
+<td>os.F_OK</td>
+<td>作为 <code>access()</code> 的mode参数，测试 <code>path</code> 是否存在</td>
+</tr>
+<tr>
+<td>os.R_OK</td>
+<td>包含在 <code>access()</code> 的 <code>mode</code> 参数中 ， 测试 <code>path</code> 是否可读</td>
+</tr>
+<tr>
+<td>os.W_OK</td>
+<td>包含在 <code>access()</code> 的 <code>mode</code> 参数中 ，测试 <code>path</code> 是否可写</td>
+</tr>
+<tr>
+<td>os.X_OK</td>
+<td>包含在 <code>access()</code> 的 <code>mode</code> 参数中 ，测试 <code>path</code> 是否可执行</td>
+</tr>
+<tr>
+<td>os.chdir(path)</td>
+<td>改变当前工作目录</td>
+</tr>
+<tr>
+<td>os.fchdir(fd)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.getcwd()</td>
+<td>返回当前工作目录的字符串</td>
+</tr>
+<tr>
+<td>os.getcwdu()</td>
+<td>返回一个当前工作目录的 <code>Unicode</code> 对象</td>
+</tr>
+<tr>
+<td>os.chflags(path, flags)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.chroot(path)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.chmod(path, mode)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.chown(path, uid, gid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.lchflags(path, flags)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.lchmod(path, mode)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.lchown(path, uid, gid)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.link(source, link_name)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.listdir(path)</td>
+<td>返回 <code>path</code> 指定的文件夹包含的文件或文件夹的名字的列表</td>
+</tr>
+<tr>
+<td>os.lstat(path)</td>
+<td>像 <code>stat()</code>，但是没有符号链接。这是 <code>stat()</code> 的别名</td>
+</tr>
+<tr>
+<td>os.mkfifo(path[, mode])</td>
+<td></td>
+</tr>
+<tr>
+<td>os.mknod(filename[, mode=0600[, device=0]])</td>
+<td>创建一个名为 <code>filename</code> 文件系统节点（文件，设备特别文件或者命名 <code>pipe</code>）。 <code>mode</code> 指定创建或使用节点的权限</td>
+</tr>
+<tr>
+<td>os.major(device)</td>
+<td>从原始的设备号中提取设备 <code>major</code> 号码</td>
+</tr>
+<tr>
+<td>os.minor(device)</td>
+<td>从原始的设备号中提取设备 <code>minor</code> 号码</td>
+</tr>
+<tr>
+<td>os.makedev(major, minor)</td>
+<td>以 <code>major</code> 和 <code>minor</code> 设备号组成一个原始设备号</td>
+</tr>
+<tr>
+<td>os.mkdir(path[, mode])</td>
+<td>以数字 <code>mode</code> 的 <code>mode</code> 创建一个名为 <code>path</code> 的文件夹.默认的 <code>mode</code> 是 0777 (八进制)</td>
+</tr>
+<tr>
+<td>os.makedirs(path[, mode])</td>
+<td>递归文件夹创建函数</td>
+</tr>
+<tr>
+<td>os.pathconf(path, name)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.pathconf_names</td>
+<td></td>
+</tr>
+<tr>
+<td>os.readlink(path)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.remove(path)</td>
+<td>删除路径为 <code>path</code> 的文件。如果 <code>path</code>  是一个文件夹，将抛出<code>OSError</code>；</td>
+</tr>
+<tr>
+<td>os.removedirs(path)</td>
+<td>递归删除 <code>directorie</code>。 像 <code>rmdir()</code>, 如果子文件夹成功删除， <code>removedirs()</code> 才尝试它们的父文件夹，直到抛出一个 <code>error</code></td>
+</tr>
+<tr>
+<td>os.rename(src, dst)</td>
+<td>重命名 <code>file</code> 或者 <code>directory src</code> 到 <code>dst</code>。如果 <code>dst</code> 是一个存在的 <code>directory</code>， 将抛出 <code>OSError</code></td>
+</tr>
+<tr>
+<td>os.renames(old, new)</td>
+<td>递归重命名文件夹或者文件</td>
+</tr>
+<tr>
+<td>os.rmdir(path)</td>
+<td>删除 <code>path</code> 文件夹. 仅当这文件夹是空的才可以, 否则, 抛出 <code>OSError</code></td>
+</tr>
+<tr>
+<td>os.stat(path)</td>
+<td>执行一个 <code>stat()</code> 系统调用在给定的 <code>path</code> 上. 返回值是一个对象，属性与 <code>stat</code> 结构成员有关</td>
+</tr>
+<tr>
+<td>os.stat_float_times([newvalue])</td>
+<td>决定 <code>stat_result</code> 是否以 <code>float</code> 对象显示时间戳</td>
+</tr>
+<tr>
+<td>os.statvfs(path)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.symlink(source, link_name)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.tempnam([dir[, prefix]])</td>
+<td>为创建一个临时文件返回一个唯一的 <code>path</code>；<br><strong>警告</strong>: 使用 <code>tempnam()</code> 对于 <code>symlink</code> 攻击是一个漏洞; 考虑使用 <code>tmpfile()</code> 代替</td>
+</tr>
+<tr>
+<td>os.tmpnam()</td>
+<td>为创建一个临时文件返回一个唯一的 <code>path</code></td>
+</tr>
+<tr>
+<td>os.TMP_MAX</td>
+<td>将产生唯一名字的最大数值</td>
+</tr>
+<tr>
+<td>os.unlink(path)</td>
+<td>删除 <code>file</code> 路径. 与 <code>remove()</code> 相同</td>
+</tr>
+<tr>
+<td>os.utime(path, times)</td>
+<td>返回指定的 <code>path</code> 文件的访问和修改的时间。如果时间是 <code>None</code>, 则文件的访问和修改设为当前时间</td>
+</tr>
+<tr>
+<td>os.walk(top, topdown=True, onerror=None, followlinks=False)</td>
+<td>输出在文件夹中的文件名通过在树中游走，向上或者向下.在根目录下的每一个文件夹(包含它自己), 产生 <code>3-tuple</code> (<code>dirpath</code>, <code>dirnames</code>, <code>filenames</code>)【文件夹路径, 文件夹名字, 文件名】</td>
+</tr>
+</tbody>
+</table>
+<h1 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.abort()</td>
+<td>产生一个 <code>SIGABRT</code> 标识到当前的进程</td>
+</tr>
+<tr>
+<td>os.execl(path, arg0, arg1, …)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execle(path, arg0, arg1, …, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execlp(file, arg0, arg1, …)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execlpe(file, arg0, arg1, …, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execv(path, args)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execve(path, args, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execvp(file, args)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.execvpe(file, args, env)</td>
+<td>这些函数将执行一个新程序，替换当前进程； 他们没有返回。在 <code>Unix</code>，新的执行体载入到当前的进程， 同时将和当前的调用者有相同的<code>id</code>。 将报告<code>Errors</code> 当抛出 <code>OSError</code> 时。</td>
+</tr>
+<tr>
+<td>os._exit(n)</td>
+<td>使用状态 <code>n</code> 退出系统，没有调用清理函数，刷新缓冲区。</td>
+</tr>
+<tr>
+<td>os.EX_OK</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_USAGE</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_DATAERR</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_NOINPUT</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_NOUSER</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_NOHOST</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_UNAVAILABLE</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_SOFTWARE</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_OSERR</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_OSFILE</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_CANTCREAT</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_IOERR</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_TEMPFAIL</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_PROTOCOL</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_NOPERM</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_CONFIG</td>
+<td></td>
+</tr>
+<tr>
+<td>os.EX_NOTFOUND</td>
+<td></td>
+</tr>
+<tr>
+<td>os.fork()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.forkpty()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.kill(pid, sig)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.killpg(pgid, sig)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.nice(increment)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.plock(op)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.popen(…)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.popen2(…)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.popen3(…)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.popen4(…)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnl(mode, path, …)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnle(mode, path, …, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnlp(mode, file, …)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnlpe(mode, file, …, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnv(mode, path, args)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnve(mode, path, args, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnvp(mode, file, args)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.spawnvpe(mode, file, args, env)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.P_NOWAIT</td>
+<td></td>
+</tr>
+<tr>
+<td>os.P_NOWAITO</td>
+<td></td>
+</tr>
+<tr>
+<td>os.P_WAIT</td>
+<td></td>
+</tr>
+<tr>
+<td>os.P_DETACH</td>
+<td></td>
+</tr>
+<tr>
+<td>os.P_OVERLAY</td>
+<td></td>
+</tr>
+<tr>
+<td>os.startfile(path[, operation])</td>
+<td></td>
+</tr>
+<tr>
+<td>os.system(command)</td>
+<td>在 <code>shell</code> 中执行 <code>string</code> 命令.</td>
+</tr>
+<tr>
+<td>os.times()</td>
+<td>返回一个 <code>5-tuple</code> 的浮点数字， 表示(处理器或者其它)累积时间， 以秒为单位。 <code>items</code>为：用户时间， 系统<code>time</code>， 子用户<code>time</code>， 子系统<code>time</code>， 和从过去一个固定的点真实流逝的时间</td>
+</tr>
+<tr>
+<td>os.wait()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.waitpid(pid, options)</td>
+<td><code>Unix</code>：等待一个指定的 <code>pid</code> 的子进程完成，返回一个 <code>tuple</code> 返回它的进程<code>id</code>和退出状态 。 一般情况下<code>option</code>设为 0。<br><code>Windows</code>: 等待一个指定的 <code>pid</code> 的进程完成, 返回一个 <code>tuple</code> 返回它的进程 <code>id</code> 和退出状态向左移动了 8 位 。 如果 <code>pid</code> 小于或等于 0 没有特别的意思,将抛出<code>exception</code>。 <code>integer options</code> 没有任何影响。 <code>pid</code> 可以指向任何进程的 <code>id</code>，不一定是子进程的<code>id</code>。</td>
+</tr>
+<tr>
+<td>os.wait3(options)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.wait4(pid, options)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WNOHANG</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WCONTINUED</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WUNTRACED</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WCOREDUMP(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WIFCONTINUED(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WIFSTOPPED(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WIFSIGNALED(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WIFEXITED(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WEXITSTATUS(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WSTOPSIG(status)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.WTERMSIG(status)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="各种各样的系统信息"><a href="#各种各样的系统信息" class="headerlink" title="各种各样的系统信息"></a>各种各样的系统信息</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.curdir</td>
+<td>操作系统用此常数字符串作为当前文件夹的引用。</td>
+</tr>
+<tr>
+<td>os.pardir</td>
+<td>操作系统用此常数字符串作为父文件夹的引用。</td>
+</tr>
+<tr>
+<td>os.sep</td>
+<td>系统使用此字符来分割路径。</td>
+</tr>
+<tr>
+<td>os.altsep</td>
+<td>系统使用另外一个字符来分割路径，如果只有一个分割字符存在，则是 <code>None</code>。</td>
+</tr>
+<tr>
+<td>os.extsep</td>
+<td>分割基本文件名和扩展名的字符。</td>
+</tr>
+<tr>
+<td>os.pathsep</td>
+<td>系统使用此字符来分割搜索路径。如 <code>POSIX</code> 上 ‘<code>:</code>‘，<code>Windows</code>上的’<code>;</code>‘</td>
+</tr>
+<tr>
+<td>os.defpath</td>
+<td>默认的搜索路径</td>
+</tr>
+<tr>
+<td>os.linesep</td>
+<td>当前平台上的换行符字符串。 在 <code>POSIX</code> 上是 ‘<code>\n</code>‘ ,或者 在 <code>Windows</code> 上是 ‘<code>\r\n</code>‘。</td>
+</tr>
+<tr>
+<td>os.devnull</td>
+<td>空设备的文件路径。例如: <code>POSIX</code>上 ‘<code>/dev/null</code>‘。</td>
+</tr>
+<tr>
+<td>os.confstr(name)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.confstr_names</td>
+<td></td>
+</tr>
+<tr>
+<td>os.getloadavg()</td>
+<td></td>
+</tr>
+<tr>
+<td>os.sysconf(name)</td>
+<td></td>
+</tr>
+<tr>
+<td>os.sysconf_names</td>
+</tr>
+</tbody>
+</table>
+<h1 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os.urandom(n)</td>
+<td>随机产生 <code>n</code> 个字节的字符串，可以作为随机加密 <code>key</code> 使用</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/31/linux-vim8/" rel="next" title="Centos 安装 vim 8.0">
+                <i class="fa fa-chevron-left"></i> Centos 安装 vim 8.0
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/08/mysql-data/" rel="prev" title="Mysql 数据类型">
+                Mysql 数据类型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行参数"><span class="nav-number">1.</span> <span class="nav-text">运行参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件对象创建"><span class="nav-number">2.</span> <span class="nav-text">文件对象创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件描述符操作"><span class="nav-number">3.</span> <span class="nav-text">文件描述符操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件和目录"><span class="nav-number">4.</span> <span class="nav-text">文件和目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程管理"><span class="nav-number">5.</span> <span class="nav-text">进程管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#各种各样的系统信息"><span class="nav-number">6.</span> <span class="nav-text">各种各样的系统信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他函数"><span class="nav-number">7.</span> <span class="nav-text">其他函数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

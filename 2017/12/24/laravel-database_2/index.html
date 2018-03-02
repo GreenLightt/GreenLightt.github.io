@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.1," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="参考 Laravel 学院的数据库相关文章整理 模型 ORM 的使用">
+<meta name="keywords" content="Laravel-5.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 用法之 Database 模块  ORM">
+<meta property="og:url" content="http://yoursite.com/2017/12/24/laravel-database_2/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="参考 Laravel 学院的数据库相关文章整理 模型 ORM 的使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.524Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 用法之 Database 模块  ORM">
+<meta name="twitter:description" content="参考 Laravel 学院的数据库相关文章整理 模型 ORM 的使用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/24/laravel-database_2/"/>
+
+
+
+
+
+  <title>Laravel 用法之 Database 模块  ORM | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/laravel-database_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 用法之 Database 模块  ORM</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T14:34:41+08:00">
+                2017-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  参考 Laravel 学院的数据库相关文章整理 模型 ORM 的使用
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h1><ul>
+<li><a href="http://laravelacademy.org/post/138.html" target="_blank" rel="noopener">[ Laravel 5.1 文档 ] Eloquent ORM —— 起步</a></li>
+<li><a href="http://laravelacademy.org/post/140.html" target="_blank" rel="noopener">[ Laravel 5.1 文档 ] Eloquent ORM —— 关联关系</a></li>
+</ul>
+<p>官方 <code>API</code> 地址 <a href="https://laravel.com/api/5.1/Illuminate/Database.html" target="_blank" rel="noopener">https://laravel.com/api/5.1/Illuminate/Database.html</a>;</p>
+<h1 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="keyword">namespace</span> <span class="title">App</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Database</span>\<span class="title">Eloquent</span>\<span class="title">Model</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="class"><span class="keyword">class</span> <span class="title">Flight</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">    <span class="comment">// 如果不指定表名，默认规则是模型类名的复数作为与其对应的表名</span></span></span><br><span class="line"><span class="php">    <span class="keyword">protected</span> $table = <span class="string">'my_flights'</span>; </span></span><br><span class="line"><span class="php">    </span></span><br><span class="line"><span class="php">    <span class="comment">// 默认每张表的主键名为 id</span></span></span><br><span class="line"><span class="php">    <span class="keyword">protected</span> $primaryKey = <span class="string">'flight_id'</span>;</span></span><br><span class="line"><span class="php">    </span></span><br><span class="line"><span class="php">    <span class="comment">// 表明模型是否应该被打上时间戳</span></span></span><br><span class="line"><span class="php">    <span class="keyword">public</span> $timestamps = <span class="keyword">false</span>;</span></span><br><span class="line"><span class="php">    </span></span><br><span class="line"><span class="php">    <span class="comment">// 模型日期列的存储格式</span></span></span><br><span class="line"><span class="php">    <span class="keyword">protected</span> $dateFormat = <span class="string">'U'</span>;</span></span><br><span class="line"><span class="php">    </span></span><br><span class="line"><span class="php">    <span class="comment">// 应该被调整为日期的属性</span></span></span><br><span class="line"><span class="php">    <span class="keyword">protected</span> $dates = [<span class="string">'created_at'</span>, <span class="string">'updated_at'</span>, <span class="string">'disabled_at'</span>];</span></span><br><span class="line"><span class="php">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>注：时间戳格式可以参考 <a href="https://www.cnblogs.com/glory-jzx/archive/2012/09/29/2708396.html" target="_blank" rel="noopener"> PHP Date()函数详细参数</a></p>
+<h2 id="访问器和修改器"><a href="#访问器和修改器" class="headerlink" title="访问器和修改器"></a>访问器和修改器</h2><p>访问器和修改器允许你在获取模型属性或设置其值时格式化 <code>Eloquent</code> 属性。例如，你可能想要使用 <code>Laravel</code> 加密器对存储在数据库中的数据进行加密，并且在 <code>Eloquent</code> 模型中访问时自动进行解密。</p>
+<p>除了自定义访问器和修改器，<code>Eloquent</code> 还可以自动转换日期字段为 <code>Carbon</code> 实例甚至将文本转换为 <code>JSON</code>。</p>
+<p><strong>定义访问器</strong><br>比如，要访问 <code>ORM</code> 模型的 <code>first_name</code> 属性， 可以定义如下的访问器</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法名 使用驼峰式命名规则</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFirstNameAttribute</span><span class="params">($value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ucfirst($value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>定义修改器</strong><br>比如，为 <code>first_name</code> 属性定义一个修改器，当我们为模型上的 <code>first_name</code> 赋值时该修改器会被自动调用：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setFirstNameAttribute</span><span class="params">($value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;attributes[<span class="string">'first_name'</span>] = strtolower($value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="属性转换"><a href="#属性转换" class="headerlink" title="属性转换"></a>属性转换</h2><p>模型中的 <code>$casts</code> 属性提供了便利方法转换属性到通用数据类型。<code>$casts</code> 属性是数组格式，其键是要被转换的属性名称，其值时你想要转换的类型。目前支持的转换类型包括：<code>integer</code>, <code>real</code>, <code>float</code>, <code>double</code>, <code>string</code>, <code>boolean</code>, <code>object</code> 和 <code>array</code>。</p>
+<p>例如，让我们转换 <code>is_admin</code> 属性，将其由 <code>integer</code> 类型转换为 <code>boolean</code> 类型：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 应该被转化为原生类型的属性</span></span><br><span class="line"><span class="keyword">protected</span> $casts = [</span><br><span class="line">    <span class="string">'is_admin'</span> =&gt; <span class="string">'boolean'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>现在，<code>is_admin</code> 属性在被<strong>访问</strong>时总是被转换为 <code>boolean</code>，即使底层存储在数据库中的值是 <code>integer</code>；</p>
+<p><strong>数组转换</strong></p>
+<p><code>array</code> 类型转换在处理被存储为序列化 <code>JSON</code> 的字段是特别有用，例如，如果数据库有一个 <code>TEXT</code> 字段类型包含了序列化 <code>JSON</code>，添加 <code>array</code> 类型转换到该属性将会在 <code>Eloquent</code> 模型中访问其值时自动将其反序列化为 <code>PHP</code> 数组：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 应该被转化为原生类型的属性</span></span><br><span class="line"><span class="keyword">protected</span> $casts = [</span><br><span class="line">    <span class="string">'options'</span> =&gt; <span class="string">'array'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>类型转换被定义后，就可以访问 <code>options</code> 属性，它将会自动从 <code>JSON</code> 反序列化为 <code>PHP</code> 数组，当你设置 <code>options</code> 属性的值时，给定数组将会自动转化为 <code>JSON</code> 以供<strong>存储</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">user = App\User::find(1);</span></span><br><span class="line"><span class="meta">$</span><span class="bash">options = <span class="variable">$user</span>-&gt;options;</span></span><br><span class="line"><span class="meta">$</span><span class="bash">options[<span class="string">'key'</span>] = <span class="string">'value'</span>;</span></span><br><span class="line"><span class="meta">$</span><span class="bash">user-&gt;options = <span class="variable">$options</span>;</span></span><br><span class="line"><span class="meta">$</span><span class="bash">user-&gt;save();</span></span><br></pre></td></tr></table></figure>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>当构建 <code>JSON API</code> 时，经常需要转化模型和关联关系为数组或 <code>JSON</code>。<code>Eloquent</code> 包含便捷方法实现这些转换，以及控制哪些属性被包含到序列化中。</p>
+<p><code>toArray()</code> 转化模型及其加载的关联关系为数组；<br><code>toJson()</code>  转化模型及其加载的关联关系为 <code>JSON</code>；</p>
+<p>你还可以转化模型或集合为字符串，这将会自动调用 <code>toJson</code> 方法：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$user = App\User<span class="type">::find</span>(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">return</span> (<span class="built_in">string</span>) $user;</span><br></pre></td></tr></table></figure>
+<p><strong>追加值到 <code>JSON</code></strong><br>有时候，需要添加数据库中没有相应的字段到数组中，要实现这个，首先要定义一个访问器;<br>定义好访问器后，添加字段名到模型的 <code>appends</code> 属性：<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 追加到模型数组表单的访问器</span></span><br><span class="line"><span class="keyword">protected</span> $appends = <span class="meta">[</span><span class="string">'is_admin'</span><span class="meta">]</span>;</span><br></pre></td></tr></table></figure></p>
+<p>字段被添加到 <code>appends</code> 列表之后，将会被包含到模型数组和 <code>JSON</code> 表单中，<code>appends</code> 数组中的字段还会遵循模型中的 <code>visible</code> 和 <code>hidden</code> 设置配置。</p>
+<p><strong>在 <code>JSON</code> 中隐藏属性显示</strong></p>
+<p>有时候你希望在模型数组或 <code>JSON</code> 显示中限制某些属性，比如密码，要实现这个，在定义模型的时候添加一个 <code>$hidden</code> 属性：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $hidden = <span class="meta">[</span><span class="string">'password'</span><span class="meta">]</span>;</span><br></pre></td></tr></table></figure>
+<p>此外，可以使用 <code>visible</code> 属性定义属性显示的白名单：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $visible = <span class="meta">[</span><span class="string">'first_name'</span>, <span class="string">'last_name'</span><span class="meta">]</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="操作模型"><a href="#操作模型" class="headerlink" title="操作模型"></a>操作模型</h1><h2 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h2><p><code>Eloquent</code> 模型可以触发事件，允许你在模型生命周期中的多个时间点调用如下这些方法：<code>creating</code>, <code>created</code>, <code>updating</code>, <code>updated</code>, <code>saving</code>, <code>saved</code>, <code>deleting</code>, <code>deleted</code>, <code>restoring</code>, <code>restored</code>。事件允许你在一个指定模型类每次保存或更新的时候执行代码。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">boot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">parent</span>::boot();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 注册 已创建事件</span></span><br><span class="line">        <span class="keyword">static</span>::created(<span class="function"><span class="keyword">function</span> <span class="params">($obj)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>想要在数据库中插入新的记录，只需创建一个新的模型实例，设置模型的属性，然后调用  <code>save</code> 方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$flight = <span class="keyword">new</span> Flight;</span><br><span class="line">$flight-&gt;name = $request-&gt;name;</span><br><span class="line">$flight-&gt;save();</span><br></pre></td></tr></table></figure>
+<p><strong>批量赋值</strong><br>还可以使用 <code>create</code> 方法保存一个新的模型。该方法返回被插入的模型实例。但是，在此之前，你需要指定模型的 <code>fillable</code> 或 <code>guarded</code> 属性，因为所有 <code>Eloquent</code> 模型都通过批量赋值（<code>Mass Assignment</code>）进行保护。</p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p><code>save</code> 方法还可以用于更新数据库中已存在的模型。要更新一个模型，应该先获取它，设置你想要更新的属性，然后调用 <code>save</code> 方法。同样，<code>updated_at</code> 时间戳会被自动更新，所以没必要手动设置其值：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$flight</span> = App\<span class="symbol">Flight:</span><span class="symbol">:find</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$flight</span>-&gt;name = <span class="string">'New Flight Name'</span>;</span><br><span class="line"><span class="variable">$flight</span>-&gt;save();</span><br></pre></td></tr></table></figure>
+<p>更新操作还可以同时修改给定查询提供的多个模型实例，在本例中，所有有效且 <code>destination=San Diego</code> 的航班都被标记为延迟：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">App\Flight::<span class="keyword">where</span>(<span class="string">'active'</span>, <span class="number">1</span>)-&gt;<span class="keyword">where</span>(<span class="string">'destination'</span>, <span class="string">'San Diego'</span>)-&gt;update([<span class="string">'delayed'</span> =&gt; <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+<p><code>update</code> 方法要求以数组形式传递键值对参数，代表着数据表中应该被更新的列。</p>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p><strong>实例调用 delete 方法</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$flight</span> = App\<span class="symbol">Flight:</span><span class="symbol">:find</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$flight</span>-&gt;delete();</span><br></pre></td></tr></table></figure>
+<p><strong>主键删除</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">App</span>\<span class="selector-tag">Flight</span><span class="selector-pseudo">::destroy(1)</span>;</span><br><span class="line"><span class="selector-tag">App</span>\<span class="selector-tag">Flight</span><span class="selector-pseudo">::destroy(</span><span class="selector-attr">[1, 2, 3]</span>);</span><br><span class="line"><span class="selector-tag">App</span>\<span class="selector-tag">Flight</span><span class="selector-pseudo">::destroy(1</span>, 2, 3);</span><br></pre></td></tr></table></figure>
+<p><strong>条件查询删除</strong></p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$deletedRows = App\Flight::<span class="keyword">where</span>(<span class="string">'active'</span>, <span class="number">0</span>)-&gt;delete();</span><br></pre></td></tr></table></figure>
+<h3 id="软删除"><a href="#软删除" class="headerlink" title="软删除"></a>软删除</h3><p>除了从数据库删除记录外，<code>Eloquent</code> 还可以对模型进行“软删除”。当模型被软删除后，它们并没有真的从数据库删除，而是在模型上设置一个 <code>deleted_at</code> 属性并插入数据库，如果模型有一个非空 <code>deleted_at</code> 值，那么该模型已经被软删除了。要启用模型的软删除功能，可以使用模型上的<code>Illuminate\Database\Eloquent\SoftDeletestrait</code>并添加 <code>deleted_at</code> 列到 <code>$dates</code> 属性：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">use <span class="type">Illuminate</span>\<span class="type">Database</span>\<span class="type">Eloquent</span>\<span class="type">Model</span>;</span><br><span class="line">use <span class="type">Illuminate</span>\<span class="type">Database</span>\<span class="type">Eloquent</span>\<span class="type">SoftDeletes</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flight</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    use <span class="type">SoftDeletes</span>;</span><br><span class="line">    <span class="comment">// 应该被调整为日期的属性</span></span><br><span class="line">    <span class="keyword">protected</span> $dates = [<span class="symbol">'deleted_a</span>t'];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，当调用模型的 <code>delete</code> 方法时，<code>deleted_at</code> 列将被设置为当前日期和时间，并且，当查询一个使用软删除的模型时，被软删除的模型将会自动从查询结果中排除。</p>
+<p>判断给定模型实例是否被软删除，可以使用 <code>trashed</code> 方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($flight-&gt;trashed()) &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>软删除模型将会自动从查询结果中排除，但是，如果你想要软删除模型出现在查询结果中，可以使用 <code>withTrashed</code> 方法：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$flights = App\Flight::withTrashed()-&gt;<span class="keyword">where</span>(<span class="string">'account_id'</span>, <span class="number">1</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+<p>只获取软删除模型 <code>onlyTrashed</code></p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$flights = App\Flight::onlyTrashed()-&gt;<span class="keyword">where</span>(<span class="string">'airline_id'</span>, <span class="number">1</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+<p>恢复软删除模型</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$flight-&gt;restore();</span><br><span class="line"></span><br><span class="line">App\Flight::withTrashed()-&gt;<span class="keyword">where</span>(<span class="string">'airline_id'</span>, <span class="number">1</span>)-&gt;restore();</span><br></pre></td></tr></table></figure>
+<p>永久删除模型</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 强制删除单个模型实例...</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$flight</span>-&gt;forceDelete();</span></span><br></pre></td></tr></table></figure>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><p>作用域允许你定义一个查询条件的通用集合，这样就可以在应用中方便地复用。例如，你需要频繁获取最受欢迎的用户，要定义一个作用域，只需要简单的在 <code>Eloquent</code> 模型方法前加上一个 <code>scope</code> 前缀：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">scopeActive</span><span class="params">($query)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $query-&gt;where(<span class="string">'active'</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h1><h2 id="一对一"><a href="#一对一" class="headerlink" title="一对一"></a>一对一</h2><p>比如，用户关联手机</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    public function phone() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;hasOne(<span class="symbol">'App</span>\<span class="type">Phone</span>');</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Phone</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    public function user() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsTo(<span class="symbol">'App</span>\<span class="type">User</span>');</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="一对多"><a href="#一对多" class="headerlink" title="一对多"></a>一对多</h2><p>比如，一篇博客文章拥有无数评论</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    public function comments() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;hasMany(<span class="symbol">'App</span>\<span class="type">Comment</span>');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Comment</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    public function post() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsTo(<span class="symbol">'App</span>\<span class="type">Post</span>');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="多对多"><a href="#多对多" class="headerlink" title="多对多"></a>多对多</h2><p>比如，一个用户有多个角色，同时一个角色被多个用户共用；要定义这样的关联关系，需要三个数据表：<code>users</code>、<code>roles</code> 和 <code>role_user</code>，<code>role_user</code> 表按照关联模型名的字母顺序命名，并且包含 <code>user_id</code> 和 <code>role_id</code> 两个列。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">    public function roles() &#123;</span><br><span class="line">        <span class="comment">// 如果中间表没有按照关联模型名的字母顺序命名</span></span><br><span class="line">        <span class="comment">// return $this-&gt;belongsToMany('App\Role', 'user_roles', 'user_id', 'role_id');</span></span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsToMany(<span class="symbol">'App</span>\<span class="type">Role</span>');</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Role</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    public function users() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsToMany(<span class="symbol">'App</span>\<span class="type">User</span>');</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="中间表"><a href="#中间表" class="headerlink" title="中间表"></a>中间表</h3><p><strong>获取中间表的列</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$user = App\User::find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> ($user-&gt;roles <span class="keyword">as</span> $role) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $role-&gt;pivot-&gt;created_at;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认情况下，只有模型键才能用在 <code>pivot</code> 对象上，如果你的 <code>pivot</code> 表包含额外的属性，必须在定义关联关系时进行指定：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsToMany<span class="function"><span class="params">(<span class="string">'App\Role'</span>)</span>-&gt;</span>withPivot(<span class="string">'column1'</span>, <span class="string">'column2'</span>);</span><br></pre></td></tr></table></figure>
+<p>如果你想要你的 <code>pivot</code> 表自动包含 <code>created_at</code> 和 <code>updated_at</code> 时间戳，在关联关系定义时使用 <code>withTimestamps</code> 方法：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsToMany<span class="function"><span class="params">(<span class="string">'App\Role'</span>)</span>-&gt;</span>withTimestamps();</span><br></pre></td></tr></table></figure>
+<h2 id="远层的一对多"><a href="#远层的一对多" class="headerlink" title="远层的一对多"></a>远层的一对多</h2><p>例如，<code>Country</code> 模型通过中间的 <code>User</code> 模型可能拥有多个 <code>Post</code> 模型。在这个例子中，你可以轻易的聚合给定国家的所有文章，让我们看看定义这个关联关系需要哪些表：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">countries</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    <span class="built_in">name</span> - <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">users</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    country_id - <span class="built_in">integer</span></span><br><span class="line">    <span class="built_in">name</span> - <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">posts</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    user_id - <span class="built_in">integer</span></span><br><span class="line">    title - <span class="built_in">string</span></span><br></pre></td></tr></table></figure>
+<p>既然我们已经查看了该关联关系的数据表结构，接下来让我们在 <code>Country</code> 模型上进行定义：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Country</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">    public function posts() &#123;</span><br><span class="line">        <span class="comment">// return $this-&gt;hasManyThrough('App\Post', 'App\User');</span></span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;hasManyThrough(<span class="symbol">'App</span>\<span class="type">Post</span>', <span class="symbol">'App</span>\<span class="type">User</span>', <span class="symbol">'country_i</span>d', <span class="symbol">'user_i</span>d');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="多态关联"><a href="#多态关联" class="headerlink" title="多态关联"></a>多态关联</h2><p>多态关联允许一个模型在单个关联下属于多个不同模型。例如，假如你想要为产品和职工存储照片，使用多态关联，你可以在这两种场景下使用单个 <code>photos</code> 表，首先，让我们看看构建这种关联关系需要的表结构：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">staff</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    <span class="built_in">name</span> - <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">products</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    price - <span class="built_in">integer</span></span><br><span class="line"></span><br><span class="line">photos</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    path - <span class="built_in">string</span></span><br><span class="line">    imageable_id - <span class="built_in">integer</span></span><br><span class="line">    imageable_type - <span class="built_in">string</span></span><br></pre></td></tr></table></figure>
+<p>接下来，让我们看看构建这种关联关系需要在模型中定义什么：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Photo</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取所有拥有的imageable模型</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    public function imageable()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;morphTo();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Staff</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取所有职员照片</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    public function photos()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;morphMany(<span class="symbol">'App</span>\<span class="type">Photo</span>', <span class="symbol">'imageabl</span>e');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Product</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取所有产品照片</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    public function photos()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;morphMany(<span class="symbol">'App</span>\<span class="type">Photo</span>', <span class="symbol">'imageabl</span>e');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>获取多态关联</strong><br>要访问一个职员的所有照片，可以通过使用 <code>photos</code> 的动态属性：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$staff = App\Staff::find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> ($staff-&gt;photos <span class="keyword">as</span> $photo) &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你还可以通过访问调用<code>morphTo</code>方法名来从多态模型中获取多态关联的所属对象。在本例中，就是<code>Photo</code>模型中的<code>imageable</code>方法。因此，我们可以用动态属性的方式访问该方法：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$photo</span> = App\<span class="symbol">Photo:</span><span class="symbol">:find</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$imageable</span> = <span class="variable">$photo</span>-&gt;imageable;</span><br></pre></td></tr></table></figure>
+<p><code>Photo</code> 模型上的 <code>imageable</code> 关联返回 <code>Staff</code> 或 <code>Product</code> 实例，这取决于那个类型的模型拥有该照片。</p>
+<h2 id="多对多多态关联"><a href="#多对多多态关联" class="headerlink" title="多对多多态关联"></a>多对多多态关联</h2><p>除了传统的多态关联，还可以定义“多对多”的多态关联，例如，一个博客的 <code>Post</code> 和 <code>Video</code> 模型可能共享一个 <code>Tag</code> 模型的多态关联。使用对多对的多态关联允许你在博客文章和视频之间有唯一的标签列表。首先，让我们看看表结构：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">posts</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    <span class="built_in">name</span> - <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">videos</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    <span class="built_in">name</span> - <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">tags</span><br><span class="line">    <span class="built_in">id</span> - <span class="built_in">integer</span></span><br><span class="line">    <span class="built_in">name</span> - <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">taggables</span><br><span class="line">    tag_id - <span class="built_in">integer</span></span><br><span class="line">    taggable_id - <span class="built_in">integer</span></span><br><span class="line">    taggable_type - <span class="built_in">string</span></span><br></pre></td></tr></table></figure>
+<p>接下来，我们准备在模型中定义该关联关系。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取指定文章所有标签</span></span><br><span class="line">    public function tags() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;morphToMany(<span class="symbol">'App</span>\<span class="type">Tag</span>', <span class="symbol">'taggabl</span>e');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tag</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取所有分配该标签的文章</span></span><br><span class="line">    public function posts() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;morphedByMany(<span class="symbol">'App</span>\<span class="type">Post</span>', <span class="symbol">'taggabl</span>e');</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取分配该标签的所有视频</span></span><br><span class="line">    public function videos() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;morphedByMany(<span class="symbol">'App</span>\<span class="type">Video</span>', <span class="symbol">'taggabl</span>e');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h1><h2 id="查询已存在的关联关系"><a href="#查询已存在的关联关系" class="headerlink" title="查询已存在的关联关系"></a>查询已存在的关联关系</h2><p>访问一个模型的记录的时候，你可能希望基于关联关系是否存在来限制查询结果的数目。例如，假设你想要获取所有至少有一个评论的博客文章，要实现这个，可以传递关联关系的名称到<code>has</code>方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取所有至少有一条评论的文章...</span></span><br><span class="line">$posts = App\Post::has(<span class="string">'comments'</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 获取所有至少有三条评论的文章...</span></span><br><span class="line">$posts = Post::has(<span class="string">'comments'</span>, <span class="string">'&gt;='</span>, <span class="number">3</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 获取所有至少有一条评论获得投票的文章...</span></span><br><span class="line">$posts = Post::has(<span class="string">'comments.votes'</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+<p>如果你需要更强大的功能，可以使用 <code>whereHas</code> 和 <code>orWhereHas</code> 方法将 <code>where</code> 条件放到 <code>has</code> 查询上，这些方法允许你添加自定义条件约束到关联关系条件约束，例如检查一条评论的内容：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取所有至少有一条评论包含foo字样的文章</span></span><br><span class="line">$posts = Post::whereHas(<span class="string">'comments'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">    $query-&gt;where(<span class="string">'content'</span>, <span class="string">'like'</span>, <span class="string">'foo%'</span>);</span><br><span class="line">&#125;)-&gt;get();</span><br></pre></td></tr></table></figure>
+<h2 id="渴求式加载"><a href="#渴求式加载" class="headerlink" title="渴求式加载"></a>渴求式加载</h2><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$books = App\Book::<span class="keyword">with</span>(<span class="string">'author'</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 渴求式加载多个关联关系</span></span><br><span class="line">$books = App\Book::<span class="keyword">with</span>(<span class="string">'author'</span>, <span class="string">'publisher'</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 嵌套的渴求式加载</span></span><br><span class="line">$books = App\Book::<span class="keyword">with</span>(<span class="string">'author.contacts'</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+<p><strong>带条件约束的渴求式加载</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$users = App\User::with([<span class="string">'posts'</span> =&gt; <span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">    $query-&gt;where(<span class="string">'title'</span>, <span class="string">'like'</span>, <span class="string">'%first%'</span>);</span><br><span class="line">&#125;])-&gt;get();</span><br><span class="line"></span><br><span class="line">$users = App\User::with([<span class="string">'posts'</span> =&gt; <span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">    $query-&gt;orderBy(<span class="string">'created_at'</span>, <span class="string">'desc'</span>);</span><br><span class="line">&#125;])-&gt;get();</span><br></pre></td></tr></table></figure>
+<h2 id="懒惰渴求式加载"><a href="#懒惰渴求式加载" class="headerlink" title="懒惰渴求式加载"></a>懒惰渴求式加载</h2><p>有时候你需要在父模型已经被获取后渴求式加载一个关联关系。例如，这在你需要动态决定是否加载关联模型时可能很有用：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$books = App\Book::all();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($someCondition) &#123;</span><br><span class="line">    $books-&gt;load(<span class="string">'author'</span>, <span class="string">'publisher'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你需要设置更多的查询条件到渴求式加载查询上，可以传递一个闭包到 <code>load</code> 方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$books-&gt;load([<span class="string">'author'</span> =&gt; <span class="function"><span class="keyword">function</span> <span class="params">($query)</span> </span>&#123;</span><br><span class="line">    $query-&gt;orderBy(<span class="string">'published_date'</span>, <span class="string">'asc'</span>);</span><br><span class="line">&#125;]);</span><br></pre></td></tr></table></figure>
+<h1 id="插入关联模型"><a href="#插入关联模型" class="headerlink" title="插入关联模型"></a>插入关联模型</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h3 id="save-方法"><a href="#save-方法" class="headerlink" title="save 方法"></a>save 方法</h3><p><code>Eloquent</code> 提供了便利的方法来添加新模型到关联关系。例如，也许你需要插入新的 <code>Comment</code> 到 <code>Post</code> 模型，你可以从关联关系的 <code>save</code> 方法直接插入 <code>Comment</code>而不是手动设置<code>Comment</code>的<code>post_id</code>属性：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$comment = <span class="keyword">new</span> App\Comment([<span class="string">'message'</span> =&gt; <span class="string">'A new comment.'</span>]);</span><br><span class="line">$post = App\Post::find(<span class="number">1</span>);</span><br><span class="line">$comment = $post-&gt;comments()-&gt;save($comment);</span><br><span class="line"></span><br><span class="line">$post-&gt;comments()-&gt;saveMany([</span><br><span class="line">    <span class="keyword">new</span> App\Comment([<span class="string">'message'</span> =&gt; <span class="string">'A new comment.'</span>]),</span><br><span class="line">    <span class="keyword">new</span> App\Comment([<span class="string">'message'</span> =&gt; <span class="string">'Another comment.'</span>]),</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p>当处理<strong>多对多关联</strong>的时候，<code>save</code> 方法以数组形式接收额外的中间表属性作为第二个参数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">App\User::find(<span class="number">1</span>)-&gt;roles()-&gt;save($role, [<span class="string">'expires'</span> =&gt; $expires]);</span><br></pre></td></tr></table></figure>
+<h3 id="create-方法"><a href="#create-方法" class="headerlink" title="create 方法"></a>create 方法</h3><p>除了 <code>save</code> 和 <code>saveMany</code> 方法外，还可以使用 <code>create</code> 方法，该方法接收属性数组、创建模型、然后插入数据库。<code>save</code> 和 <code>create</code> 的不同之处在于 <code>save</code> 接收整个 <code>Eloquent</code> 模型实例而 <code>create</code> 接收原生 <code>PHP</code> 数组：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$post = App\Post::find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">$comment = $post-&gt;comments()-&gt;create([</span><br><span class="line">    <span class="string">'message'</span> =&gt; <span class="string">'A new comment.'</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p>使用 <code>create</code> 方法之前确保先浏览属性批量赋值文档。</p>
+<h3 id="更新“属于”关联"><a href="#更新“属于”关联" class="headerlink" title="更新“属于”关联"></a>更新“属于”关联</h3><p>更新 <code>belongsTo</code> 关联的时候，可以使用 <code>associate</code> 方法，该方法会在子模型设置外键：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$account</span> = App\<span class="symbol">Account:</span><span class="symbol">:find</span>(<span class="number">10</span>);</span><br><span class="line"><span class="variable">$user</span>-&gt;account()-&gt;associate(<span class="variable">$account</span>);</span><br><span class="line"><span class="variable">$user</span>-&gt;save();</span><br></pre></td></tr></table></figure>
+<p>移除 <code>belongsTo</code> 关联的时候，可以使用 <code>dissociate</code> 方法。该方法在子模型上取消外键和关联：</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$<span class="function"><span class="title">user</span>-&gt;</span><span class="function"><span class="title">account</span>()-&gt;</span>dissociate();</span><br><span class="line">$<span class="function"><span class="title">user</span>-&gt;</span>save();</span><br></pre></td></tr></table></figure>
+<h2 id="多对多关联"><a href="#多对多关联" class="headerlink" title="多对多关联"></a>多对多关联</h2><h3 id="附加-分离"><a href="#附加-分离" class="headerlink" title="附加/分离"></a>附加/分离</h3><p>处理多对多关联的时候，<code>Eloquent</code> 提供了一些额外的帮助函数来使得处理关联模型变得更加方便。例如，让我们假定一个用户可能有多个角色同时一个角色属于多个用户，要通过在连接模型的中间表中插入记录附加角色到用户上，可以使用 <code>attach</code> 方法：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$user</span> = App\<span class="symbol">User:</span><span class="symbol">:find</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;attach(<span class="variable">$roleId</span>);</span><br></pre></td></tr></table></figure>
+<p>附加关联关系到模型，还可以以数组形式传递额外被插入数据到中间表：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user-&gt;roles()-&gt;attach($roleId, [<span class="string">'expires'</span> =&gt; $expires]);</span><br></pre></td></tr></table></figure>
+<p>当然，有时候有必要从用户中移除角色，要移除一个多对多关联记录，使用 <code>detach</code> 方法。<code>detach</code> 方法将会从中间表中移除相应的记录；然而，两个模型在数据库中都保持不变：</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从指定用户中移除角色...</span></span><br><span class="line">$<span class="function"><span class="title">user</span>-&gt;</span><span class="function"><span class="title">roles</span>()-&gt;</span>detach($roleId);</span><br><span class="line"><span class="comment">// 从指定用户移除所有角色...</span></span><br><span class="line">$<span class="function"><span class="title">user</span>-&gt;</span><span class="function"><span class="title">roles</span>()-&gt;</span>detach();</span><br></pre></td></tr></table></figure>
+<p>为了方便，<code>attach</code> 和 <code>detach</code> 还接收数组形式的 <code>ID</code> 作为输入：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = App\User::find(<span class="number">1</span>);</span><br><span class="line">$user-&gt;roles()-&gt;detach([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line">$user-&gt;roles()-&gt;attach([<span class="number">1</span> =&gt; [<span class="string">'expires'</span> =&gt; $expires], <span class="number">2</span>, <span class="number">3</span>]);</span><br></pre></td></tr></table></figure>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>你还可以使用 <code>sync</code> 方法构建多对多关联。<code>sync</code> 方法接收数组形式的 <code>ID</code> 并将其放置到中间表。任何不在该数组中的 <code>ID</code> 对应记录将会从中间表中移除。因此，该操作完成后，只有在数组中的 <code>ID</code> 对应记录还存在于中间表：<br><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$<span class="function"><span class="title">user</span>-&gt;</span><span class="function"><span class="title">roles</span>()-&gt;</span>sync([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>你还可以和 <code>ID</code> 一起传递额外的中间表值：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user-&gt;roles()-&gt;sync([<span class="number">1</span> =&gt; [<span class="string">'expires'</span> =&gt; <span class="keyword">true</span>], <span class="number">2</span>, <span class="number">3</span>]);</span><br></pre></td></tr></table></figure></p>
+<h2 id="触发父级时间戳"><a href="#触发父级时间戳" class="headerlink" title="触发父级时间戳"></a>触发父级时间戳</h2><p>当一个模型属于另外一个时，例如 <code>Comment</code> 属于 <code>Post</code>，子模型更新时父模型的时间戳也被更新将很有用，例如，当 <code>Comment</code> 模型被更新时，你可能想要“触发”创建其所属模型 <code>Post</code> 的 <code>updated_at</code> 时间戳。<code>Eloquent</code> 使得这项操作变得简单，只需要添加包含关联关系名称的 <code>touches</code> 属性到子模型中即可：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Comment</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    <span class="comment">// 要触发的所有关联关系</span></span><br><span class="line">    <span class="keyword">protected</span> $touches = [<span class="symbol">'pos</span>t'];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 评论所属文章</span></span><br><span class="line">    public function post() &#123;</span><br><span class="line">        <span class="keyword">return</span> $<span class="keyword">this</span>-&gt;belongsTo(<span class="symbol">'App</span>\<span class="type">Post</span>');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，当你更新 <code>Comment</code> 时，所属模型 <code>Post</code> 将也会更新其 <code>updated_at</code> 值：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$<span class="keyword">comment</span> = App\<span class="keyword">Comment</span>::find(<span class="number">1</span>);</span><br><span class="line">$<span class="keyword">comment</span>-&gt;<span class="built_in">text</span> = <span class="string">'Edit to this comment!'</span>;</span><br><span class="line">$<span class="keyword">comment</span>-&gt;<span class="keyword">save</span>();</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-1/" rel="tag"><i class="fa fa-tag"></i> Laravel-5.1</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/20/laravel-database_1/" rel="next" title="Laravel 用法之 Database 模块 原生 SQL 及 查询构建器">
+                <i class="fa fa-chevron-left"></i> Laravel 用法之 Database 模块 原生 SQL 及 查询构建器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/25/laravel-cache/" rel="prev" title="Laravel 用法之 Cache 模块">
+                Laravel 用法之 Cache 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考阅读"><span class="nav-number">1.</span> <span class="nav-text">参考阅读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义模型"><span class="nav-number">2.</span> <span class="nav-text">定义模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#访问器和修改器"><span class="nav-number">2.1.</span> <span class="nav-text">访问器和修改器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性转换"><span class="nav-number">2.2.</span> <span class="nav-text">属性转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化"><span class="nav-number">2.3.</span> <span class="nav-text">序列化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作模型"><span class="nav-number">3.</span> <span class="nav-text">操作模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#事件"><span class="nav-number">3.1.</span> <span class="nav-text">事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入"><span class="nav-number">3.2.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新"><span class="nav-number">3.3.</span> <span class="nav-text">更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除"><span class="nav-number">3.4.</span> <span class="nav-text">删除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#软删除"><span class="nav-number">3.4.1.</span> <span class="nav-text">软删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询"><span class="nav-number">3.5.</span> <span class="nav-text">查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关联关系"><span class="nav-number">4.</span> <span class="nav-text">关联关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一对一"><span class="nav-number">4.1.</span> <span class="nav-text">一对一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一对多"><span class="nav-number">4.2.</span> <span class="nav-text">一对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多对多"><span class="nav-number">4.3.</span> <span class="nav-text">多对多</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#中间表"><span class="nav-number">4.3.1.</span> <span class="nav-text">中间表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远层的一对多"><span class="nav-number">4.4.</span> <span class="nav-text">远层的一对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多态关联"><span class="nav-number">4.5.</span> <span class="nav-text">多态关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多对多多态关联"><span class="nav-number">4.6.</span> <span class="nav-text">多对多多态关联</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关联查询"><span class="nav-number">5.</span> <span class="nav-text">关联查询</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查询已存在的关联关系"><span class="nav-number">5.1.</span> <span class="nav-text">查询已存在的关联关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渴求式加载"><span class="nav-number">5.2.</span> <span class="nav-text">渴求式加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#懒惰渴求式加载"><span class="nav-number">5.3.</span> <span class="nav-text">懒惰渴求式加载</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#插入关联模型"><span class="nav-number">6.</span> <span class="nav-text">插入关联模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">6.1.</span> <span class="nav-text">基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#save-方法"><span class="nav-number">6.1.1.</span> <span class="nav-text">save 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-方法"><span class="nav-number">6.1.2.</span> <span class="nav-text">create 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新“属于”关联"><span class="nav-number">6.1.3.</span> <span class="nav-text">更新“属于”关联</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多对多关联"><span class="nav-number">6.2.</span> <span class="nav-text">多对多关联</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#附加-分离"><span class="nav-number">6.2.1.</span> <span class="nav-text">附加/分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步"><span class="nav-number">6.2.2.</span> <span class="nav-text">同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#触发父级时间戳"><span class="nav-number">6.3.</span> <span class="nav-text">触发父级时间戳</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

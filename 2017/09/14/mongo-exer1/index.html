@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MongoDB3.x," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="通过实例 Demo 学习数据的增删改查操作">
+<meta name="keywords" content="MongoDB3.x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="练习 MongoDB 操作 —— 数据操作（一）">
+<meta property="og:url" content="http://yoursite.com/2017/09/14/mongo-exer1/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="通过实例 Demo 学习数据的增删改查操作">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.526Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="练习 MongoDB 操作 —— 数据操作（一）">
+<meta name="twitter:description" content="通过实例 Demo 学习数据的增删改查操作">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/14/mongo-exer1/"/>
+
+
+
+
+
+  <title>练习 MongoDB 操作 —— 数据操作（一） | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/14/mongo-exer1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">练习 MongoDB 操作 —— 数据操作（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-14T17:57:41+08:00">
+                2017-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NoSQL/" itemprop="url" rel="index">
+                    <span itemprop="name">NoSQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  通过实例 Demo 学习数据的增删改查操作
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文的目标是通过大量的示例，来更好的理解如果在<code>Mongodb</code>中进行数据操作；</p>
+<p><strong>初入客户端</strong><br>刚利用 <code>mongod</code>命令进入客户端环境，此时对数据库一无所知；</p>
+<p>举目四望，想知道现在有哪些数据库，<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show </span>dbs<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>因为是新装的<code>mongodb</code>环境，所以只看到了<code>admin</code>和<code>local</code>两个默认就存在的数据库；目光慢慢收回，那么当前是处于哪个数据库上呢？<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>通过上述这个命令，不仅可以知道当前在哪个数据库上；<br>现在切换到<code>admin</code>数据库上，转一圈；<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">admin</span>;</span><br></pre></td></tr></table></figure></p>
+<p><strong>数据库</strong><br>这时候，笔者想要创建自己应用的数据库<code>school</code>, 用来存放一些班级学生信息；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">school</span>;</span><br></pre></td></tr></table></figure></p>
+<p><code>use</code>命令：如果数据库不存在，则创建数据库，否则切换到指定数据库；</p>
+<p>突然发现刚才敲命令，写错了，写成了<code>use school1</code>；这时候，希望删除<code>school1</code>这个数据库，就切换到该数据库下，再键入删除命令；<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use school1<span class="comment">;</span></span><br><span class="line">db.dropDatabase()<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>集合</strong><br><code>Mongodb</code>中的集合相当于<code>Mysql</code>中的表；</p>
+<p>作为一名优秀的“校长”，能适应高信息化社会发展，笔者需要为学校下的各个年级、班级建立集合；创建集合可以是显式的，也可以是隐式的；</p>
+<p>通过<code>show tables</code>，看到数据库下没有任何集合；笔者显式地创建“一年级一班的”集合；<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.createCollection(<span class="string">"grade_1_1"</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>再次通过<code>show tables</code>就可以看到列表中有<code>grade_1_1</code>这个集合；</p>
+<p>当然，也可以隐式地创建，当为集合插入数据，集合不存在，这时候集合会自动创建；现在，不存在<code>grade_1_2</code>“一年级二班”这个集合，执行下面语句，为“一年级二班”加入一个学生；<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.grade_1_2.<span class="keyword">insert</span>(&#123;<span class="string">"name"</span>: <span class="string">'zhangsan'</span>, <span class="string">"age"</span>: <span class="string">'7'</span>, <span class="string">"sex"</span>: <span class="string">"0"</span>&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>通过<code>show tables</code>就可以看到<code>grade_1_2</code>这个集合了；</p>
+<p>因为一些特殊原因，要解散一年级二班，那笔者这儿就不用继续维护<code>grade_1_2</code>集合，</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.grade_1_2</span><span class="selector-class">.drop</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="练习增查"><a href="#练习增查" class="headerlink" title="练习增查"></a>练习增查</h2><ol>
+<li><p>清空上面的<code>school</code>数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> school;</span><br><span class="line">db.dropDatabase();</span><br><span class="line"><span class="keyword">use</span> school;</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">tables</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一年级的3个班，并随机添加 10 名学生；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(grade_index <span class="keyword">in</span> (grade = [<span class="string">'grade_1_1'</span>, <span class="string">'grade_1_2'</span>, <span class="string">'grade_1_3'</span>])) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        db[grade[grade_index]].insert(&#123;</span><br><span class="line">            <span class="string">"name"</span>: <span class="string">"zhangsan"</span> + i,</span><br><span class="line">            <span class="string">"sex"</span>: <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">10</span>) % <span class="number">2</span>,</span><br><span class="line">            <span class="string">"age"</span>: <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">6</span>) + <span class="number">3</span>,</span><br><span class="line">            <span class="string">"hobby"</span>: []</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一年级二班<code>grade_1_2</code>中的所有学生</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.getCollection</span>(<span class="string">'grade_1_2'</span>)<span class="selector-class">.find</span>(&#123;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>查看一年级二班<code>grade_1_2</code>中所有年龄是 4 岁的学生</p>
+  <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="built_in">find</span>(&#123;<span class="string">"age"</span>: <span class="number">4</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班<code>grade_1_2</code>中所有年龄大于 4 岁的学生</p>
+ <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"age"</span>: &#123;$gt: <span class="number">4</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班<code>grade_1_2</code>中所有年龄大于 4 岁并且小于 7 岁的学生</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"age"</span>: &#123;<span class="symbol">$</span><span class="keyword">gt</span>: <span class="number">4</span>, <span class="symbol">$</span><span class="keyword">lt</span>: <span class="number">7</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班<code>grade_1_2</code>中所有年龄大于 4 岁并且性别值为<code>0</code>的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"age"</span>: &#123;$gt: <span class="number">4</span>&#125;, <span class="string">"sex"</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>查看一年级二班<code>grade_1_2</code>中所有年龄小于 4 岁并且大于 7 岁的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;$or: [&#123;<span class="string">"age"</span>: &#123;$lt: <span class="number">4</span>&#125;&#125;, &#123;<span class="string">"age"</span>: &#123;$gt: <span class="number">6</span>&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>查看一年级二班<code>grade_1_2</code>中所有年龄是 4 岁或 6 岁的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"age"</span>: &#123;$in: [<span class="number">4</span>, <span class="number">6</span>]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一年级二班<code>grade_1_2</code>中所有姓名带<code>zhangsan1</code>的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"name"</span>: &#123;$regex: <span class="string">"zhangsan1"</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班<code>grade_1_2</code>中所有姓名带<code>zhangsan1</code>和<code>zhangsan2</code>的学生</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"name"</span>: &#123;</span><br><span class="line">   $<span class="keyword">in</span>: [<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">""</span>zhangsan1<span class="string">"), new RegExp("</span><span class="string">"zhangsan2"</span>)]</span><br><span class="line">&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一年级二班<code>grade_1_2</code>中所有兴趣爱好有三项的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).find(&#123;<span class="string">"hobby"</span>: &#123;$size: <span class="number">3</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>  查看一年级二班<code>grade_1_2</code>中所有兴趣爱好包括画画的学生</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="built_in">find</span>(&#123;<span class="string">"hobby"</span>: <span class="string">"drawing"</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>  查看一年级二班<code>grade_1_2</code>中所有兴趣爱好既包括画画又包括跳舞的学生</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">find</span>(&#123;<span class="string">"hobby"</span>: &#123;$<span class="keyword">al</span><span class="variable">l:</span> [<span class="string">"drawing"</span>, <span class="string">"dance"</span>]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一年级二班<code>grade_1_2</code>中所有兴趣爱好有三项的学生的学生数目</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">find</span>(&#123;<span class="string">"hobby"</span>: &#123;$<span class="keyword">size</span>: <span class="number">3</span>&#125;&#125;).<span class="keyword">count</span>()</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>查看一年级二班的第二位学生</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.getCollection</span>(<span class="string">'grade_1_2'</span>)<span class="selector-class">.find</span>(&#123;&#125;)<span class="selector-class">.limit</span>(<span class="number">1</span>)<span class="selector-class">.skip</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一年级二班的学生，按年纪升序</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">find</span>(&#123;&#125;).<span class="keyword">sort</span>(&#123;<span class="string">"age"</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班的学生，按年纪降序</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">find</span>(&#123;&#125;).<span class="keyword">sort</span>(&#123;<span class="string">"age"</span>: -<span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>查看一年级二班的学生，年龄值有哪些</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.getCollection</span>(<span class="string">'grade_1_2'</span>)<span class="selector-class">.distinct</span>(<span class="string">'age'</span>)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班的学生，兴趣覆盖范围有哪些</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.getCollection</span>(<span class="string">'grade_1_2'</span>)<span class="selector-class">.distinct</span>(<span class="string">'hobby'</span>)</span><br></pre></td></tr></table></figure>
+<p> 查看一年级二班的学生，男生（<code>sex</code>为 0）年龄值有哪些</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).distinct(<span class="string">'age'</span>, &#123;<span class="string">"sex"</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="练习删除"><a href="#练习删除" class="headerlink" title="练习删除"></a>练习删除</h2><ol>
+<li><p>一年级二班<code>grade_1_2</code>， 删除所有 4 岁的学生</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="built_in">remove</span>(&#123;<span class="string">"age"</span>: <span class="number">4</span>&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>一年级二班<code>grade_1_2</code>， 删除第一位 6 岁的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).remove(&#123;<span class="string">"age"</span>: <span class="number">6</span>&#125;, &#123;justOne: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="练习修改"><a href="#练习修改" class="headerlink" title="练习修改"></a>练习修改</h2><ol>
+<li><p>一年级二班<code>grade_1_2</code>中，修改名为<code>zhangsan7</code>的学生，年龄为 8 岁，兴趣爱好为 跳舞和画画；</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$set: &#123;<span class="string">"age"</span>: <span class="number">8</span>, <span class="string">"hobby"</span>: [<span class="string">"dance"</span>, <span class="string">"drawing"</span>]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>  一年级二班<code>grade_1_2</code>中，追加zhangsan7`学生兴趣爱好唱歌；</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$push: &#123;<span class="string">"hobby"</span>: <span class="string">"sing"</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>  一年级二班<code>grade_1_2</code>中，追加zhangsan7`学生兴趣爱好吹牛和打篮球；</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$push: &#123;<span class="string">"hobby"</span>: &#123;$each: [<span class="string">"brag"</span>, <span class="string">"play_basketball"</span>]&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>  一年级二班<code>grade_1_2</code>中，追加<code>zhangsan7</code>学生兴趣爱好唱歌和打篮球，要保证<code>hobby</code>数组不重复；</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$addToSet: &#123;<span class="string">"hobby"</span>: &#123;$each: [<span class="string">"sing1"</span>, <span class="string">"play_basketball"</span>]&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>新学年，给一年级二班所有学生的年龄都增加一岁</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;&#125;, &#123;$inc: &#123;<span class="string">"age"</span>: <span class="number">1</span>&#125;&#125;, &#123;multi: true&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一年级二班<code>grade_1_2</code>中，删除<code>zhangsan7</code>学生的<code>sex</code>属性</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$unset: &#123;<span class="string">"sex"</span>: <span class="number">1</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一年级二班<code>grade_1_2</code>中，删除<code>zhangsan7</code>学生的<code>hobby</code>数组中的头元素</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$pop: &#123;<span class="string">"hobby"</span>: -<span class="number">1</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>  一年级二班<code>grade_1_2</code>中，删除<code>zhangsan7</code>学生的<code>hobby</code>数组中的尾元素</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$pop: &#123;<span class="string">"hobby"</span>: <span class="number">1</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>  一年级二班<code>grade_1_2</code>中，删除<code>zhangsan7</code>学生的<code>hobby</code>数组中的<code>sing</code>元素</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_2'</span>).<span class="keyword">update</span>(&#123;<span class="string">"name"</span>: <span class="string">"zhangsan7"</span>&#125;, &#123;$pull: &#123;<span class="string">"hobby"</span>: <span class="string">"sing"</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="练习分组"><a href="#练习分组" class="headerlink" title="练习分组"></a>练习分组</h2><p>新建一个集合<code>grade_1_4</code>，记录一年级四班在期中考试时的成绩；<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">    db.grade_1_4.insert(&#123;</span><br><span class="line">        <span class="string">"name"</span>: <span class="string">"zhangsan"</span> + i,</span><br><span class="line">        <span class="string">"sex"</span>: <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">10</span>) % <span class="number">2</span>,</span><br><span class="line">        <span class="string">"age"</span>: <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">6</span>) + <span class="number">3</span>,</span><br><span class="line">        <span class="string">"score"</span>: &#123;</span><br><span class="line">         <span class="string">"chinese"</span>: <span class="number">60</span> + <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">40</span>),</span><br><span class="line">      <span class="string">"math"</span>: <span class="number">60</span> + <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">40</span>),</span><br><span class="line">      <span class="string">"english"</span>: <span class="number">60</span> + <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random() * <span class="number">40</span>)</span><br><span class="line">  &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>统计每名学生在考试中的总分</p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">db.grade_1_4.group(&#123;</span><br><span class="line">    <span class="attribute">key</span>: &#123;"name": 1&#125;,</span><br><span class="line">    cond: &#123;&#125;,</span><br><span class="line">    reduce: function(curr, result) &#123;</span><br><span class="line">        result<span class="variable">.total</span> += curr<span class="variable">.score</span><span class="variable">.chinese</span> + curr<span class="variable">.score</span><span class="variable">.math</span> + curr<span class="variable">.score</span><span class="variable">.english</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    initial: &#123; total : 0 &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>统计每名男生在考试中的总分</p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">db.grade_1_4.group(&#123;</span><br><span class="line">    <span class="attribute">key</span>: &#123;"name": 1&#125;,</span><br><span class="line">    cond: &#123;"sex": 0&#125;,</span><br><span class="line">    reduce: function(curr, result) &#123;</span><br><span class="line">        result<span class="variable">.total</span> += curr<span class="variable">.score</span><span class="variable">.chinese</span> + curr<span class="variable">.score</span><span class="variable">.math</span> + curr<span class="variable">.score</span><span class="variable">.english</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    initial: &#123; total : 0 &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>统计每名男生在考试中的总分及平均分</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">db</span>.grade_1_4.<span class="built_in">group</span>(&#123;</span><br><span class="line">    key: &#123;<span class="string">"name"</span>: 1&#125;,</span><br><span class="line">    cond: &#123;<span class="string">"sex"</span>: 0&#125;,</span><br><span class="line">    reduce: function(curr, result) &#123;</span><br><span class="line">        result.<span class="keyword">total</span> += curr.<span class="keyword">score</span>.chinese + curr.<span class="keyword">score</span>.math + curr.<span class="keyword">score</span>.english;</span><br><span class="line">    &#125;,</span><br><span class="line">    initial: &#123; <span class="keyword">total</span> : 0 &#125;,</span><br><span class="line">    finalize: function(item) &#123;</span><br><span class="line">        item.avg = (item.<span class="keyword">total</span> / 3).toFixed(2);</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="练习聚合"><a href="#练习聚合" class="headerlink" title="练习聚合"></a>练习聚合</h2><ol>
+<li><p>根据姓名分组， 并统计人数</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_4'</span>).aggregate([</span><br><span class="line">    &#123;$group: &#123;_id: <span class="string">"$name"</span>, num: &#123;$sum: <span class="number">1</span>&#125;&#125;&#125;</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+<p>  根据姓名分组， 并统计人数，过滤人数大于 1 的学生</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">'grade_1_4'</span>).aggregate([</span><br><span class="line">    &#123;$group: &#123;_id: <span class="string">"$name"</span>, num: &#123;$sum: <span class="number">1</span>&#125;&#125;&#125;, </span><br><span class="line">    &#123;$match: &#123;num: &#123;$gt: <span class="number">1</span>&#125;&#125;&#125;</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>统计每名学生在考试中的总分</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    db.getCollection(<span class="string">'grade_1_4'</span>).aggregate([</span><br><span class="line">        &#123;<span class="variable">$group</span>: &#123;_id: <span class="string">"<span class="variable">$name</span>"</span>, score: &#123;<span class="variable">$sum</span>: &#123;<span class="variable">$sum</span>: [<span class="string">"<span class="variable">$score</span>.chinese"</span>, <span class="string">"<span class="variable">$score</span>.math"</span>, <span class="string">"<span class="variable">$score</span>.english"</span>]&#125;&#125;&#125;&#125;</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>统计每名男生在考试中的总分</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> db.getCollection(<span class="string">'grade_1_4'</span>).aggregate([</span><br><span class="line">    &#123;$match: &#123;sex: <span class="number">0</span>&#125;&#125;,</span><br><span class="line">    &#123;$group: &#123;_id: <span class="string">"$name"</span>, score: &#123;$sum: &#123;$sum: [<span class="string">"$score.chinese"</span>, <span class="string">"$score.math"</span>, <span class="string">"$score.english"</span>]&#125;&#125;&#125;&#125;</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+<p> 统计每名男生在考试中的总分， 总分降序</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    db.getCollection(<span class="string">'grade_1_4'</span>).aggregate([</span><br><span class="line">        &#123;$match: &#123;sex: <span class="number">0</span>&#125;&#125;,</span><br><span class="line">        &#123;$group: &#123;_id: <span class="string">"$name"</span>, score: &#123;$sum: &#123;$sum: [<span class="string">"$score.chinese"</span>, <span class="string">"$score.math"</span>, <span class="string">"$score.english"</span>]&#125;&#125;&#125;&#125;,</span><br><span class="line">        &#123;$sort: &#123;score: <span class="number">1</span>&#125;&#125;</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="练习权限"><a href="#练习权限" class="headerlink" title="练习权限"></a>练习权限</h2><h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><blockquote>
+<p>要让权限生效，需要<code>mongo</code>服务器启动时添加<code>--auth</code>选项；</p>
+</blockquote>
+<p>创建用户<code>school_admin</code>，只能对<code>school</code>数据库进行读写操作；</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">school</span>;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;</span><br><span class="line">    <span class="attribute">user</span>: <span class="string">"school_admin"</span>,</span><br><span class="line">    <span class="attribute">pwd</span>: <span class="string">"school_admin"</span>,</span><br><span class="line">    <span class="attribute">roles</span>: [&#123;<span class="attribute">role</span>: <span class="string">"readWrite"</span>, <span class="attribute">db</span>: <span class="string">"school"</span>&#125;]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>关于第三个参数角色，看下表：</p>
+<table>
+<thead>
+<tr>
+<th>角色名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read</td>
+<td>允许用户读取指定数据库</td>
+</tr>
+<tr>
+<td>readWrite</td>
+<td>允许用户读写指定数据库</td>
+</tr>
+<tr>
+<td>dbAdmin</td>
+<td>允许用户在指定数据库中执行管理函数，如索引创建、删除，查看统计或访问<code>system.profile</code></td>
+</tr>
+<tr>
+<td>userAdmin</td>
+<td>允许用户向<code>system.users</code>集合写入，可以找指定数据库里创建、删除和管理用户</td>
+</tr>
+<tr>
+<td>clusterAdmin</td>
+<td>只在<code>admin</code>数据库中可用，赋予用户所有分片和复制集相关函数的管理权限</td>
+</tr>
+<tr>
+<td>readAnyDatabase</td>
+<td>只在<code>admin</code>数据库中可用，赋予用户所有数据库的读权限</td>
+</tr>
+<tr>
+<td>readWriteAnyDatabase</td>
+<td>只在<code>admin</code>数据库中可用，赋予用户所有数据库的读写权限</td>
+</tr>
+<tr>
+<td>userAdminAnyDatabase</td>
+<td>只在<code>admin</code>数据库中可用，赋予用户所有数据库的<code>userAdmin</code>权限</td>
+</tr>
+<tr>
+<td>dbAdminAnyDatabase</td>
+<td>只在<code>admin</code>数据库中可用，赋予用户所有数据库的<code>dbAdmin</code>权限</td>
+</tr>
+<tr>
+<td>root</td>
+<td>只在<code>admin</code>数据库中可用。超级账号，超级权限</td>
+</tr>
+</tbody>
+</table>
+<h3 id="验证用户"><a href="#验证用户" class="headerlink" title="验证用户"></a>验证用户</h3><p>如果未通过验证，进行查询，</p>
+<p>会得到如下的提示：<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Error: error: &#123;</span><br><span class="line">	<span class="string">"ok"</span> : 0,</span><br><span class="line">	<span class="string">"errmsg"</span> : "<span class="keyword"><span class="keyword">not</span></span> <span class="type">authorized</span> on school to execute command &#123; find: \<span class="string">"grade_1_2\"</span>, filter: &#123;&#125; &#125;<span class="string">",</span></span><br><span class="line"><span class="string">	"</span>code<span class="string">" : 13,</span></span><br><span class="line"><span class="string">	"</span>codeName<span class="string">" : "</span>Unauthorized<span class="string">"</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果执行验证代码：<strong>注意，要在注册时所在的数据库中验证</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">school</span>;</span><br><span class="line"></span><br><span class="line">db.auth(<span class="string">'用户名'</span>, <span class="string">'密码'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="查看所有用户"><a href="#查看所有用户" class="headerlink" title="查看所有用户"></a>查看所有用户</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.getUsers</span>()</span><br></pre></td></tr></table></figure>
+<h3 id="删除用户"><a href="#删除用户" class="headerlink" title="删除用户"></a>删除用户</h3><p>先移到用户注册的数据库，然后移除指定用户 <code>school_admin</code><br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">db</span><span class="selector-class">.dropUser</span>(<span class="string">'school_admin'</span>)</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>关于用户的注册位置，笔者的理解是在<code>admin</code>下创建其他数据库的管理者，再由这些管理者在对应的数据库下创建“可读”或“可写”的用户；</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MongoDB3-x/" rel="tag"><i class="fa fa-tag"></i> MongoDB3.x</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/31/laravel-container/" rel="next" title="Laravel 大将之 服务容器 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 服务容器 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/17/laravel-view/" rel="prev" title="Laravel 大将之 View 模块">
+                Laravel 大将之 View 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#练习增查"><span class="nav-number">1.</span> <span class="nav-text">练习增查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习删除"><span class="nav-number">2.</span> <span class="nav-text">练习删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习修改"><span class="nav-number">3.</span> <span class="nav-text">练习修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习分组"><span class="nav-number">4.</span> <span class="nav-text">练习分组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习聚合"><span class="nav-number">5.</span> <span class="nav-text">练习聚合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习权限"><span class="nav-number">6.</span> <span class="nav-text">练习权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建用户"><span class="nav-number">6.1.</span> <span class="nav-text">创建用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证用户"><span class="nav-number">6.2.</span> <span class="nav-text">验证用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看所有用户"><span class="nav-number">6.3.</span> <span class="nav-text">查看所有用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除用户"><span class="nav-number">6.4.</span> <span class="nav-text">删除用户</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

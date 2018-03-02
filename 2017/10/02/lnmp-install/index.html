@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="在 Centos 6.8 上搭建 nginx + php7 + mysql 环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建 LNMP 环境">
+<meta property="og:url" content="http://yoursite.com/2017/10/02/lnmp-install/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="在 Centos 6.8 上搭建 nginx + php7 + mysql 环境">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20171002015453.png">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/susscess-init.png">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.526Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建 LNMP 环境">
+<meta name="twitter:description" content="在 Centos 6.8 上搭建 nginx + php7 + mysql 环境">
+<meta name="twitter:image" content="http://owk2q4gs5.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20171002015453.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/02/lnmp-install/"/>
+
+
+
+
+
+  <title>搭建 LNMP 环境 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/02/lnmp-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建 LNMP 环境</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-02T16:46:41+08:00">
+                2017-10-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  在 Centos 6.8 上搭建 nginx + php7 + mysql 环境
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是在<code>Centos 6.8</code>服务器上进行搭建<code>PHP</code> + <code>Nginx</code> + <code>Mysql</code>环境的指导性文章；</p>
+<h1 id="PHP7"><a href="#PHP7" class="headerlink" title="PHP7"></a>PHP7</h1><p><strong>下载<code>PHP7</code>的源码包</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="regexp">//</span>tw2.php.net<span class="regexp">/get/</span>php-<span class="number">7.1</span>.<span class="number">9</span>.tar.gz<span class="regexp">/from/</span>this<span class="regexp">/mirror -O php7.1.9.tar.gz</span></span><br></pre></td></tr></table></figure>
+<p>说明，<code>-o</code>参数指定存在下载文件的路径</p>
+<p><strong>解压</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">tar</span> <span class="selector-tag">zxvf</span> <span class="selector-tag">php7</span><span class="selector-class">.1</span><span class="selector-class">.9</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span></span><br></pre></td></tr></table></figure>
+<p>说明，可以加<code>-C</code>参数指定安装目录；</p>
+<p><strong>安装依赖库</strong><br><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">yum</span> -y install libjpeg libjpeg-devel libpng libpng-devel free<span class="keyword">type</span> freetype-devel libxml2 libxml2-devel mysql pcre-devel dpkg dpkg-dev bzip2-devel curl-devel db4-devel libXpm-devel gmp-devel libc-client-devel openldap-devel unixODBC-devel postgresql-devel libxslt-devel libxml2-devel</span><br></pre></td></tr></table></figure></p>
+<p><strong>生成 Makefile</strong>，为下一步的编译做准备</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/php7 \</span><br><span class="line"> -<span class="ruby">-with-curl \</span></span><br><span class="line"><span class="ruby"> --with-freetype-dir \</span></span><br><span class="line"><span class="ruby"> --with-gd \</span></span><br><span class="line"><span class="ruby"> --with-gettext \</span></span><br><span class="line"><span class="ruby"> --with-iconv-dir \</span></span><br><span class="line"><span class="ruby"> --with-kerberos \</span></span><br><span class="line"><span class="ruby"> --with-libdir=lib64 \</span></span><br><span class="line"><span class="ruby"> --with-libxml-dir \</span></span><br><span class="line"><span class="ruby"> --with-mysqli \</span></span><br><span class="line"><span class="ruby"> --with-openssl \</span></span><br><span class="line"><span class="ruby"> --with-pcre-regex \</span></span><br><span class="line"><span class="ruby"> --with-pdo-mysql \</span></span><br><span class="line"><span class="ruby"> --with-pdo-sqlite \</span></span><br><span class="line"><span class="ruby"> --with-pear \</span></span><br><span class="line"><span class="ruby"> --with-png-dir \</span></span><br><span class="line"><span class="ruby"> --with-xmlrpc \</span></span><br><span class="line"><span class="ruby"> --with-xsl \</span></span><br><span class="line"><span class="ruby"> --with-zlib \</span></span><br><span class="line"><span class="ruby"> --enable-fpm \</span></span><br><span class="line"><span class="ruby"> --enable-bcmath \</span></span><br><span class="line"><span class="ruby"> --enable-libxml \</span></span><br><span class="line"><span class="ruby"> --enable-inline-optimization \</span></span><br><span class="line"><span class="ruby"> --enable-gd-native-ttf \</span></span><br><span class="line"><span class="ruby"> --enable-mbregex \</span></span><br><span class="line"><span class="ruby"> --enable-mbstring \</span></span><br><span class="line"><span class="ruby"> --enable-opcache \</span></span><br><span class="line"><span class="ruby"> --enable-pcntl \</span></span><br><span class="line"><span class="ruby"> --enable-shmop \</span></span><br><span class="line"><span class="ruby"> --enable-soap \</span></span><br><span class="line"><span class="ruby"> --enable-sockets \</span></span><br><span class="line"><span class="ruby"> --enable-sysvsem \</span></span><br><span class="line"><span class="ruby"> --enable-xml \</span></span><br><span class="line"><span class="ruby"> --enable-zip</span></span><br></pre></td></tr></table></figure>
+<p><strong>编译</strong></p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">make</span></span><br></pre></td></tr></table></figure>
+<p><strong>安装</strong><br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make <span class="keyword">install</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>移动配置文件</strong><br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/php7/etc</span><br><span class="line"></span><br><span class="line">cp /home/php/php-<span class="number">7.1</span>.<span class="number">9</span>/php.ini-development ../<span class="class"><span class="keyword">lib</span>/<span class="title">php</span>.<span class="title">ini</span></span></span><br><span class="line">cp php-fpm.conf.default php-fpm.conf</span><br></pre></td></tr></table></figure></p>
+<p><strong>通过软链接，加入系统命令</strong><br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/usr/</span>local<span class="regexp">/php7/</span>bin<span class="regexp">/php /u</span>sr<span class="regexp">/local/</span>bin<span class="regexp">/php7</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>确认安装成功</strong><br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">php7</span> -v</span><br></pre></td></tr></table></figure></p>
+<h1 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h1><p>下载<code>nginx</code>源码包，<a href="http://nginx.org/en/download.html" target="_blank" rel="noopener">nginx 官方下载地址</a></p>
+<p>笔者在 <code>home</code> 目录进行<strong>解压缩</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">tar</span> <span class="selector-tag">zxvf</span> <span class="selector-tag">nginx-1</span><span class="selector-class">.13</span><span class="selector-class">.5</span><span class="selector-class">.tar</span><span class="selector-class">.gz</span></span><br></pre></td></tr></table></figure>
+<p><strong>配置、编译、安装</strong><br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line"><span class="built_in">make</span> &amp;&amp; <span class="built_in">make</span> install</span><br></pre></td></tr></table></figure></p>
+<p><strong>通过软链接，加入系统命令</strong><br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/usr/</span>local<span class="regexp">/nginx/</span>sbin<span class="regexp">/nginx /u</span>sr<span class="regexp">/local/</span>bin<span class="regexp">/nginx</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>检查是否安装成功</strong><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">nginx -t</span></span><br></pre></td></tr></table></figure></p>
+<p>显示如下图</p>
+<p><img src="http://owk2q4gs5.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20171002015453.png" alt="此处输入链接的描述"></p>
+<h2 id="配置支持-PHP"><a href="#配置支持-PHP" class="headerlink" title="配置支持 PHP"></a>配置支持 PHP</h2><p>修改<code>php</code>的<code>php.ini</code>信息<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">extension_dir</span> = /usr/local/php7/lib/php/extensions</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">enable_dl</span> = On</span><br><span class="line">cgi.<span class="attr">fix_pathinfo=1</span></span><br><span class="line">cgi.<span class="attr">force_redirect</span> = <span class="number">0</span></span><br><span class="line">fastcgi.<span class="attr">impersonate</span> = <span class="number">1</span></span><br><span class="line">cgi.<span class="attr">rfc2616_headers</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>修改<code>nginx</code>配置文件<code>/usr/local/nginx/conf/nginx.con</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> <span class="regexp">~ \.php$</span> &#123;                                                        </span><br><span class="line">    <span class="attribute">root</span>           /usr/local/nginx/html;                                  </span><br><span class="line">    <span class="attribute">fastcgi_pass</span>   <span class="number">127.0.0.1:9000</span>;                                         </span><br><span class="line">    <span class="attribute">fastcgi_index</span>  index.php;                                              </span><br><span class="line">    <span class="attribute">fastcgi_param</span>  SCRIPT_FILENAME  /usr/local/nginx/html<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    <span class="attribute">include</span>        fastcgi_params;                                         </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>验证</strong><br>启动内置 <code>fastcgi</code> 管理器<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/php7/</span>bin<span class="regexp">/php-cgi -b 127.0.0.1:9000 -c /u</span>sr<span class="regexp">/local/</span>php7<span class="regexp">/etc/</span>php.ini&amp;</span><br></pre></td></tr></table></figure></p>
+<p>重新加载<code>nginx</code>配置与<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">nginx -s reload</span></span><br></pre></td></tr></table></figure></p>
+<p>通过浏览器访问<code>nginx</code>所在服务器 <code>http://192.168.31.168/phpinfo.php</code>; 出现<code>php</code>相关信息页面，成功；</p>
+<p>关闭<code>nginx</code>服务器与<code>fastcgi</code> 管理器<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -s <span class="built_in">stop</span></span><br><span class="line">killall <span class="number">-9</span> php-cgi</span><br></pre></td></tr></table></figure></p>
+<h2 id="启用-PHP-Fpm"><a href="#启用-PHP-Fpm" class="headerlink" title="启用 PHP-Fpm"></a>启用 PHP-Fpm</h2><p>为什么用<code>php-fpm</code>替换<code>php-cgi</code>,参考文章<a href="http://blog.csdn.net/linuxheik/article/details/52039220" target="_blank" rel="noopener">如何通俗地解释 CGI、FastCGI、php-fpm 之间的关系？</a>; 笔者也还没怎么理清呢；</p>
+<p>至于步骤，只需要把这部分的操作替换上面启动内置 <code>fastcgi</code> 管理器即可；</p>
+<p><strong>准备用户及用户组</strong><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">groupadd www</span></span><br><span class="line"><span class="attribute">useradd -g www www</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>通过<code>cat /etc/passwd</code>查看当前系统有哪些用户；通过<code>cat /etc/group</code>命令来查看当前系统有哪些用户组；</p>
+</blockquote>
+<p><strong>文件配置</strong><br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp <span class="regexp">/usr/</span>local<span class="regexp">/php7/</span>etc<span class="regexp">/php-fpm.d/</span>www.conf.<span class="keyword">default</span> <span class="regexp">/usr/</span>local<span class="regexp">/php7/</span>etc<span class="regexp">/php-fpm.d/</span>www.conf</span><br></pre></td></tr></table></figure></p>
+<p>同时修改文件<code>/usr/local/php7/etc/php-fpm.d/www.conf</code>内容 </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user = www</span><br><span class="line">group = www</span><br></pre></td></tr></table></figure>
+<p><strong>启动 <code>php-fpm</code></strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/php7/</span>sbin<span class="regexp">/php-fpm</span></span><br></pre></td></tr></table></figure>
+<p>查看启动<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -lnt <span class="string">| grep 9000</span></span><br></pre></td></tr></table></figure></p>
+<p>关闭<code>php-fpm</code><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">pkill php-fpm</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h1><p><a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">Mysql 官网页面</a>，选择 <code>Linux Generuc</code> 版本，下载最新版本 <code>(mysql-5.7.19-linux-glibc2.12-x86_64.tar.gz)</code>;</p>
+<p><strong>解压</strong><br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /home</span><br><span class="line">tar zxvf mysql<span class="number">-5.7</span><span class="number">.19</span>-linux-glibc2<span class="number">.12</span>-x86_64.tar.gz</span><br><span class="line">mv mysql<span class="number">-5.7</span><span class="number">.19</span>-linux-glibc2<span class="number">.12</span>-x86_64 mysql</span><br></pre></td></tr></table></figure></p>
+<p><strong>目录权限设置</strong><br>如果<code>mysql</code>目录下没有<code>data</code>目录，手动建一个。<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /<span class="built_in">home</span>/mysql</span><br><span class="line"><span class="built_in">mkdir</span> data</span><br></pre></td></tr></table></figure></p>
+<p>将<code>mysql</code>及其下所有的目录所有者和组均设为<code>mysql</code><br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">chown</span> <span class="selector-tag">mysql</span><span class="selector-pseudo">:mysql</span> <span class="selector-tag">-R</span> .</span><br></pre></td></tr></table></figure></p>
+<p><strong>通过软链接，加入系统命令</strong><br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/home/my</span>sql<span class="regexp">/bin/my</span>sql <span class="regexp">/usr/</span>local<span class="regexp">/bin/my</span>sql</span><br></pre></td></tr></table></figure></p>
+<p><strong>初始化</strong><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/mysql/bin/mysqld --initialize <span class="attribute">--user</span>=mysql <span class="attribute">--datadir</span>=/home/mysql/data <span class="attribute">--basedir</span>=/home/mysql</span><br></pre></td></tr></table></figure></p>
+<p>初始化成功，显示如下：<br><img src="http://owk2q4gs5.bkt.clouddn.com/susscess-init.png" alt="此处输入链接的描述"></p>
+<blockquote>
+<p>注意最后一行，这也是和之有版本不同的地方，它给了<code>root</code>一个初始密码，后面要登录的时候要用到这个密码。</p>
+</blockquote>
+<p><strong>配置</strong><br>由于在<code>5.7.18</code>开始，二进制包不再包含示例文件<code>my-default.cnf</code>，参考<code>5.7.17</code>版本中的文件，在<code>/etc/my.cnf</code>中复制以下内容：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> For advice on how to change settings please see</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> *** DO NOT EDIT THIS FILE. It‘s a template <span class="built_in">which</span> will be copied to the</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> *** default location during install, and will be replaced <span class="keyword">if</span> you</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> *** upgrade to a newer version of MySQL.</span></span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Remove leading <span class="comment"># and set to the amount of RAM for the most important data</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> cache <span class="keyword">in</span> MySQL. Start at 70% of total RAM <span class="keyword">for</span> dedicated server, <span class="keyword">else</span> 10%.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> innodb_buffer_pool_size = 128M</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Remove leading <span class="comment"># to turn on a very important data integrity option: logging</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> changes to the binary <span class="built_in">log</span> between backups.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> log_bin</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> These are commonly <span class="built_in">set</span>, remove the <span class="comment"># and set as required.</span></span></span><br><span class="line">basedir = /home/mysql</span><br><span class="line">datadir = /home/mysql/data</span><br><span class="line">port = 3306</span><br><span class="line"><span class="meta">#</span><span class="bash"> server_id = .....</span></span><br><span class="line">socket = /home/mysql/tmp/mysql.sock</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Remove leading <span class="comment"># to set options mainly useful for reporting servers.</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> The server defaults are faster <span class="keyword">for</span> transactions and fast SELECTs.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Adjust sizes as needed, experiment to find the optimal values.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> join_buffer_size = 128M</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sort_buffer_size = 2M</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> read_rnd_buffer_size = 2M </span></span><br><span class="line"></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES </span><br><span class="line"></span><br><span class="line">[client]</span><br><span class="line">socket = /home/mysql/tmp/mysql.sock</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意，<code>tmp</code>目录不存在，请创建之。注意权限 <code>chown -R mysql:mysql tmp</code></p>
+</blockquote>
+<p><strong>运行</strong></p>
+<ol>
+<li><p>运行服务器程序</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/home/my</span>sql<span class="regexp">/bin/my</span>sqld_safe&amp;</span><br></pre></td></tr></table></figure>
+<p>在这个启动脚本里已默认设置<code>--user=mysql</code>；在脚本末尾加<code>&amp;</code>表示设置此进程为后台进程，区别就是在控制台输入<code>bg</code>，即可将当前进程转入后台，当前<code>shell</code>可进行其他操作。</p>
+</li>
+<li><p>停止 <code>mysql</code></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/<span class="built_in">home</span>/mysql/bin/mysqladmin -uroot -p <span class="built_in">shutdown</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>客户端连接测试</strong><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">mysql -uroot -p</span></span><br></pre></td></tr></table></figure></p>
+<p>输入初始化时提供的默认密码，然后进行<code>mysql</code>客户端界面，修改密码<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">user</span> <span class="string">'root'</span>@<span class="string">'localhost'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'111111'</span>;</span><br></pre></td></tr></table></figure></p>
+<p><strong>设置<code>mysql</code>以服务运行并且开机启动</strong><br>将<code>/home/mysql/support-files/mysql.server</code> 拷贝为<code>/etc/init.d/mysql</code>并设置运行权限<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp <span class="meta-keyword">/home/</span>mysql<span class="meta-keyword">/support-files/</span>mysql.server <span class="meta-keyword">/etc/</span>init.d/mysql</span><br><span class="line">chmod +x <span class="meta-keyword">/etc/</span>init.d/mysql</span><br></pre></td></tr></table></figure></p>
+<p>把<code>mysql</code>注册为开机启动的服务<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig --<span class="keyword">add</span><span class="bash"> mysql</span></span><br></pre></td></tr></table></figure></p>
+<p>当然也可以手动进行服务的开启和关闭：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/mysql <span class="literal">start</span></span><br><span class="line">/etc/init.d/mysql <span class="literal">stop</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/30/wnmp_install/" rel="next" title="搭建 WNMP 环境">
+                <i class="fa fa-chevron-left"></i> 搭建 WNMP 环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/09/linux-pyenv/" rel="prev" title="Linux 下 python 版本管理工具 pyenv">
+                Linux 下 python 版本管理工具 pyenv <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP7"><span class="nav-number">1.</span> <span class="nav-text">PHP7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx"><span class="nav-number">2.</span> <span class="nav-text">Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置支持-PHP"><span class="nav-number">2.1.</span> <span class="nav-text">配置支持 PHP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启用-PHP-Fpm"><span class="nav-number">2.2.</span> <span class="nav-text">启用 PHP-Fpm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql"><span class="nav-number">3.</span> <span class="nav-text">Mysql</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

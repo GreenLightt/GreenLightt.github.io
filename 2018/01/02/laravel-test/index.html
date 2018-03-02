@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.1," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="转载 Laravel 学院的测试相关文章并略加精简">
+<meta name="keywords" content="Laravel-5.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 用法之 测试 模块">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/laravel-test/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="转载 Laravel 学院的测试相关文章并略加精简">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 用法之 测试 模块">
+<meta name="twitter:description" content="转载 Laravel 学院的测试相关文章并略加精简">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/laravel-test/"/>
+
+
+
+
+
+  <title>Laravel 用法之 测试 模块 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/laravel-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 用法之 测试 模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T16:28:41+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  转载 Laravel 学院的测试相关文章并略加精简
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文转载<a href="http://laravelacademy.org/post/238.html" target="_blank" rel="noopener">[ Laravel 5.1 文档 ] 服务 —— 测试</a></p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Laravel</code> 植根于测试，实际上，内置使用 <code>PHPUnit</code> 对测试提供支持是即开即用的，并且 <code>phpunit.xml</code> 文件已经为应用设置好了。框架还提供了方便的帮助方法允许你对应用进行富有表现力的测试。</p>
+<p><code>tests</code> 目录中提供了一个 <code>ExampleTest.php</code> 文件，安装完新的 <code>Laravel</code> 应用后，只需简单在命令行运行 <code>phpunit</code> 来运行测试。</p>
+<h2 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h2><p>运行测试的时候，<code>Laravel</code> 自动设置配置环境为 <code>testing</code>。<code>Laravel</code> 在测试时自动配置  <code>session</code> 和 <code>cache</code> 驱动为数组驱动，这意味着测试时不会持久化存储 <code>session</code> 和 <code>cache</code>。</p>
+<p>如果需要的话你可以自由创建其它测试环境配置。<code>testing</code> 环境变量可以在 <code>phpunit.xml</code> 文件中配置。</p>
+<h2 id="定义-amp-运行测试"><a href="#定义-amp-运行测试" class="headerlink" title="定义&amp;运行测试"></a>定义&amp;运行测试</h2><p>要创建一个测试用例，只需简单在 <code>tests</code> 目录创建一个新的测试文件，测试类应该继承 <code>TestCase</code>，然后你可以使用 <code>PHPUnit</code> 定义测试方法。要运行测试，简单从终端执行 <code>phpunit</code> 命令即可：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line">    public function testSomethingIsTrue() &#123;</span><br><span class="line">        $<span class="keyword">this</span>-&gt;assertTrue(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明： 如果你在测试类中定义自己的 <code>setUp</code> 方法，确保在其中调用 <code>parent::setUp</code>。</p>
+</blockquote>
+<h1 id="应用测试"><a href="#应用测试" class="headerlink" title="应用测试"></a>应用测试</h1><p><code>Laravel</code> 为生成 <code>HTTP</code> 请求、测试输出、以及填充表单提供了平滑的 <code>API</code>。举个例子，我们看下 <code>tests</code> 目录下包含的 <code>ExampleTest.php</code> 文件：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">WithoutMiddleware</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">DatabaseTransactions</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span><br><span class="line">    <span class="comment">// 基本功能测试示例</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testBasicExample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;visit(<span class="string">'/'</span>)-&gt;see(<span class="string">'Laravel 5'</span>)-&gt;dontSee(<span class="string">'Rails'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>visit</code> 方法生成了一个 <code>GET</code> 请求，<code>see</code> 方法对我们从应用返回响应中应该看到的给定文本进行断言。<code>dontSee</code> 方法对给定文本没有从应用响应中返回进行断言。在 <code>Laravel</code> 中这是最基本的有效应用测试。</p>
+<h2 id="与应用交互"><a href="#与应用交互" class="headerlink" title="与应用交互"></a>与应用交互</h2><h3 id="点击链接"><a href="#点击链接" class="headerlink" title="点击链接"></a>点击链接</h3><p>在本测试中，我们将为应用生成请求，在返回的响应中“点击”链接，然后对访问URI进行断言。例如，假定响应中有一个“关于我们”的链接：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/about-us"</span>&gt;</span>About Us<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>现在，让我们编写一个测试点击链接并断言用户访问页面是否正确：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">function</span> testBasicExample()&#123;</span><br><span class="line">    $<span class="keyword">this</span>-&gt;visit(<span class="string">'/'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>click(<span class="string">'About Us'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>seePageIs(<span class="string">'/about-us'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="处理表单"><a href="#处理表单" class="headerlink" title="处理表单"></a>处理表单</h3><p><code>Laravel</code>还为处理表单提供了多个方法。<code>type</code>, <code>select</code>, <code>check</code>, <code>attach</code>, 和 <code>press</code> 方法允许你与所有表单输入进行交互。例如，我们假设这个表单存在于应用注册页面：</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/register"</span> <span class="attr">method</span>=<span class="string">"POST"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    </span><span class="template-variable">&#123;!! csrf_field() !!&#125;</span><span class="xml"></span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        Name: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span> <span class="attr">value</span>=<span class="string">"yes"</span> <span class="attr">name</span>=<span class="string">"terms"</span>&gt;</span> Accept Terms</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"Register"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>我们可以编写测试完成表单并检查结果：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">function</span> testNewUserRegistration()&#123;</span><br><span class="line">    $<span class="keyword">this</span>-&gt;visit(<span class="string">'/register'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>type(<span class="string">'Taylor'</span>, <span class="string">'name'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>check(<span class="string">'terms'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>press(<span class="string">'Register'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>seePageIs(<span class="string">'/dashboard'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，如果你的表单包含其他输入比如单选按钮或下拉列表，也可以轻松填写这些字段类型。这里是所有表单操作方法列表：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$this-&gt;type($text, $elementName)</code></td>
+<td>“<code>Type</code>” 文本到给定字段</td>
+</tr>
+<tr>
+<td><code>$this-&gt;select($value, $elementName)</code></td>
+<td>“<code>Select</code>” 单选框或下拉列表</td>
+</tr>
+<tr>
+<td><code>$this-&gt;check($elementName)</code></td>
+<td>“<code>Check</code>” 复选框</td>
+</tr>
+<tr>
+<td><code>$this-&gt;attach($pathToFile, $elementName)</code></td>
+<td>“<code>Attach</code>” 文件到表单</td>
+</tr>
+<tr>
+<td><code>$this-&gt;press($buttonTextOrElementName)</code></td>
+<td>“<code>Press</code>”  给定文本或name的按钮</td>
+</tr>
+</tbody>
+</table>
+<h3 id="处理附件"><a href="#处理附件" class="headerlink" title="处理附件"></a>处理附件</h3><p>如果表单包含 <code>file</code> 输入类型，可以使用 <code>attach</code> 方法添加文件到表单：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">function</span> testPhotoCanBeUploaded()&#123;</span><br><span class="line">    $<span class="keyword">this</span>-&gt;visit(<span class="string">'/upload'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>name(<span class="string">'File Name'</span>, <span class="string">'name'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>attach($absolutePathToFile, <span class="string">'photo'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>press(<span class="string">'Upload'</span>)</span><br><span class="line"><span class="function">         -&gt;</span>see(<span class="string">'Upload Successful!'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="测试-JSON-Api"><a href="#测试-JSON-Api" class="headerlink" title="测试 JSON Api"></a>测试 JSON Api</h2><p><code>Laravel</code> 还提供多个帮助函数用于测试 <code>JSON API</code> 及其响应。例如，<code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, 和 <code>delete</code> 方法用于通过多种 <code>HTTP</code> 请求方式发出请求。你还可以轻松传递数据和头到这些方法。作为开始，我们编写测试来生成 <code>POST</code> 请求到 <code>/user</code> 并断言返回的数据是否是 <code>JSON</code> 格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 基本功能测试示例</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testBasicExample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;post(<span class="string">'/user'</span>, [<span class="string">'name'</span> =&gt; <span class="string">'Sally'</span>])</span><br><span class="line">             -&gt;seeJson([</span><br><span class="line">                 <span class="string">'created'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">             ]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>seeJson</code> 方法将给定数组转化为 <code>JSON</code>，然后验证应用返回的整个 <code>JSON</code> 响应中的 <code>JSON</code> 片段。因此，如果在 <code>JSON</code> 响应中有其他属性，只要给定片段存在的话测试依然会通过。</p>
+<p>如果你想要验证给定数组和应用返回的 <code>JSON</code> 能够精确匹配，使用 <code>seeJsonEquals</code> 方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testBasicExample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;post(<span class="string">'/user'</span>, [<span class="string">'name'</span> =&gt; <span class="string">'Sally'</span>])</span><br><span class="line">         -&gt;seeJsonEquals([</span><br><span class="line">             <span class="string">'created'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">         ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Session-认证"><a href="#Session-认证" class="headerlink" title="Session 认证"></a>Session 认证</h2><p><code>Laravel</code> 提供个多个帮助函数在测试期间处理 <code>session</code>，首先，可以使用 <code>withSession</code> 方法设置 <code>session</code> 值到给定数组。这通常在测试请求前获取 <code>session</code> 数据时很有用：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span><br><span class="line">    public function testApplication() &#123;</span><br><span class="line">        $<span class="keyword">this</span>-&gt;withSession([<span class="symbol">'fo</span>o' =&gt; <span class="symbol">'ba</span>r'])-&gt;visit('/');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，<code>session</code> 的通常用于操作用户状态，例如认证用户。帮助函数 <code>actingAs</code> 提供了认证给定用户为当前用户的简单方法，例如，我们使用模型工厂生成和认证用户：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span></span><br><span class="line"><span class="php">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testApplication</span><span class="params">()</span></span></span></span><br><span class="line"><span class="php">    &#123;</span></span><br><span class="line"><span class="php">        $user = factory(<span class="string">'App\User'</span>)-&gt;create();</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">        <span class="keyword">$this</span>-&gt;actingAs($user)</span></span><br><span class="line"><span class="php">             -&gt;withSession([<span class="string">'foo'</span> =&gt; <span class="string">'bar'</span>])</span></span><br><span class="line"><span class="php">             -&gt;visit(<span class="string">'/'</span>)</span></span><br><span class="line"><span class="php">             -&gt;see(<span class="string">'Hello, '</span>.$user-&gt;name);</span></span><br><span class="line"><span class="php">    &#125;</span></span><br><span class="line"><span class="php">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="禁止中间件"><a href="#禁止中间件" class="headerlink" title="禁止中间件"></a>禁止中间件</h2><p>测试应用时，为某些测试禁止中间件很方便。这种机制允许你将路由和控制器与中间件孤立开来做测试，<code>Laravel</code> 包含了一个简单的 <code>WithoutMiddleware trait</code>，可以使用该 <code>trait</code> 自动在测试类中禁止所有中间件：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use <span class="type">Illuminate</span>\<span class="type">Foundation</span>\<span class="type">Testing</span>\<span class="type">WithoutMiddleware</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span><br><span class="line">    use <span class="type">WithoutMiddleware</span>;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你只想在某些方法中禁止中间件，可以在测试方法中调用 <code>withoutMiddleware</code> 方法：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span><br><span class="line">    <span class="comment">// 基本功能测试示例</span></span><br><span class="line">    public function testBasicExample() &#123;</span><br><span class="line">        $<span class="keyword">this</span>-&gt;withoutMiddleware();</span><br><span class="line"></span><br><span class="line">        $<span class="keyword">this</span>-&gt;visit('/')-&gt;see(<span class="symbol">'Laravel</span> <span class="number">5</span>');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自定义-Http-请求"><a href="#自定义-Http-请求" class="headerlink" title="自定义 Http 请求"></a>自定义 Http 请求</h2><p>如果你想要在应用中生成自定义 <code>HTTP</code> 请求并获取完整的 <code>Illuminate\Http\Response</code> 对象，可以使用 <code>call</code> 方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testApplication</span><span class="params">()</span></span>&#123;</span><br><span class="line">    $response = <span class="keyword">$this</span>-&gt;call(<span class="string">'GET'</span>, <span class="string">'/'</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;assertEquals(<span class="number">200</span>, $response-&gt;status());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你要生成 <code>POST</code>, <code>PUT</code>, 或者 <code>PATCH</code> 请求可以在请求中传入输入数据数组，在路由或控制器中可以通过 <code>Request</code> 实例访问请求数据：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$response = <span class="keyword">$this</span>-&gt;call(<span class="string">'POST'</span>, <span class="string">'/user'</span>, [<span class="string">'name'</span> =&gt; <span class="string">'Taylor'</span>]);</span><br></pre></td></tr></table></figure>
+<h1 id="处理数据库"><a href="#处理数据库" class="headerlink" title="处理数据库"></a>处理数据库</h1><p><code>Laravel</code> 还提供了多种有用的工具让测试数据库驱动的应用更加简单。首先，你可以使用帮助函数 <code>seeInDatabase</code> 来断言数据库中的数据是否和给定数据集合匹配。例如，如果你想要通过 <code>email</code> 值为 <a href="mailto:`sally@example.com" target="_blank" rel="noopener">`sally@example.com</a><code>的条件去数据表</code>users` 查询是否存在该记录 ，我们可以这样做：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testDatabase</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 调用应用...</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;seeInDatabase(<span class="string">'users'</span>, [<span class="string">'email'</span> =&gt; <span class="string">'sally@foo.com'</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="每次测试后重置数据库"><a href="#每次测试后重置数据库" class="headerlink" title="每次测试后重置数据库"></a>每次测试后重置数据库</h2><p>每次测试后重置数据库通常很有用，这样的话上次测试的数据不会影响下一次测试。</p>
+<h3 id="使用迁移"><a href="#使用迁移" class="headerlink" title="使用迁移"></a>使用迁移</h3><p>一种方式是每次测试后回滚数据库并在下次测试前重新迁移。<code>Laravel</code> 提供了一个简单的 <code>DatabaseMigrations trait</code> 来自动为你处理。在测试类上简单使用该 <code>trait</code> 如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">WithoutMiddleware</span>;</span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">DatabaseMigrations</span>;</span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">DatabaseTransactions</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span></span><br><span class="line"><span class="php">    <span class="keyword">use</span> <span class="title">DatabaseMigrations</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">    <span class="comment">// 基本功能测试示例</span></span></span><br><span class="line"><span class="php">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testBasicExample</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="php">        <span class="keyword">$this</span>-&gt;visit(<span class="string">'/'</span>)-&gt;see(<span class="string">'Laravel 5'</span>);</span></span><br><span class="line"><span class="php">    &#125;</span></span><br><span class="line"><span class="php">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用事务"><a href="#使用事务" class="headerlink" title="使用事务"></a>使用事务</h3><p>另一种方式是将每一个测试用例包裹到一个数据库事务中，<code>Laravel</code> 提供了方便的 DatabaseTransactions trait自动为你处理：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">WithoutMiddleware</span>;</span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">DatabaseMigrations</span>;</span></span><br><span class="line"><span class="php"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span>\<span class="title">DatabaseTransactions</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span>&#123;</span></span><br><span class="line"><span class="php">    <span class="keyword">use</span> <span class="title">DatabaseTransactions</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">    <span class="comment">// 基本功能测试示例</span></span></span><br><span class="line"><span class="php">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testBasicExample</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="php">        <span class="keyword">$this</span>-&gt;visit(<span class="string">'/'</span>)-&gt;see(<span class="string">'Laravel 5'</span>);</span></span><br><span class="line"><span class="php">    &#125;</span></span><br><span class="line"><span class="php">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="模型工厂"><a href="#模型工厂" class="headerlink" title="模型工厂"></a>模型工厂</h2><p>测试时，通常需要在执行测试前插入新数据到数据库。在创建测试数据时，<code>Laravel</code> 允许你使用”<code>factories</code> ”为每个 <code>Eloquent</code> 模型定义默认的属性值集合，而不用手动为每一列指定值。作为开始，我们看一下 <code>database/factories/ModelFactory.php</code> 文件，该文件包含了一个工厂定义：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$factory-&gt;define(App\User::class, <span class="function"><span class="keyword">function</span> <span class="params">(Faker\Generator $faker)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">'name'</span> =&gt; $faker-&gt;name,</span><br><span class="line">        <span class="string">'email'</span> =&gt; $faker-&gt;email,</span><br><span class="line">        <span class="string">'password'</span> =&gt; bcrypt(str_random(<span class="number">10</span>)),</span><br><span class="line">        <span class="string">'remember_token'</span> =&gt; str_random(<span class="number">10</span>),</span><br><span class="line">    ];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在闭包中，作为工厂定义，我们返回该模型上所有属性默认测试值。该闭包接收<code>PHP</code> 库 <code>Faker</code> 实例，从而允许你方便地为测试生成多种类型的随机数据。</p>
+<p>当然，你可以添加更多工厂到 <code>ModelFactory.php</code> 文件。</p>
+<h3 id="多个工厂类型"><a href="#多个工厂类型" class="headerlink" title="多个工厂类型"></a>多个工厂类型</h3><p>有时候你可能想要为同一个 <code>Eloquent</code> 模型类生成多个工厂，例如，除了正常用户外可能你想要为“管理员”用户生成一个工厂，你可以使用 <code>defineAs</code>方法定义这些工厂：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$factory-&gt;defineAs(App\User::class, <span class="string">'admin'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($faker)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">'name'</span> =&gt; $faker-&gt;name,</span><br><span class="line">        <span class="string">'email'</span> =&gt; $faker-&gt;email,</span><br><span class="line">        <span class="string">'password'</span> =&gt; str_random(<span class="number">10</span>),</span><br><span class="line">        <span class="string">'remember_token'</span> =&gt; str_random(<span class="number">10</span>),</span><br><span class="line">        <span class="string">'admin'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">    ];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>你可以使用 <code>raw</code> 方法获取基本属性而不用重复基本用户工厂中的所有属性，获取这些属性后，只需将你要求的额外值增补进去即可：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$factory-&gt;defineAs(App\User::class, <span class="string">'admin'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($faker)</span> <span class="title">use</span> <span class="params">($factory)</span> </span>&#123;</span><br><span class="line">    $user = $factory-&gt;raw(App\User::class);</span><br><span class="line">    <span class="keyword">return</span> array_merge($user, [<span class="string">'admin'</span> =&gt; <span class="keyword">true</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="在测试中使用工厂"><a href="#在测试中使用工厂" class="headerlink" title="在测试中使用工厂"></a>在测试中使用工厂</h3><p>定义好工厂后，可以在测试或数据库填充文件中通过全局的 <code>factory</code> 方法使用它们来生成模型实例，所以，让我们看一些生成模型的例子，首先，我们使用 <code>make</code> 方法，该方法创建模型但不将其保存到数据库：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testDatabase</span><span class="params">()</span></span>&#123;</span><br><span class="line">    $user = factory(App\User::class)-&gt;make();</span><br><span class="line">    <span class="comment">// 用户模型测试...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你想要覆盖模型的一些默认值，可以传递数组值到 <code>make</code> 方法。只有指定值被替换，其他数据保持不变：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = factory(App\User::<span class="class"><span class="keyword">class</span>)-&gt;<span class="title">make</span>([</span></span><br><span class="line">    <span class="string">'name'</span> =&gt; <span class="string">'Abigail'</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p>还可以创建多个模型集合或者创建给定类型的集合：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建3个 App\User 实例...</span></span><br><span class="line">$users = factory(App\User::<span class="keyword">class</span>, <span class="number">3</span>)-&gt;make();</span><br><span class="line"><span class="comment">// 创建1个 App\User "admin" 实例...</span></span><br><span class="line">$user = factory(App\User::<span class="keyword">class</span>, <span class="string">'admin'</span>)-&gt;make();</span><br><span class="line"><span class="comment">// 创建3个 App\User "admin" 实例...</span></span><br><span class="line">$users = factory(App\User::<span class="keyword">class</span>, <span class="string">'admin'</span>, <span class="number">3</span>)-&gt;make();</span><br></pre></td></tr></table></figure>
+<h3 id="持久化工厂模型"><a href="#持久化工厂模型" class="headerlink" title="持久化工厂模型"></a>持久化工厂模型</h3><p><code>create</code> 方法不仅能创建模型实例，还可以使用 <code>Eloquent</code> 的 <code>save</code> 方法将它们保存到数据库：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testDatabase</span><span class="params">()</span></span>&#123;</span><br><span class="line">    $user = factory(App\User::class)-&gt;create();</span><br><span class="line">    <span class="comment">//用户模型测试...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你仍然可以通过传递数组到 <code>create</code> 方法覆盖模型上的属性：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = factory(App\User::<span class="class"><span class="keyword">class</span>)-&gt;<span class="title">create</span>([</span></span><br><span class="line">    <span class="string">'name'</span> =&gt; <span class="string">'Abigail'</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<h3 id="添加关联关系到模型"><a href="#添加关联关系到模型" class="headerlink" title="添加关联关系到模型"></a>添加关联关系到模型</h3><p>你甚至可以持久化多个模型到数据库。在本例中，我们添加一个关联到创建的模型，使用create方法创建多个模型的时候，会返回一个 <code>Eloquent</code> 集合实例，从而允许你使用集合提供的所有便利方法，例如 <code>each</code>：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$users = factory(App<span class="string">\User::class,</span> <span class="number">3</span>)</span><br><span class="line"><span class="function">           -&gt;</span>create()</span><br><span class="line"><span class="function">           -&gt;</span>each(<span class="keyword">function</span>($u) &#123;</span><br><span class="line">                $u-&gt;posts<span class="function"><span class="params">()</span>-&gt;</span>save<span class="function"><span class="params">(factory(App<span class="string">\Post::class)-&gt;make());</span></span></span></span><br><span class="line"><span class="function"><span class="params">            &#125;);</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a>模拟</h1><h2 id="模拟事件"><a href="#模拟事件" class="headerlink" title="模拟事件"></a>模拟事件</h2><p>如果你在重度使用 <code>Laravel</code> 的时间系统，可能想要在测试时模拟特定事件。例如，如果你在测试用户注册，你可能不想所有 <code>UserRegistered</code> 的时间处理器都被触发，因为这可能会发送欢迎邮件，等等。</p>
+<p><code>Laravel</code> 提供可一个方便的 <code>expectsEvents</code> 方法来验证期望的事件被触发，但同时阻止该事件的其它处理器运行：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    public function testUserRegistration() &#123;</span><br><span class="line">    </span><br><span class="line">        $<span class="keyword">this</span>-&gt;expectsEvents(<span class="type">App</span>\<span class="type">Events</span>\<span class="type">UserRegistered</span>::<span class="class"><span class="keyword">class</span>)</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 测试用户注册代码...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你想要阻止所有事件运行，可以使用 <code>withoutEvents</code> 方法：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    public function testUserRegistration() &#123;</span><br><span class="line">    </span><br><span class="line">        $<span class="keyword">this</span>-&gt;withoutEvents();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 测试用户注册代码...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="模拟队列任务"><a href="#模拟队列任务" class="headerlink" title="模拟队列任务"></a>模拟队列任务</h2><p>有时候，你可能想要在请求时简单测试控制器分发的指定任务，这允许你孤立的测试路由/控制器——将其从任务逻辑中分离出去，当然，接下来你可以在一个独立测试类中测试任务本身。</p>
+<p><code>Laravel</code> 提供了一个方便的 <code>expectsJobs</code> 方法来验证期望的任务被分发，但该任务本身不会被测试：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    public function testPurchasePodcast() &#123;</span><br><span class="line">        $<span class="keyword">this</span>-&gt;expectsJobs(<span class="type">App</span>\<span class="type">Jobs</span>\<span class="type">PurchasePodcast</span>::<span class="class"><span class="keyword">class</span>)</span>;</span><br><span class="line">        <span class="comment">// 测试购买播客代码...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：这个方法只检查通过 <code>DispatchesJobs trait</code> 分发方法分发的任务，并不检查直接通过 <code>Queue::push</code> 分发的任务。</p>
+</blockquote>
+<h2 id="模拟门面"><a href="#模拟门面" class="headerlink" title="模拟门面"></a>模拟门面</h2><p>测试的时候，你可能经常想要模拟 <code>Laravel</code> 门面的调用，例如，看看下面的控制器动作：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span>&#123;</span><br><span class="line">    <span class="comment">// 显示应用用户列表</span></span><br><span class="line">    public function index() &#123;</span><br><span class="line">        $value = <span class="type">Cache</span>::get(<span class="symbol">'ke</span>y');</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以通过使用 <code>shouldReceive</code> 方法模拟 <code>Cache</code> 门面的调用，该方法返回一个 <code>Mockery</code> 模拟的实例，由于门面通过 <code>Laravel</code> 服务容器解析和管理，它们比通常的静态类更具有可测试性。例如，我们来模拟 <code>Cache</code> 门面的调用：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span> &#123;</span></span><br><span class="line">    public <span class="keyword">function</span> testGetIndex() &#123;</span><br><span class="line">        Cache::shouldReceive(<span class="string">'get'</span>)</span><br><span class="line"><span class="function">                    -&gt;</span>once()</span><br><span class="line"><span class="function">                    -&gt;</span><span class="keyword">with</span>(<span class="string">'key'</span>)</span><br><span class="line"><span class="function">                    -&gt;</span>andReturn(<span class="string">'value'</span>);</span><br><span class="line"></span><br><span class="line">        $<span class="keyword">this</span>-&gt;visit<span class="function"><span class="params">(<span class="string">'/users'</span>)</span>-&gt;</span>see(<span class="string">'value'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：不要模拟 <code>Request</code> 门面，取而代之地，在测试时传递输入到 <code>HTTP</code> 帮助函数如 <code>call</code> 和 <code>post</code>。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-1/" rel="tag"><i class="fa fa-tag"></i> Laravel-5.1</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/29/laravel-console/" rel="next" title="Laravel 用法之 Artisan 控制台 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 用法之 Artisan 控制台 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/02/laravel-validation/" rel="prev" title="Laravel 用法之 验证 模块">
+                Laravel 用法之 验证 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试环境"><span class="nav-number">1.1.</span> <span class="nav-text">测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-amp-运行测试"><span class="nav-number">1.2.</span> <span class="nav-text">定义&amp;运行测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用测试"><span class="nav-number">2.</span> <span class="nav-text">应用测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#与应用交互"><span class="nav-number">2.1.</span> <span class="nav-text">与应用交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#点击链接"><span class="nav-number">2.1.1.</span> <span class="nav-text">点击链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理表单"><span class="nav-number">2.1.2.</span> <span class="nav-text">处理表单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理附件"><span class="nav-number">2.1.3.</span> <span class="nav-text">处理附件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试-JSON-Api"><span class="nav-number">2.2.</span> <span class="nav-text">测试 JSON Api</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session-认证"><span class="nav-number">2.3.</span> <span class="nav-text">Session 认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#禁止中间件"><span class="nav-number">2.4.</span> <span class="nav-text">禁止中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义-Http-请求"><span class="nav-number">2.5.</span> <span class="nav-text">自定义 Http 请求</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理数据库"><span class="nav-number">3.</span> <span class="nav-text">处理数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#每次测试后重置数据库"><span class="nav-number">3.1.</span> <span class="nav-text">每次测试后重置数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用迁移"><span class="nav-number">3.1.1.</span> <span class="nav-text">使用迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用事务"><span class="nav-number">3.1.2.</span> <span class="nav-text">使用事务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型工厂"><span class="nav-number">3.2.</span> <span class="nav-text">模型工厂</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多个工厂类型"><span class="nav-number">3.2.1.</span> <span class="nav-text">多个工厂类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在测试中使用工厂"><span class="nav-number">3.2.2.</span> <span class="nav-text">在测试中使用工厂</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持久化工厂模型"><span class="nav-number">3.2.3.</span> <span class="nav-text">持久化工厂模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加关联关系到模型"><span class="nav-number">3.2.4.</span> <span class="nav-text">添加关联关系到模型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模拟"><span class="nav-number">4.</span> <span class="nav-text">模拟</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟事件"><span class="nav-number">4.1.</span> <span class="nav-text">模拟事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟队列任务"><span class="nav-number">4.2.</span> <span class="nav-text">模拟队列任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟门面"><span class="nav-number">4.3.</span> <span class="nav-text">模拟门面</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

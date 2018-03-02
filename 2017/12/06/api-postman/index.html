@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Postman," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="整理关于 Postman 的知识点">
+<meta name="keywords" content="Postman">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API 测试插件 Postman">
+<meta property="og:url" content="http://yoursite.com/2017/12/06/api-postman/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="整理关于 Postman 的知识点">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.518Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 测试插件 Postman">
+<meta name="twitter:description" content="整理关于 Postman 的知识点">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/06/api-postman/"/>
+
+
+
+
+
+  <title>API 测试插件 Postman | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/api-postman/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">API 测试插件 Postman</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-06T17:26:41+08:00">
+                2017-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  整理关于 Postman 的知识点
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>具体使用参考官网 <a href="https://www.getpostman.com/docs/" target="_blank" rel="noopener">https://www.getpostman.com/docs/</a>;</p>
+<p><code>Postman</code> 是 <code>Google</code> 开发的一款功能强大的网页调试与发送网页 <code>HTTP</code> 请求，并能运行测试用例的的 <code>Chrome</code> 插件。其主要功能包括</p>
+<ul>
+<li>模拟各种 <code>HTTP</code> 请求<br>从常用的 <code>GET</code>、<code>POST</code> 到 <code>RESTful</code> 的 <code>PUT</code> 、 <code>DELETE</code> … 等等。 甚至还可以发送文件、送出额外的 <code>header</code>。</li>
+<li><code>Collection</code> 功能（测试集合）<br><code>Collection</code> 是 <code>requests</code> 的集合，在做完一个测试的時候， 你可以把这次的 <code>request</code> 存到特定的 <code>Collection</code> 里面，如此一来，下次要做同样的测试时，就不需要重新输入。而且一个 <code>collection</code> 可以包含多条 <code>request</code>，如果我们把一个 <code>request</code> 当成一个 <code>test case</code>，那 <code>collection</code> 就可以看成是一个<code>test suite</code>。通过<code>collection</code>的归类，我们可以良好的分类测试软件所提供的<code>API</code>。而且 <code>Collection</code> 还可以 <code>Import</code> 或是 <code>Share</code> 出来，让团队里面的所有人共享你建立起來的 <code>Collection</code>。</li>
+<li>人性化的 <code>Response</code> 整理<br>一般在用其他工具来测试的時候，<code>response</code> 的内容通常都是纯文字的 <code>raw</code>， 但如果是 <code>JSON</code>，就是塞成一整行的 <code>JSON</code>。这会造成阅读的障碍 ，而 <code>Postman</code> 可以针对 <code>response</code> 内容的格式自动美化。 <code>JSON</code>、 <code>XML</code> 或是 <code>HTML</code> 都會整理成我们可以阅读的格式。</li>
+<li>内置测试脚本语言<br><code>Postman</code> 支持编写测试脚本，可以快速的检查 <code>request</code> 的结果，并返回测试结果。</li>
+<li>设定变量与环境<br><code>Postman</code> 可以自由设定变量与 <code>Environment</code>，一般我们在编辑 <code>request</code>，校验 <code>response</code> 的时候，总会需要重复输入某些字符，比如<code>url</code>，<code>postman</code>允许我们设定变量来保存这些值。并且把变量保存在不同的环境中。比如，我们可能会有多种环境， <code>development</code> 、 <code>staging</code> 或 <code>local</code>， 而这几种环境中的 <code>request URL</code> 也各不相同，但我们可以在不同的环境中设定同样的变量，只是变量的值不一样，这样我们就不用修改我们的测试脚本，而测试不同的环境。</li>
+</ul>
+<h1 id="官方文档目录"><a href="#官方文档目录" class="headerlink" title="官方文档目录"></a>官方文档目录</h1><ul>
+<li>运行 Postman<ul>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/installation_and_updates" target="_blank" rel="noopener">安装和更新</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/sending_the_first_request" target="_blank" rel="noopener">发送第一个请求</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/creating_the_first_collection" target="_blank" rel="noopener">创建第一个collection</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/navigating_postman" target="_blank" rel="noopener">Postman 面板</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/postman_account" target="_blank" rel="noopener">Postman 账户</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/syncing" target="_blank" rel="noopener">同步数据</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/settings" target="_blank" rel="noopener">Settings 设置</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/launching_postman/newbutton" target="_blank" rel="noopener">New 按钮</a></li>
+</ul>
+</li>
+<li>发送 API 请求<ul>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/requests" target="_blank" rel="noopener">请求</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/responses" target="_blank" rel="noopener">响应</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/history" target="_blank" rel="noopener">历史记录</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/troubleshooting_api_requests" target="_blank" rel="noopener">API 请求出错诊断</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/debugging_and_logs" target="_blank" rel="noopener">调试与日志</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/authorization" target="_blank" rel="noopener">权限认证</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/cookies" target="_blank" rel="noopener">cookie 管理</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/certificates" target="_blank" rel="noopener">SSL 证书</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/capturing_http_requests" target="_blank" rel="noopener">捕捉 http 请求</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/interceptor_extension" target="_blank" rel="noopener">拦截器扩展</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/proxy" target="_blank" rel="noopener">代理</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/generate_code_snippets" target="_blank" rel="noopener">生成代码片段</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/sending_api_requests/making_soap_requests" target="_blank" rel="noopener">发送 SOAP 请求</a></li>
+</ul>
+</li>
+<li>创建 collection<ul>
+<li><a href="https://www.getpostman.com/docs/postman/collections/creating_collections" target="_blank" rel="noopener">创建 collection</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collections/sharing_collections" target="_blank" rel="noopener">共享 collection</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collections/managing_collections" target="_blank" rel="noopener">管理 collection</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collections/examples" target="_blank" rel="noopener">示例</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collections/data_formats" target="_blank" rel="noopener">数据导入与导出</a></li>
+</ul>
+</li>
+<li>介绍脚本<ul>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/intro_to_scripts" target="_blank" rel="noopener">Postman 脚本的介绍</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/pre_request_scripts" target="_blank" rel="noopener">请求前的脚本</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/test_scripts" target="_blank" rel="noopener">请求后的脚本</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/test_examples" target="_blank" rel="noopener">Test 脚本常用示例</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/branching_and_looping" target="_blank" rel="noopener">指定 Collection Runder 执行的顺序</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/postman_sandbox" target="_blank" rel="noopener">Postman 沙盒</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/scripts/postman_sandbox_api_reference" target="_blank" rel="noopener">Postman 沙盒提供的 API</a></li>
+</ul>
+</li>
+<li>环境变量和全局变量<ul>
+<li><a href="https://www.getpostman.com/docs/postman/environments_and_globals/variables" target="_blank" rel="noopener">变量</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/environments_and_globals/manage_environments" target="_blank" rel="noopener">环境变量管理</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/environments_and_globals/manage_globals" target="_blank" rel="noopener">全局变量管理</a></li>
+</ul>
+</li>
+<li>运行 collections<ul>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/starting_a_collection_run" target="_blank" rel="noopener">介绍 collection run</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/using_environments_in_collection_runs" target="_blank" rel="noopener">在 collection run 使用环境变量</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/working_with_data_files" target="_blank" rel="noopener">使用 Data files</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/running_multiple_iterations" target="_blank" rel="noopener">多次执行</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/building_workflows" target="_blank" rel="noopener">建立工作流</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/sharing_a_collection_run" target="_blank" rel="noopener">共享 collection run</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/debugging_a_collection_run" target="_blank" rel="noopener">调试 collection run</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/command_line_integration_with_newman" target="_blank" rel="noopener">Newman</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/integration_with_jenkins" target="_blank" rel="noopener">和 Jenkins 集成</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/integration_with_travis" target="_blank" rel="noopener">和 Travis CI 集成</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/collection_runs/newman_with_docker" target="_blank" rel="noopener">docker 运行 newman</a></li>
+</ul>
+</li>
+<li>团队仓库<ul>
+<li><a href="https://www.getpostman.com/docs/postman/team_library/setting_up_team_library" target="_blank" rel="noopener">设置一个团队仓库</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/team_library/sharing" target="_blank" rel="noopener">共享</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/team_library/activity_feed_and_restoring_collections" target="_blank" rel="noopener">活动摘要和保存 collections</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/team_library/searching" target="_blank" rel="noopener">搜索</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/team_library/conflicts" target="_blank" rel="noopener">冲突</a></li>
+</ul>
+</li>
+<li>API 文档<ul>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/intro_to_api_documentation" target="_blank" rel="noopener">API 文档的介绍</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/viewing_documentation" target="_blank" rel="noopener">查看文档</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/environments_and_environment_templates" target="_blank" rel="noopener">环境变量和环境模板</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/how_to_document_using_markdown" target="_blank" rel="noopener">用 Markdown 书写文档</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/publishing_public_docs" target="_blank" rel="noopener">发布公共文档</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/adding_and_verifying_custom_domains" target="_blank" rel="noopener">添加和验证自定义域名</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/api_documentation/adding_team_name_and_logo" target="_blank" rel="noopener">添加团队名和 logo</a></li>
+</ul>
+</li>
+<li>监控<ul>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/intro_monitors" target="_blank" rel="noopener">对监控的简介</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/setting_up_monitor" target="_blank" rel="noopener">设置一个监控器</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/viewing_monitor_results" target="_blank" rel="noopener">查看监控结果</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/monitoring_apis_websites" target="_blank" rel="noopener">监控 API 和站点</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/integrations_for_alerts" target="_blank" rel="noopener">设置接收警报</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/pricing_monitors" target="_blank" rel="noopener">关于监控的付费</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/troubleshooting_monitors" target="_blank" rel="noopener">诊断监控</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/monitors/faqs_monitors" target="_blank" rel="noopener">监控器的常见问题</a></li>
+</ul>
+</li>
+<li>模拟服务器<ul>
+<li><a href="https://www.getpostman.com/docs/postman/mock_servers/setting_up_mock" target="_blank" rel="noopener">设置一个模拟服务器</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/mock_servers/mocking_with_examples" target="_blank" rel="noopener">示例</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/mock_servers/mock_with_api" target="_blank" rel="noopener">使用 Postman Pro API 来 Mock</a></li>
+<li><a href="https://www.getpostman.com/docs/postman/mock_servers/matching_algorithm" target="_blank" rel="noopener">匹配逻辑</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Postman/" rel="tag"><i class="fa fa-tag"></i> Postman</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/28/linux-nohup/" rel="next" title="Linux 不挂断运行命令工具 nohup">
+                <i class="fa fa-chevron-left"></i> Linux 不挂断运行命令工具 nohup
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/08/laravel-mail/" rel="prev" title="Laravel 大将之 Mail 模块">
+                Laravel 大将之 Mail 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#官方文档目录"><span class="nav-number">1.</span> <span class="nav-text">官方文档目录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

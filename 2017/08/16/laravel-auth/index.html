@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.4," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍如何使用 Auth 模块">
+<meta name="keywords" content="Laravel-5.4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 大将之 Auth 模块">
+<meta property="og:url" content="http://yoursite.com/2017/08/16/laravel-auth/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="介绍如何使用 Auth 模块">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/bVS3fX.png">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.524Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 大将之 Auth 模块">
+<meta name="twitter:description" content="介绍如何使用 Auth 模块">
+<meta name="twitter:image" content="http://owk2q4gs5.bkt.clouddn.com/bVS3fX.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/16/laravel-auth/"/>
+
+
+
+
+
+  <title>Laravel 大将之 Auth 模块 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/laravel-auth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 大将之 Auth 模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-16T17:57:41+08:00">
+                2017-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍如何使用 Auth 模块
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是基于<code>Laravel 5.4</code> 版本的<code>Auth</code>模块代码进行分析书写；</p>
+<p>官方 <code>API</code> 地址 <a href="https://laravel.com/api/5.4/Illuminate/Auth.html" target="_blank" rel="noopener">https://laravel.com/api/5.4/Illuminate/Auth.html</a></p>
+<h1 id="模块组成"><a href="#模块组成" class="headerlink" title="模块组成"></a>模块组成</h1><p><code>Auth</code>模块从功能上分为用户认证和权限管理两个部分；从文件组成上，<code>Illuminate\Auth\Passwords</code>目录下是密码重置或忘记密码处理的小模块，<code>Illuminate\Auth</code>是负责用户认证和权限管理的模块，<code>Illuminate\Foundation\Auth</code>提供了登录、修改密码、重置密码等一系统列具体逻辑实现；下图展示了<code>Auth</code>模块各个文件的关系，并进行简要说明；</p>
+<p><img src="http://owk2q4gs5.bkt.clouddn.com/bVS3fX.png" alt="Laravel Auth 模块关系图"></p>
+<h1 id="用户认证"><a href="#用户认证" class="headerlink" title="用户认证"></a>用户认证</h1><p><code>HTTP</code>本身是无状态，通常在系统交互的过程中，使用账号或者<code>Token</code>标识来确定认证用户；</p>
+<h2 id="配置文件解读"><a href="#配置文件解读" class="headerlink" title="配置文件解读"></a>配置文件解读</h2><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">'defaults'</span> =&gt; [</span><br><span class="line">        <span class="string">'guard'</span> =&gt; <span class="string">'web'</span>,</span><br><span class="line">        ...</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">'guards'</span> =&gt; [  </span><br><span class="line">        <span class="string">'web'</span> =&gt; [</span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'session'</span>,</span><br><span class="line">            <span class="string">'provider'</span> =&gt; <span class="string">'users'</span>,</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">'api'</span> =&gt; [    </span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'token'</span>, </span><br><span class="line">            <span class="string">'provider'</span> =&gt; <span class="string">'users'</span>,</span><br><span class="line">        ],</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">'providers'</span> =&gt; [</span><br><span class="line">        <span class="string">'users'</span> =&gt; [</span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'eloquent'</span>,</span><br><span class="line">            <span class="string">'model'</span> =&gt; App\User::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line"><span class="class">        ], </span></span><br><span class="line"><span class="class">    ],</span></span><br><span class="line"><span class="class">], </span></span><br><span class="line"><span class="class">];</span></span><br></pre></td></tr></table></figure>
+<p>从下往上，理解；</p>
+<p><code>providers</code>是提供用户数据的接口，要标注驱动对象和目标对象；此处，键名<code>users</code>是一套<code>provider</code>的名字，采用<code>eloquent</code>驱动，<code>modal</code>是<code>App\User::class</code>；</p>
+<p><code>guards</code>部分针对认证管理部分进行配置；有两种认证方式，一种叫<code>web</code>，还有一种是<code>api</code>；<code>web</code>认证是基于<code>Session</code>交互，根据<code>sessionId</code>获取用户<code>id</code>，在<code>users</code>这个<code>provider</code>查询出此用户；<code>api</code>认证是基于<code>token</code>值交互，也采用<code>users</code>这个<code>provider</code>；</p>
+<p><code>defaults</code>项显示默认使用<code>web</code>认证；</p>
+<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><ol>
+<li><p><code>Session</code>绑定认证信息：</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// $credentials数组存放认证条件，比如邮箱或者用户名、密码</span><br><span class="line">// $remember 表示是否要记住，生成 `remember_token`</span><br><span class="line">public <span class="keyword">function</span> attempt(<span class="keyword">array</span> $credentials = [], $remember = <span class="literal">false</span>) </span><br><span class="line"> </span><br><span class="line">public <span class="keyword">function</span> login(AuthenticatableContract $user, $remember = <span class="literal">false</span>)</span><br><span class="line"> </span><br><span class="line">public <span class="keyword">function</span> loginUsingId($id, $remember = <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+<p><code>HTTP</code>基本认证，认证信息放在请求头部；后面的请求访问通过<code>sessionId</code>；</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic</span><span class="params">($field = <span class="string">'email'</span>, $extraConditions = [])</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>只在当前会话中认证，<code>session</code>中不记录认证信息：</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">once</span></span>(array $credentials = [])</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onceUsingId</span></span>($id)</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">onceBasic</span></span>($field = <span class="string">'email'</span>, $extraConditions = [])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>认证过程中（包括注册、忘记密码），定义的事件有这些：</p>
+<table>
+<thead>
+<tr>
+<th>事件名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attempting</td>
+<td>尝试验证事件</td>
+</tr>
+<tr>
+<td>Authenticated</td>
+<td>验证通过事件</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>验证失败事件</td>
+</tr>
+<tr>
+<td>Lockout</td>
+<td>失败次数超过限制，锁住该请求再次访问事件</td>
+</tr>
+<tr>
+<td>Logi</td>
+<td>通过‘remember_token’成功登录时，调用的事件</td>
+</tr>
+<tr>
+<td>Logout</td>
+<td>用户退出事件</td>
+</tr>
+<tr>
+<td>Registered</td>
+<td>用户注册事件</td>
+</tr>
+</tbody>
+</table>
+<p>还有一些其他的认证方法：</p>
+<ol>
+<li>检查是否存在认证用户：<code>Auth::check()</code></li>
+<li>获取当前认证用户：<code>Auth::user()</code></li>
+<li>退出系统：<code>Auth::logout()</code></li>
+</ol>
+<h1 id="密码处理"><a href="#密码处理" class="headerlink" title="密码处理"></a>密码处理</h1><h2 id="配置解读"><a href="#配置解读" class="headerlink" title="配置解读"></a>配置解读</h2><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">'defaults'</span> =&gt; [</span><br><span class="line">        <span class="string">'passwords'</span> =&gt; <span class="string">'users'</span>,</span><br><span class="line">        ...</span><br><span class="line">    ],</span><br><span class="line">    </span><br><span class="line">    <span class="string">'passwords'</span> =&gt; [</span><br><span class="line">        <span class="string">'users'</span> =&gt; [</span><br><span class="line">            <span class="string">'provider'</span> =&gt; <span class="string">'users'</span>,</span><br><span class="line">            <span class="string">'table'</span> =&gt; <span class="string">'password_resets'</span>,</span><br><span class="line">            <span class="string">'expire'</span> =&gt; <span class="number">60</span>,</span><br><span class="line">        ],</span><br><span class="line">    ],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>从下往上，看配置；</p>
+<p><code>passwords</code>数组是重置密码的配置；<code>users</code>是配置方案的别名，包含三个元素：<code>provider</code>（提供用户的方案，是上面<code>providers</code>数组）、<code>table</code>（存放重置密码<code>token</code>的表）、<code>expire</code>（<code>token</code>过期时间）</p>
+<p><code>default</code> 项会设置默认的 <code>passwords</code> 重置方案；</p>
+<h2 id="重置密码的调用与实现"><a href="#重置密码的调用与实现" class="headerlink" title="重置密码的调用与实现"></a>重置密码的调用与实现</h2><p>先看看<code>Laravel</code>的重置密码功能是怎么实现的：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">reset</span><span class="params">(array $credentials, Closure $callback)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 验证用户名、密码和 token 是否有效</span></span><br><span class="line">    $user = <span class="keyword">$this</span>-&gt;validateReset($credentials);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (! $user <span class="keyword">instanceof</span> CanResetPasswordContract) &#123;</span><br><span class="line">         <span class="keyword">return</span> $user;</span><br><span class="line">    &#125;	</span><br><span class="line">    </span><br><span class="line">    $password = $credentials[<span class="string">'password'</span>];</span><br><span class="line">    <span class="comment">// 回调函数执行修改密码，及持久化存储</span></span><br><span class="line">    $callback($user, $password);</span><br><span class="line">    <span class="comment">// 删除重置密码时持久化存储保存的 token</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;tokens-&gt;delete($user);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">static</span>::PASSWORD_RESET;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再看看<code>Foundation\Auth</code>模块封装的重置密码模块是怎么调用的：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 暴露的重置密码 API</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">reset</span><span class="params">(Request $request)</span>   </span>&#123;</span><br><span class="line">    <span class="comment">// 验证请求参数 token、email、password、password_confirmation</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;validate($request, <span class="keyword">$this</span>-&gt;rules(), <span class="keyword">$this</span>-&gt;validationErrorMessages());</span><br><span class="line">    <span class="comment">// 调用重置密码的方法，第二个参数是回调，做一些持久化存储工作</span></span><br><span class="line">    $response = <span class="keyword">$this</span>-&gt;broker()-&gt;reset(</span><br><span class="line">        <span class="keyword">$this</span>-&gt;credentials($request), <span class="function"><span class="keyword">function</span> <span class="params">($user, $password)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">$this</span>-&gt;resetPassword($user, $password);</span><br><span class="line">        &#125;</span><br><span class="line">    );</span><br><span class="line">    <span class="comment">// 封装 Response</span></span><br><span class="line">    <span class="keyword">return</span> $response == Password::PASSWORD_RESET</span><br><span class="line">        ? <span class="keyword">$this</span>-&gt;sendResetResponse($response)</span><br><span class="line">        : <span class="keyword">$this</span>-&gt;sendResetFailedResponse($request, $response);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取重置密码时的请求参数</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">credentials</span><span class="params">(Request $request)</span>  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $request-&gt;only(</span><br><span class="line">        <span class="string">'email'</span>, <span class="string">'password'</span>, <span class="string">'password_confirmation'</span>, <span class="string">'token'</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重置密码的真实性验证后，进行的持久化工作</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">resetPassword</span><span class="params">($user, $password)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 修改后的密码、重新生成 remember_token</span></span><br><span class="line">    $user-&gt;forceFill([</span><br><span class="line">        <span class="string">'password'</span> =&gt; bcrypt($password),</span><br><span class="line">        <span class="string">'remember_token'</span> =&gt; Str::random(<span class="number">60</span>),</span><br><span class="line">    ])-&gt;save();</span><br><span class="line">	<span class="comment">// session 中的用户信息也进行重新赋值								     </span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;guard()-&gt;login($user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>“忘记密码 =&gt; 发邮件 =&gt; 重置密码” 的大体流程如下：</p>
+<ol>
+<li>点击“忘记密码”，通过路由配置，跳到“忘记密码”页面，页面上有“要发送的邮箱”这个字段要填写；</li>
+<li>验证“要发送的邮箱”是否是数据库中存在的，如果存在，即向该邮箱发送重置密码邮件；</li>
+<li>重置密码邮件中有一个链接（点击后会携带 token 到修改密码页面），同时数据库会保存这个 token 的哈希加密后的值；</li>
+<li>填写“邮箱”，“密码”，“确认密码”三个字段后，携带 <code>token</code> 访问重置密码<code>API</code>，首页判断邮箱、密码、确认密码这三个字段，然后验证 <code>token</code>是否有效；如果是，则重置成功；</li>
+</ol>
+<h2 id="登录次数限制"><a href="#登录次数限制" class="headerlink" title="登录次数限制"></a>登录次数限制</h2><p>这部分的代码逻辑实现在 <code>Illuminate\Foundation\Auth\ThrottlesLogins</code> 页面中；</p>
+<p>主要涉及以下因素：</p>
+<ol>
+<li>限制的登录次数<br>阅读源代码中的 <code>maxLoginAttempts</code> 方法，可以获悉如果引用此 <code>ThrottlesLogins</code> 的 <code>AuthController</code>没有定义 <code>maxLoginAttempts</code> 属性，则默认值为 5；</li>
+<li>超出登录次数的封锁时间<br>阅读源代码中的 <code>lockoutTime</code> 方法，可以获悉如果引用此 <code>ThrottlesLogins</code> 的 <code>AuthController</code>没有定义 <code>lockoutTime</code> 属性，则默认值为 60，（隐藏单位为秒）；</li>
+</ol>
+<p>如果要清除之前的登录限制，可在 <code>AuthController</code> 处理登录请求开始处执行以下语句：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$this</span>-&gt;clearLoginAttempts(<span class="variable">$request</span>);</span><br></pre></td></tr></table></figure>
+<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><p>权限管理是依靠内存空间维护的一个数组变量<code>abilities</code>来维护，结构如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$abilities = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'定义的动作名，比如以路由的 as 名(common.dashboard.list)'</span> =&gt; <span class="function"><span class="keyword">function</span><span class="params">($user)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 方法的参数，第一位是 $user, 当前 user, 后面的参数可以自行决定</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;  <span class="comment">// 返回 true 意味有权限， false 意味没有权限</span></span><br><span class="line">    &#125;,</span><br><span class="line">    ......</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>但只用 <code>$abilities</code>，会使用定义的那部分代码集中在一起太烦索，所以有<code>policy</code>策略类的出现；</p>
+<p><code>policy</code>策略类定义一组实体及实体权限类的对应关系，比如以文章举例：</p>
+<p>有一个 <code>Modal</code>实体类叫 <code>Post</code>，可以为这个实体类定义一个<code>PostPolicy</code>权限类，在这个权限类定义一些动作为方法名；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostPolicy</span> </span>&#123;</span><br><span class="line">    <span class="comment">// update 权限，文章作者才可以修改</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(User $user, Post $post)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $user-&gt;id === $post-&gt;user_id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在<code>ServiceProvider</code>中注册，这样系统就知道，如果你要检查的类是<code>Post</code>对象，加上你给的动作名，系统会找到<code>PostPolicy</code>类的对应方法；<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $policies = [</span><br><span class="line">    Post::<span class="class"><span class="keyword">class</span> =&gt; <span class="title">PostPolicy</span>:<span class="type">:class</span>,<span class="type"></span></span></span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>怎么调用呢？</p>
+<p><strong>对于定义在<code>abilities</code>数组的权限</strong>：</p>
+<ul>
+<li>当前用户是否具备<code>common.dashboard.list</code>权限：<code>Gate::allows(&#39;common.dashboard.list&#39;)</code></li>
+<li>当前用户是否具备<code>common.dashboard.list</code>权限：<code>! Gate::denies(&#39;common.dashboard.list&#39;)</code></li>
+<li>当前用户是否具备<code>common.dashboard.list</code>权限：<code>$request-&gt;user()-&gt;can(&#39;common.dashboard.list&#39;)</code></li>
+<li>当前用户是否具备<code>common.dashboard.list</code>权限：<code>! $request-&gt;user()-&gt;cannot(&#39;common.dashboard.list&#39;)</code></li>
+<li>指定用户是否具备<code>common.dashboard.list</code>权限：<code>Gate::forUser($user)-&gt;allows(&#39;common.dashboard.list&#39;)</code></li>
+</ul>
+<p><strong>对于<code>policy</code>策略类调用的权限</strong>：</p>
+<ul>
+<li>当前用户是否可以修改文章（Gate 调用）：<code>Gate::allows(&#39;update&#39;, $post)</code></li>
+<li>当前用户是否可以修改文章（user 调用）：<code>$user-&gt;can(&#39;update&#39;, $post)</code></li>
+<li>当前用户是否可以修改文章（用帮助函数）：<code>policy($post)-&gt;update($user, $post)</code></li>
+<li>当前用户是否可以修改文章（Controller 类方法中调用）：<code>$this-&gt;authorize(&#39;update&#39;, $post);</code></li>
+<li>当前用户是否可以修改文章（Controller 类同名方法中调用）：<code>$this-&gt;authorize($post);</code></li>
+<li>指定用户是否可以修改文章（Controller 类方法中调用）：<code>$this-&gt;authorizeForUser($user, &#39;update&#39;, $post);</code></li>
+</ul>
+<h2 id="有用的技巧"><a href="#有用的技巧" class="headerlink" title="有用的技巧"></a>有用的技巧</h2><p>获取当前系统注册的权限，包括两部分<code>abilities</code>和<code>policies</code>数组内容，代码如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$gate = app(\Illuminate\Contracts\Auth\Access\Gate::class);</span><br><span class="line">$reflection_gate = <span class="keyword">new</span> ReflectionClass($gate);</span><br><span class="line"></span><br><span class="line">$policies = $reflection_gate-&gt;getProperty(<span class="string">'policies'</span>);</span><br><span class="line">$policies-&gt;setAccessible(<span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// 获取当前注册的 policies 数组</span></span><br><span class="line">dump($policies-&gt;getValue($gate));</span><br><span class="line">                                                                                                        </span><br><span class="line">$abilities = $reflection_gate-&gt;getProperty(<span class="string">'abilities'</span>);                                       </span><br><span class="line">$abilities-&gt;setAccessible(<span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// 获取当前注册的 abilities 数组</span></span><br><span class="line">dump($abilities-&gt;getValue($gate));</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-4/" rel="tag"><i class="fa fa-tag"></i> Laravel-5.4</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/01/laravel-router/" rel="next" title="Laravel 大将之 路由 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 路由 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/21/laravel-broadcast/" rel="prev" title="Laravel 大将之 广播 模块">
+                Laravel 大将之 广播 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模块组成"><span class="nav-number">1.</span> <span class="nav-text">模块组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户认证"><span class="nav-number">2.</span> <span class="nav-text">用户认证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件解读"><span class="nav-number">2.1.</span> <span class="nav-text">配置文件解读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认证"><span class="nav-number">2.2.</span> <span class="nav-text">认证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#密码处理"><span class="nav-number">3.</span> <span class="nav-text">密码处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置解读"><span class="nav-number">3.1.</span> <span class="nav-text">配置解读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重置密码的调用与实现"><span class="nav-number">3.2.</span> <span class="nav-text">重置密码的调用与实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录次数限制"><span class="nav-number">3.3.</span> <span class="nav-text">登录次数限制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#权限管理"><span class="nav-number">4.</span> <span class="nav-text">权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有用的技巧"><span class="nav-number">4.1.</span> <span class="nav-text">有用的技巧</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

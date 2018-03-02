@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.4," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍在 Laravel 中如何直接使用 redis 的原生命令">
+<meta name="keywords" content="Laravel-5.4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 大将之 Redis 模块">
+<meta property="og:url" content="http://yoursite.com/2017/06/07/laravel-redis/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="介绍在 Laravel 中如何直接使用 redis 的原生命令">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 大将之 Redis 模块">
+<meta name="twitter:description" content="介绍在 Laravel 中如何直接使用 redis 的原生命令">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/07/laravel-redis/"/>
+
+
+
+
+
+  <title>Laravel 大将之 Redis 模块 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/07/laravel-redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 大将之 Redis 模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-07T18:15:10+08:00">
+                2017-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍在 Laravel 中如何直接使用 redis 的原生命令
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>官方 <code>API</code> 地址 <a href="https://laravel.com/api/5.4/Illuminate/Redis.html" target="_blank" rel="noopener">https://laravel.com/api/5.4/Illuminate/Redis.html</a></p>
+<p><code>Redis</code>模块负责与<code>Redis</code>数据库交互，并提供<code>Redis</code>的相关API支持；</p>
+<p><code>Redis</code>模块提供<code>redis</code>与<code>redis.connection</code>这两个服务；<code>redis.connection</code>服务提供<code>redis</code>连接对象；<code>redis</code>服务提供<code>Illuminate\Redis\RedisManager</code>对象，负责与<code>Redis</code>打交道的这部分管理工作；</p>
+<h1 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h1><p>以下是笔者的示例；<br><code>default</code>是默认的<code>Redis</code>连接对象名，值是连接对象的参数；<code>app(&#39;redis.connection&#39;)</code>返回的就是该默认连接对象；</p>
+<p><code>mydefine</code>是笔者定义的<code>Redis</code>连接对象名；通过执行<code>app(&#39;redis&#39;)-&gt;connection(&#39;mydefine&#39;)</code>可以获取该连接对象；</p>
+<p><code>mycluster1</code>是笔者定义的<code>Redis</code>集群对象名；通过执行<code>app(&#39;redis&#39;)-&gt;connection(&#39;mycluster1&#39;)</code>可以获取该集群对象；</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'redis'</span> =&gt; [                                                                                    </span><br><span class="line">    <span class="string">'client'</span> =&gt; <span class="string">'predis'</span>,                                                                       </span><br><span class="line">    <span class="string">'default'</span> =&gt; [                                                                              </span><br><span class="line">         <span class="string">'host'</span> =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'127.0.0.1'</span>),                                               </span><br><span class="line">         <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),                                              </span><br><span class="line">         <span class="string">'port'</span> =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),                                                      </span><br><span class="line">         <span class="string">'database'</span> =&gt; <span class="number">0</span>,                                                                        </span><br><span class="line">    ], </span><br><span class="line">    <span class="string">'mydefine'</span> =&gt; [                                                                              </span><br><span class="line">         <span class="string">'host'</span> =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'127.0.0.1'</span>),                                               </span><br><span class="line">         <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),                                              </span><br><span class="line">         <span class="string">'port'</span> =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),                                                      </span><br><span class="line">         <span class="string">'database'</span> =&gt; <span class="number">4</span>,                                                                        </span><br><span class="line">    ],</span><br><span class="line">    <span class="string">'clusters'</span> =&gt; [                                                                             </span><br><span class="line">        <span class="string">'mycluster1'</span> =&gt; [                                                                       </span><br><span class="line">            [                                                                                   </span><br><span class="line">                <span class="string">'host'</span> =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'127.0.0.1'</span>),                                       </span><br><span class="line">                <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),                                      </span><br><span class="line">                <span class="string">'port'</span> =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),                                              </span><br><span class="line">                <span class="string">'database'</span> =&gt; <span class="number">1</span>,                                                                </span><br><span class="line">            ],                                                                                  </span><br><span class="line">            [                                                                                   </span><br><span class="line">                <span class="string">'host'</span> =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'127.0.0.1'</span>),                                       </span><br><span class="line">                <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),                                      </span><br><span class="line">                <span class="string">'port'</span> =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),                                              </span><br><span class="line">                <span class="string">'database'</span> =&gt; <span class="number">2</span>,                                                                </span><br><span class="line">            ],</span><br><span class="line">            [                                                                                   </span><br><span class="line">                <span class="string">'host'</span> =&gt; env(<span class="string">'REDIS_HOST'</span>, <span class="string">'127.0.0.1'</span>),                                       </span><br><span class="line">                <span class="string">'password'</span> =&gt; env(<span class="string">'REDIS_PASSWORD'</span>, <span class="keyword">null</span>),                                      </span><br><span class="line">                <span class="string">'port'</span> =&gt; env(<span class="string">'REDIS_PORT'</span>, <span class="number">6379</span>),                                              </span><br><span class="line">                <span class="string">'database'</span> =&gt; <span class="number">3</span>,                                                                </span><br><span class="line">            ], </span><br><span class="line">       ],                                                                                      </span><br><span class="line">    ],          </span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="简单"><a href="#简单" class="headerlink" title="简单"></a>简单</h2><h3 id="入门级操作"><a href="#入门级操作" class="headerlink" title="入门级操作"></a>入门级操作</h3><p>普通 set / get 操作； <code>set</code>操作，如果键名存在，则会覆盖原有的值；<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span> = app(<span class="string">'redis.connection'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;set(<span class="string">'library'</span>, <span class="string">'predis'</span>); <span class="regexp">//</span> 存储 key 为 library， 值为 predis 的记录；</span><br><span class="line"><span class="variable">$redis</span>-&gt;get(<span class="string">'library'</span>); <span class="regexp">//</span> 获取 key 为 library 的记录值</span><br></pre></td></tr></table></figure></p>
+<p><code>set</code> / <code>get</code>多个 key-value<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$mkv = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">'usr:0001'</span> =&gt; <span class="string">'First user'</span>,</span><br><span class="line">    <span class="string">'usr:0002'</span> =&gt; <span class="string">'Second user'</span>,</span><br><span class="line">    <span class="string">'usr:0003'</span> =&gt; <span class="string">'Third user'</span></span><br><span class="line">);</span><br><span class="line">$redis-&gt;mset($mkv);  <span class="comment">// 存储多个 key 对应的 value</span></span><br><span class="line">$retval = $redis -&gt; mget (array_keys( $mkv));  <span class="comment">//获取多个key对应的value</span></span><br></pre></td></tr></table></figure></p>
+<p>存放带存储时效的记录<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;setex(<span class="string">'library'</span>, <span class="number">10</span>, <span class="string">'predis'</span>); <span class="regexp">//</span> 存储 key 为 library， 值为 predis 的记录, 有效时长为 <span class="number">10</span> 秒</span><br></pre></td></tr></table></figure></p>
+<p><code>add</code>操作,不会覆盖已有值<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;setnx(<span class="string">'foo'</span>, <span class="number">12</span>) ;  <span class="regexp">//</span> 返回 <span class="keyword">true</span> ， 添加成功</span><br><span class="line"><span class="variable">$redis</span>-&gt;setnx(<span class="string">'foo'</span>, <span class="number">34</span>) ;  <span class="regexp">//</span> 返回 <span class="keyword">false</span>， 添加失败，因为已经存在键名为 foo 的记录</span><br></pre></td></tr></table></figure></p>
+<p><code>set</code>的变种，结果返回替换前的值<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;getset(<span class="string">'foo'</span>, <span class="number">56</span>) ; <span class="regexp">//</span> 返回 <span class="number">34</span>； 如果之前不存在记录，则返回 null</span><br></pre></td></tr></table></figure></p>
+<p><code>incrby</code>/<code>incr</code>/<code>decrby</code>/<code>decr</code> 对值的递增和递减<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;incr(<span class="string">'foo'</span>) ;  <span class="regexp">//</span> 返回 <span class="number">57</span>，同时 foo 的值为 <span class="number">57</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;incrby(<span class="string">'foo'</span>, <span class="number">2</span> ) ;  <span class="regexp">//</span> 返回 <span class="number">59</span>，同时 foo 的值为 <span class="number">59</span></span><br></pre></td></tr></table></figure></p>
+<p>检测是否存在值<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;exists(<span class="string">'foo'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>删除<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;del(<span class="string">'foo'</span>); <span class="regexp">//</span> 成功删除返回 <span class="keyword">true</span>, 失败则返回 <span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p><code>type</code>类型检测，字符串返回 <code>string</code>，列表返回 <code>list</code>，<code>set</code> 表返回 <code>set</code>/<code>zset</code>，<code>hash</code> 表返回 <code>hash</code>；<br><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;<span class="keyword">type</span>('foo');</span><br></pre></td></tr></table></figure></p>
+<p><code>append</code> 连接到已存在字符串<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;get(<span class="string">'str'</span>); <span class="regexp">//</span> 返回 test</span><br><span class="line"><span class="variable">$redis</span>-&gt;append(<span class="string">'str'</span>, <span class="string">'_123'</span>);  <span class="regexp">//</span> 返回累加后的字符串长度 <span class="number">8</span>,此时 str 为 <span class="string">'test_123'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>setrange</code> 部分替换操作, 并返回字符串长度<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;setrange(<span class="string">'str'</span>, <span class="number">0</span>, <span class="string">'abc'</span>);  <span class="regexp">//</span> 返回 <span class="number">3</span>, 第<span class="number">2</span>个参数为 <span class="number">0</span> 时等同于 set 操作</span><br><span class="line"><span class="variable">$redis</span>-&gt;setrange(<span class="string">'str'</span>, <span class="number">2</span>, <span class="string">'cd'</span>); <span class="regexp">//</span> 返回 <span class="number">4</span>, 表示从第<span class="number">2</span>个字符后替换，这时 <span class="string">'str'</span> 为 <span class="string">'abcd'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>substr</code> 部分获取操作<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;substr(<span class="string">'str'</span>, <span class="number">0</span>, <span class="number">2</span>); <span class="regexp">//</span> 返回<span class="string">'abc'</span>; 表示从第 <span class="number">0</span> 个起，取到第 <span class="number">2</span> 个字符</span><br></pre></td></tr></table></figure></p>
+<p><code>strlen</code> 获取字符串长度<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;strlen (<span class="string">'str'</span>);  <span class="regexp">//</span> 返回 <span class="number">4</span>; 此时 <span class="string">'str'</span> 为 <span class="string">'abcd'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>setbit</code>位存储<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;setbit(<span class="string">'binary'</span>, <span class="number">31</span>, <span class="number">1</span>);   <span class="regexp">//</span>表示在第<span class="number">31</span>位存入<span class="number">1</span>,这边可能会有大小端问题?不过没关系, getbit 应该不会有问题</span><br></pre></td></tr></table></figure></p>
+<p><code>getbit</code>位获取<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;getbit(<span class="string">'binary'</span>, <span class="number">31</span>);     <span class="regexp">//</span>返回<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p><code>keys</code> 模糊查找功能,支持 * 号以及 ? 号 (匹配一个字符)<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;set(<span class="string">'foo1'</span>, <span class="number">123</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;set(<span class="string">'foo2'</span>, <span class="number">456</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;keys(<span class="string">'foo*'</span>);   <span class="regexp">//</span> 返回 foo1 和 foo2 的 array</span><br><span class="line"><span class="variable">$redis</span>-&gt;keys(<span class="string">'f?o?'</span>);   <span class="regexp">//</span> 同上</span><br></pre></td></tr></table></figure></p>
+<p><code>randomkey</code>随机返回一个<code>key</code><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;randomkey() ;  <span class="regexp">//</span> 可能是返回 <span class="string">'foo1'</span> 或者是 <span class="string">'foo2'</span> 及其它任何已存在的 key</span><br></pre></td></tr></table></figure></p>
+<p><code>rename</code>/<code>renamenx</code>方法对<code>key</code>进行改名，所不同的是<code>renamenx</code>不允许改成已存在的<code>key</code><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;rename(<span class="string">'str'</span>, <span class="string">'str2'</span>);  <span class="regexp">//</span> 把原先命名为<span class="string">'str'</span>的 key 改成了 <span class="string">'str2'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>expire</code> 设置 key-value 的时效性<br><code>ttl</code> 获取剩余有效期<br><code>persist</code> 重新设置为永久存储<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;expire(<span class="string">'foo'</span>, <span class="number">10</span>);  <span class="regexp">//</span> 设置有效期为 <span class="number">10</span> 秒</span><br><span class="line"><span class="variable">$redis</span>-&gt;ttl(<span class="string">'foo'</span>);  <span class="regexp">//</span> 返回剩余有效期值 <span class="number">10</span> 秒</span><br><span class="line"><span class="variable">$redis</span>-&gt;persisit(<span class="string">'foo'</span>);  <span class="regexp">//</span> 取消 expire 行为</span><br></pre></td></tr></table></figure></p>
+<p><code>dbsize</code> 返回<code>redis</code>当前数据库的记录总数<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;dbsize() ;</span><br></pre></td></tr></table></figure></p>
+<h3 id="队列操作"><a href="#队列操作" class="headerlink" title="队列操作"></a>队列操作</h3><p><code>rpush</code>/<code>rpushx</code> 有序列表操作,从队列后插入元素；<code>lpush</code>/<code>lpushx</code> 和 <code>rpush</code>/<code>rpushx</code> 的区别是插入到队列的头部,同上,’x’含义是只对已存在的 key 进行操作<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;rpush(<span class="string">'fooList'</span>, <span class="string">'bar1'</span>);  <span class="regexp">//</span> 返回列表长度 <span class="number">1</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;lpush(<span class="string">'fooList'</span>, <span class="string">'bar0'</span>);  <span class="regexp">//</span> 返回列表长度 <span class="number">2</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;rpushx(<span class="string">'fooList'</span>, <span class="string">'bar2'</span>);  <span class="regexp">//</span> 返回 <span class="number">3</span>, rpushx只对已存在的队列做添加,否则返回 <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p><code>llen</code>返回当前列表长度<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;llen(<span class="string">'fooList'</span>); <span class="regexp">//</span> 返回 <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p><code>lrange</code> 返回队列中一个区间的元素<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;<span class="keyword">lrange</span> (<span class="string">'fooList'</span>, <span class="number">0</span>, <span class="number">1</span>);  // 返回数组包含第 <span class="number">0</span> 个至第 <span class="number">1</span> 个, 共<span class="number">2</span>个元素</span><br><span class="line">$redis-&gt;<span class="keyword">lrange</span> (<span class="string">'fooList'</span>, <span class="number">0</span>, <span class="number">-1</span>); //返回第<span class="number">0</span>个至倒数第一个, 相当于返回所有元素</span><br></pre></td></tr></table></figure></p>
+<p><code>lindex</code> 返回指定顺序位置的 list 元素<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;<span class="keyword">lindex</span>(<span class="string">'fooList'</span>, <span class="number">1</span>) ;  // 返回<span class="string">'bar1'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>lset</code> 修改队列中指定位置的<code>value</code><br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;<span class="keyword">lset</span>(<span class="string">'fooList'</span>, <span class="number">1</span>, <span class="string">'123'</span>); // 修改位置 <span class="number">1</span> 的元素, 返回 true</span><br></pre></td></tr></table></figure></p>
+<p><code>lrem</code> 删除队列中左起指定数量的字符<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;lrem(<span class="string">'fooList'</span>, <span class="number">1</span>, <span class="string">'_'</span>) ;  <span class="regexp">//</span> 删除队列中左起(右起使用-<span class="number">1</span>) <span class="number">1</span>个 字符<span class="string">'_'</span>(若有)</span><br></pre></td></tr></table></figure></p>
+<p><code>lpop</code>/<code>rpop</code> 类似栈结构地弹出(并删除)最左或最右的一个元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;lpop(<span class="string">'fooList'</span>) ;  <span class="regexp">//</span> 返回 <span class="string">'bar0'</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;rpop(<span class="string">'fooList'</span>) ;  <span class="regexp">//</span> 返回 <span class="string">'bar2'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>ltrim</code>队列修改，保留左边起若干元素，其余删除<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;ltrim(<span class="string">'fooList'</span>,  <span class="number">0</span>, <span class="number">1</span>) ;  <span class="regexp">//</span> 保留左边起第 <span class="number">0</span> 个至第 <span class="number">1</span> 个元素</span><br></pre></td></tr></table></figure></p>
+<p><code>rpoplpush</code> 从一个队列中 <code>pop</code> 出元素并 <code>push</code> 到另一个队列<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;rpush(<span class="string">'list1'</span>, <span class="string">'ab0'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;rpush(<span class="string">'list1'</span>, <span class="string">'ab1'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;rpush(<span class="string">'list2'</span>, <span class="string">'ab2'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;rpush(<span class="string">'list2'</span>, <span class="string">'ab3'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;rpoplpush(<span class="string">'list1'</span>, <span class="string">'list2'</span>); <span class="regexp">//</span> 结果list1 =&gt;array(<span class="string">'ab0'</span>), list2 =&gt;array(<span class="string">'ab1'</span>,<span class="string">'ab2'</span>,<span class="string">'ab3'</span>)</span><br><span class="line"><span class="variable">$redis</span>-&gt;rpoplpush(<span class="string">'list2'</span>, <span class="string">'list2'</span>); <span class="regexp">//</span> 也适用于同一个队列, 把最后一个元素移到头部 list2 =&gt;array(<span class="string">'ab3'</span>,<span class="string">'ab1'</span>,<span class="string">'ab2'</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>linsert</code>在队列的中间指定元素前或后插入元素<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;<span class="keyword">linsert</span>(<span class="string">'list2'</span>, <span class="string">'before'</span>, <span class="string">'ab1'</span>, <span class="string">'123'</span>);  //表示在元素 <span class="string">'ab1'</span> 之前插入 <span class="string">'123'</span></span><br><span class="line">$redis-&gt;<span class="keyword">linsert</span>(<span class="string">'list2'</span>, <span class="string">'after'</span>, <span class="string">'ab1'</span>, <span class="string">'456'</span>);   //表示在元素 <span class="string">'ab1'</span> 之后插入 <span class="string">'456'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>blpop</code>/<code>brpop</code> 阻塞并等待一个列队不为空时，再<code>pop</code>出最左或最右的一个元素（这个功能在php以外可以说非常好用）<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;blpop(<span class="string">'list3'</span>, <span class="number">10</span>) ;  <span class="regexp">//</span> 如果 list3 为空则一直等待,直到不为空时将第一元素弹出, <span class="number">10</span> 秒后超时</span><br></pre></td></tr></table></figure></p>
+<h3 id="set-集合操作"><a href="#set-集合操作" class="headerlink" title="set 集合操作"></a>set 集合操作</h3><p><code>sadd</code>增加<code>set</code>集合元素， 返回<code>true</code>， 重复返回<code>false</code><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;sadd(<span class="string">'set1'</span>, <span class="string">'ab'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;sadd(<span class="string">'set1'</span>, <span class="string">'cd'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;sadd(<span class="string">'set1'</span>, <span class="string">'ef'</span>);</span><br></pre></td></tr></table></figure></p>
+<p><code>srem</code> 移除指定元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;srem(<span class="string">'set1'</span>, <span class="string">'cd'</span>);  <span class="regexp">//</span> 删除<span class="string">'cd'</span>元素</span><br></pre></td></tr></table></figure></p>
+<p><code>spop</code> 弹出首元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;spop(<span class="string">'set1'</span>);  <span class="regexp">//</span> 返回 <span class="string">'ab'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>smove</code> 移动当前<code>set</code>集合的指定元素到另一个<code>set</code>集合<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;sadd(<span class="string">'set2'</span>, <span class="string">'123'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;smove(<span class="string">'set1'</span>, <span class="string">'set2'</span>, <span class="string">'ab'</span>); <span class="regexp">//</span> 移动<span class="string">'set1'</span>中的<span class="string">'ab'</span>到<span class="string">'set2'</span>, 返回<span class="keyword">true</span> <span class="keyword">or</span> <span class="keyword">false</span>；此时 <span class="string">'set1'</span>集合不存在 <span class="string">'ab'</span> 这个值</span><br></pre></td></tr></table></figure></p>
+<p><code>scard</code> 返回当前set表元素个数<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;scard(<span class="string">'set2'</span>); <span class="regexp">//</span> 返回 <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p><code>sismember</code> 判断元素是否属于当前<code>set</code>集合<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;sismember(<span class="string">'set2'</span>, <span class="string">'123'</span>);  <span class="regexp">//</span> 返回 <span class="keyword">true</span> <span class="keyword">or</span> <span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p><code>smembers</code> 返回当前<code>set</code>集合的所有元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;smembers(<span class="string">'set2'</span>);  <span class="regexp">//</span> 返回 array(<span class="string">'123'</span>,<span class="string">'ab'</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>sinter</code>/<code>sunion</code>/<code>sdiff</code>  返回两个表中元素的交集/并集/补集<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;sadd(<span class="string">'set1'</span>, <span class="string">'ab'</span>) ;</span><br><span class="line"><span class="variable">$redis</span>-&gt;sinter(<span class="string">'set2'</span>, <span class="string">'set1'</span>) ;  <span class="regexp">//</span>返回array(<span class="string">'ab'</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>sinterstore</code>/<code>sunionstore</code>/<code>sdiffstore</code> 将两个表交集/并集/补集元素 copy 到第三个表中<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;set(<span class="string">'foo'</span>, <span class="number">0</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;sinterstore(<span class="string">'foo'</span>, <span class="string">'set1'</span>);  <span class="regexp">//</span> 等同于将<span class="string">'set1'</span>的内容copy到<span class="string">'foo'</span>中，并将<span class="string">'foo'</span>转为set表</span><br><span class="line"><span class="variable">$redis</span>-&gt;sinterstore(<span class="string">'foo'</span>, array(<span class="string">'set1'</span>, <span class="string">'set2'</span>));  <span class="regexp">//</span> 将<span class="string">'set1'</span>和<span class="string">'set2'</span>中相同的元素 copy 到<span class="string">'foo'</span>表中, 覆盖<span class="string">'foo'</span>原有内容</span><br></pre></td></tr></table></figure></p>
+<p><code>srandmember</code> 返回表中一个随机元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;srandmember(<span class="string">'set1'</span>) ;</span><br></pre></td></tr></table></figure></p>
+<h3 id="有序set表操作"><a href="#有序set表操作" class="headerlink" title="有序set表操作"></a>有序set表操作</h3><p><code>sadd</code> 增加元素，并设置序号，成功返回true，重复返回false<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zadd(<span class="string">'zset1'</span>, <span class="number">1</span>, <span class="string">'ab'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;zadd(<span class="string">'zset1'</span>, <span class="number">2</span>, <span class="string">'cd'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;zadd(<span class="string">'zset1'</span>, <span class="number">3</span>, <span class="string">'ef'</span>);</span><br></pre></td></tr></table></figure></p>
+<p><code>zincrby</code> 对指定元素索引值的增减,改变元素排列次序<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span> -&gt; zincrby ( <span class="string">'zset1'</span> , <span class="number">10</span> , <span class="string">'ab'</span> ) ; <span class="regexp">//</span>返回<span class="number">11</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zrem</code> 移除指定元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zrem(<span class="string">'zset1'</span>, <span class="string">'ef'</span>);  <span class="regexp">//</span> 返回 <span class="keyword">true</span> <span class="keyword">or</span> <span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zrange</code> 按位置次序返回表中指定区间的元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zrange(<span class="string">'zset1'</span>, <span class="number">0</span>, <span class="number">1</span>);  <span class="regexp">//</span> 返回位置 <span class="number">0</span> 和 <span class="number">1</span> 之间(两个)的元素</span><br><span class="line"><span class="variable">$redis</span>-&gt;zrange(<span class="string">'zset1'</span>, <span class="number">0</span>, -<span class="number">1</span>); <span class="regexp">//</span> 返回位置 <span class="number">0</span> 和倒数第一个元素之间的元素(相当于所有元素)</span><br></pre></td></tr></table></figure></p>
+<p><code>zrevrange</code> 同上,返回表中指定区间的元素,按次序倒排<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zrevrange(<span class="string">'zset1'</span>, <span class="number">0</span>, -<span class="number">1</span>);  <span class="regexp">//</span> 元素顺序和zrange相反</span><br></pre></td></tr></table></figure></p>
+<p><code>zrangebyscore</code>/<code>zrevrangebyscore</code> 按顺序/降序返回表中指定索引区间的元素<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;zadd(<span class="string">'zset1'</span>, <span class="number">3</span>, <span class="string">'ef'</span>);</span><br><span class="line">$redis-&gt;zadd(<span class="string">'zset1'</span>, <span class="number">5</span>, <span class="string">'gh'</span>);</span><br><span class="line">$redis-&gt;zrangebyscore(<span class="string">'zset1'</span>, <span class="number">2</span>, <span class="number">9</span>);  //返回索引值<span class="number">2</span>-<span class="number">9</span>之间的元素 <span class="keyword">array</span>(<span class="string">'ef'</span>,<span class="string">'gh'</span>)</span><br><span class="line">$redis-&gt;zrangebyscore(<span class="string">'zset1'</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="string">'withscores'</span>); // 返回索引值<span class="number">2</span>-<span class="number">9</span>之间的元素并包含索引值 <span class="keyword">array</span>(<span class="keyword">array</span>(<span class="string">'ef'</span>,<span class="number">3</span>),<span class="keyword">array</span>(<span class="string">'gh'</span>,<span class="number">5</span>))</span><br><span class="line">$redis-&gt;zrangebyscore(<span class="string">'zset1'</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="keyword">array</span>(<span class="string">'withscores'</span>=&gt;<span class="literal">true</span>, <span class="string">'limit'</span>=&gt;<span class="keyword">array</span>(<span class="number">1</span>, <span class="number">2</span>)));  //返回索引值<span class="number">2</span>-<span class="number">9</span>之间的元素,<span class="string">'withscores'</span> =&gt;<span class="literal">true</span>表示包含索引值; <span class="string">'limit'</span>=&gt;<span class="keyword">array</span>(<span class="number">1</span>, <span class="number">2</span>),表示偏移<span class="number">1</span>条，返回<span class="number">2</span>条,结果为<span class="keyword">array</span>(<span class="keyword">array</span>(<span class="string">'ef'</span>,<span class="number">3</span>),<span class="keyword">array</span>(<span class="string">'gh'</span>,<span class="number">5</span>))</span><br></pre></td></tr></table></figure></p>
+<p><code>zunionstore</code>/<code>zinterstore</code> 将多个表的并集/交集存入另一个表中<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;zunionstore(<span class="string">'zset3'</span>, <span class="keyword">array</span>(<span class="string">'zset1'</span>, <span class="string">'zset2'</span>, <span class="string">'zset0'</span>));  <span class="comment">//将'zset1','zset2','zset0'的并集存入'zset3'</span></span><br><span class="line">$redis-&gt;zunionstore(<span class="string">'zset3'</span>, <span class="keyword">array</span>(<span class="string">'zset1'</span>, <span class="string">'zset2'</span>), <span class="keyword">array</span>(<span class="string">'weights'</span> =&gt; <span class="keyword">array</span>(<span class="number">2</span>, <span class="number">1</span>))); <span class="comment">//weights参数表示权重，其中表示并集后 zset1集合的分 * 2 后存储到 zset3 集合， zset2集合的分 * 1 后存储到 zset3 集合</span></span><br><span class="line">$redis-&gt;zunionstore(<span class="string">'zset3'</span>, <span class="keyword">array</span>(<span class="string">'zset1'</span>, <span class="string">'zset2'</span>), <span class="keyword">array</span>(<span class="string">'aggregate'</span> =&gt; <span class="string">'max'</span>)); <span class="comment">//'aggregate' =&gt; 'max'或'min'表示并集后相同的元素是取大值或是取小值</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zcount</code> 统计一个索引区间的元素个数<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zcount(<span class="string">'zset1'</span>, <span class="number">3</span>, <span class="number">5</span>); <span class="regexp">//</span> 返回 <span class="number">2</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;zcount(<span class="string">'zset1'</span>, <span class="string">'(3'</span>, <span class="number">5</span>));  <span class="regexp">//</span><span class="string">'(3'</span>表示索引值在<span class="number">3</span>-<span class="number">5</span>之间但不含<span class="number">3</span>,同理也可以使用<span class="string">'(5'</span>表示上限为<span class="number">5</span>但不含<span class="number">5</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zcard</code> 统计元素个数<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zcard(<span class="string">'zset1'</span>); <span class="regexp">//</span> 返回 <span class="number">4</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zscore</code> 查询元素的索引<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zscore(<span class="string">'zset1'</span>, <span class="string">'ef'</span>); <span class="regexp">//</span> 返回 <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zremrangebyscore</code> 删除一个索引区间的元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zremrangebyscore(<span class="string">'zset1'</span>, <span class="number">0</span>, <span class="number">2</span>);  <span class="regexp">//</span> 删除索引在<span class="number">0</span>-<span class="number">2</span>之间的元素(<span class="string">'ab'</span>,<span class="string">'cd'</span>), 返回删除元素个数<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zrank</code>/<code>zrevrank</code> 返回元素所在表顺序/降序的位置(不是索引)<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zrank(<span class="string">'zset1'</span>, <span class="string">'ef'</span>); <span class="regexp">//</span> 返回<span class="number">0</span>,因为它是第一个元素；zrevrank则返回<span class="number">1</span>(最后一个)</span><br></pre></td></tr></table></figure></p>
+<p><code>zremrangebyrank</code> 删除表中指定位置区间的元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;zremrangebyrank(<span class="string">'zset1'</span>, <span class="number">0</span>, <span class="number">10</span>);  <span class="regexp">//</span>删除位置为<span class="number">0</span>-<span class="number">10</span>的元素,返回删除的元素个数<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Hash表操作"><a href="#Hash表操作" class="headerlink" title="Hash表操作"></a>Hash表操作</h3><p><code>hset</code>/<code>hget</code> 存取hash表的数据<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hset(<span class="string">'hash1'</span>, <span class="string">'key1'</span>, <span class="string">'v1'</span>);  <span class="regexp">//</span>将key为<span class="string">'key1'</span> value为<span class="string">'v1'</span>的元素存入hash1表</span><br><span class="line"><span class="variable">$redis</span>-&gt;hset(<span class="string">'hash1'</span>, <span class="string">'key2'</span>, <span class="string">'v2'</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;hget(<span class="string">'hash1'</span>, <span class="string">'key1'</span>);   <span class="regexp">//</span>取出表<span class="string">'hash1'</span>中的key <span class="string">'key1'</span>的值,返回<span class="string">'v1'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hexists</code> 返回hash表中的指定key是否存在<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hexists(<span class="string">'hash1'</span>, <span class="string">'key1'</span>) ;  <span class="regexp">//true</span> <span class="keyword">or</span> <span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hdel</code> 删除hash表中指定key的元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hdel(<span class="string">'hash1'</span>, <span class="string">'key2'</span>) ;  <span class="regexp">//true</span> <span class="keyword">or</span> <span class="keyword">false</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hlen</code> 返回hash表元素个数<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hlen(<span class="string">'hash1'</span>);  <span class="regexp">//</span> 返回 <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hsetnx</code> 增加一个元素,但不能重复<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hsetnx(<span class="string">'hash1'</span>, <span class="string">'key1'</span>, <span class="string">'v2'</span>) ;  <span class="regexp">//</span> <span class="keyword">false</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;hsetnx(<span class="string">'hash1'</span>, <span class="string">'key2'</span>, <span class="string">'v2'</span>) ;  <span class="regexp">//</span> <span class="keyword">true</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hmset</code>/<code>hmget</code> 存取多个元素到hash表<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;hmset(<span class="string">'hash1'</span>, <span class="keyword">array</span>(<span class="string">'key3'</span> =&gt; <span class="string">'v3'</span>, <span class="string">'key4'</span> =&gt; <span class="string">'v4'</span>)); </span><br><span class="line">$redis-&gt;hmget(<span class="string">'hash1'</span>, <span class="keyword">array</span>(<span class="string">'key3'</span>, <span class="string">'key4'</span>));  <span class="comment">// 返回相应的值 array('v3','v4')</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hincrby</code> 对指定key进行累加<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hincrby(<span class="string">'hash1'</span>, <span class="string">'key5'</span>, <span class="number">3</span>);  <span class="regexp">//</span> 不存在，则存储并返回 <span class="number">3</span>；存在，即返回 原有值 + <span class="number">3</span>；</span><br><span class="line"><span class="variable">$redis</span>-&gt;hincrby(<span class="string">'hash1'</span>, <span class="string">'key5'</span>, <span class="number">10</span>);  <span class="regexp">//</span> 返回<span class="number">13</span></span><br></pre></td></tr></table></figure></p>
+<p><code>hkeys</code> 返回hash表中的所有key<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hkeys(<span class="string">'hash1'</span>);  <span class="regexp">//</span> 返回array(<span class="string">'key1'</span>, <span class="string">'key2'</span>, <span class="string">'key3'</span>, <span class="string">'key4'</span>, <span class="string">'key5'</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>hvals</code> 返回hash表中的所有value<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hvals(<span class="string">'hash1'</span>);  <span class="regexp">//</span> 返回 array(<span class="string">'v1'</span>,<span class="string">'v2'</span>,<span class="string">'v3'</span>,<span class="string">'v4'</span>,<span class="number">13</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>hgetall</code> 返回整个hash表元素<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;hgetall(<span class="string">'hash1'</span>);  <span class="regexp">//</span> 返回 array(<span class="string">'key1'</span>=&gt;<span class="string">'v1'</span>,<span class="string">'key2'</span>=&gt;<span class="string">'v2'</span>,<span class="string">'key3'</span>=&gt;<span class="string">'v3'</span>,<span class="string">'key4'</span>=&gt;<span class="string">'v4'</span>,<span class="string">'key5'</span>=&gt;<span class="number">13</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="排序操作"><a href="#排序操作" class="headerlink" title="排序操作"></a>排序操作</h3><p><code>sort</code> 排序<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;rpush(<span class="string">'tab'</span>, <span class="number">3</span>);</span><br><span class="line">$redis-&gt;rpush(<span class="string">'tab'</span>, <span class="number">2</span>);</span><br><span class="line">$redis-&gt;rpush(<span class="string">'tab'</span>, <span class="number">17</span>);</span><br><span class="line">$redis-&gt;sort(<span class="string">'tab'</span>);   <span class="comment">// 返回 array(2,3,17)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用参数,可组合使用 array('sort' =&gt; 'desc','limit' =&gt; array(1, 2))</span></span><br><span class="line">$redis-&gt;sort(<span class="string">'tab'</span>, <span class="keyword">array</span>(<span class="string">'sort'</span> =&gt; <span class="string">'desc'</span>));   <span class="comment">// 降序排列，返回 array(17,3,2)</span></span><br><span class="line">$redis-&gt;sort(<span class="string">'tab'</span>, <span class="keyword">array</span>(<span class="string">'limit'</span> =&gt; <span class="keyword">array</span>(<span class="number">1</span>, <span class="number">2</span>)));   <span class="comment">//返回顺序位置中1的元素2个(这里的2是指个数,而不是位置)，返回array(3,17)</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$redis-&gt;sort(<span class="string">'tab'</span>, <span class="keyword">array</span>(<span class="string">'limit'</span> =&gt; <span class="keyword">array</span>(<span class="string">'alpha'</span> =&gt; <span class="keyword">true</span>)));  <span class="comment">//按首字符排序返回array(17,2,3)，因为17的首字符是'1'所以排首位置</span></span><br><span class="line">$redis-&gt;sort(<span class="string">'tab'</span>, <span class="keyword">array</span>(<span class="string">'limit'</span> =&gt; <span class="keyword">array</span>(<span class="string">'store'</span> =&gt; <span class="string">'ordered'</span>)));  <span class="comment">//表示永久性排序，返回元素个数</span></span><br><span class="line">$redis-&gt;sort(<span class="string">'tab'</span>, <span class="keyword">array</span>(<span class="string">'limit'</span> =&gt; <span class="keyword">array</span>(<span class="string">'get'</span> =&gt; <span class="string">'pre_*'</span>)));  <span class="comment">//使用了通配符'*'过滤元素，表示只返回以'pre_'开头的元素</span></span><br></pre></td></tr></table></figure>
+<h3 id="Redis管理操作"><a href="#Redis管理操作" class="headerlink" title="Redis管理操作"></a>Redis管理操作</h3><p><code>info</code> 显示服务当状态信息<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;<span class="builtin-name">info</span>();</span><br></pre></td></tr></table></figure></p>
+<p><code>select</code> 指定要操作的数据库<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;select(<span class="number">4</span>);  <span class="regexp">//</span> 指定数据库的下标</span><br></pre></td></tr></table></figure></p>
+<p><code>flushdb</code> 清空当前库<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;flushdb();</span><br></pre></td></tr></table></figure></p>
+<p><code>move</code> 移动当库的元素到其它数据库<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">redis-&gt;<span class="built_in">set</span>(<span class="string">'tomove'</span>, <span class="string">'bar'</span>);</span></span><br><span class="line"><span class="meta">$</span><span class="bash">redis-&gt;move(<span class="string">'tomove'</span>, 4);</span></span><br></pre></td></tr></table></figure></p>
+<p><code>slaveof</code> 配置从服务器<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;slaveof(<span class="string">'127.0.0.1'</span>, <span class="number">80</span>);  <span class="regexp">//</span> 配置 <span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span> 端口 <span class="number">80</span> 的服务器为从服务器</span><br><span class="line"><span class="variable">$redis</span>-&gt;slaveof();  <span class="regexp">//</span> 清除从服务器</span><br></pre></td></tr></table></figure></p>
+<p>同步保存服务器数据到磁盘<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;save();</span><br></pre></td></tr></table></figure></p>
+<p>异步保存服务器数据到磁盘<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;bgsave ();</span><br></pre></td></tr></table></figure></p>
+<p>返回最后更新磁盘的时间<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span>-&gt;lastsave();</span><br></pre></td></tr></table></figure></p>
+<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 等待探索</span></span><br></pre></td></tr></table></figure>
+<h2 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h2><p>可以阅读<a href="http://d.laravel-china.org/docs/5.4/redis#pubsub" target="_blank" rel="noopener">Laravel 的 Redis 使用指南</a>中关于发布与订阅的章节，了解使用过程；</p>
+<p>订阅和发布本质上是一种监听触发；订阅功能可以监听指定频道的消息，基于长连接的通信，完成信息接收；而发布则是触发监听的开始；</p>
+<p>说明：上述涉及操作代码均来自<a href="http://www.open-open.com/lib/view/open1355830836135.html" target="_blank" rel="noopener">利用predis操作redis方法大全</a>文章；</p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-4/" rel="tag"><i class="fa fa-tag"></i> Laravel-5.4</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/04/laravel-config/" rel="next" title="Laravel 大将之 配置 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 配置 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/13/laravel-paginate/" rel="prev" title="Laravel 大将之 分页 模块">
+                Laravel 大将之 分页 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置项"><span class="nav-number">2.</span> <span class="nav-text">配置项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单"><span class="nav-number">3.1.</span> <span class="nav-text">简单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#入门级操作"><span class="nav-number">3.1.1.</span> <span class="nav-text">入门级操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列操作"><span class="nav-number">3.1.2.</span> <span class="nav-text">队列操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set-集合操作"><span class="nav-number">3.1.3.</span> <span class="nav-text">set 集合操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有序set表操作"><span class="nav-number">3.1.4.</span> <span class="nav-text">有序set表操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash表操作"><span class="nav-number">3.1.5.</span> <span class="nav-text">Hash表操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排序操作"><span class="nav-number">3.1.6.</span> <span class="nav-text">排序操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis管理操作"><span class="nav-number">3.1.7.</span> <span class="nav-text">Redis管理操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群"><span class="nav-number">3.2.</span> <span class="nav-text">集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#订阅"><span class="nav-number">3.3.</span> <span class="nav-text">订阅</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

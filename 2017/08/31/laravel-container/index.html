@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.4," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍如何使用服务容器模块">
+<meta name="keywords" content="Laravel-5.4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 大将之 服务容器 模块">
+<meta property="og:url" content="http://yoursite.com/2017/08/31/laravel-container/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="介绍如何使用服务容器模块">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.524Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 大将之 服务容器 模块">
+<meta name="twitter:description" content="介绍如何使用服务容器模块">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/31/laravel-container/"/>
+
+
+
+
+
+  <title>Laravel 大将之 服务容器 模块 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/31/laravel-container/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 大将之 服务容器 模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T17:57:41+08:00">
+                2017-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍如何使用服务容器模块
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>官方 <code>API</code> 地址 <a href="https://laravel.com/api/5.4/Illuminate/Container/Container.html" target="_blank" rel="noopener">https://laravel.com/api/5.4/Illuminate/Container/Container.html</a></p>
+<p>服务容器是一个用于管理类依赖和执行依赖注入的强大工具。是整个框架的核心；</p>
+<p>几乎所有的服务容器绑定都是在服务提供者中完成。</p>
+<h1 id="框架调用分析"><a href="#框架调用分析" class="headerlink" title="框架调用分析"></a>框架调用分析</h1><p>在框架直接生成服务容器的只有一处，在<code>bootstrap/app.php</code>，通过<code>require</code>引用会返回服务容器实例。通过<code>require</code>引用有两处，一处是<code>public/index.php</code>，服务器访问的入口；另一处是<code>tests/CreatesApplication.php</code>，是单元测试的入口；</p>
+<p>如果想在项目各处中调用，可以调用<code>$app = Illuminate\Container\Container::getInstance()</code>或者全局帮助函数<code>app()</code>获取服务容器实例（也就是<code>Illuminate\Foundation/Application</code>实例）；</p>
+<p><code>Illuminate\Foundation/Application</code>是对<code>Illuminate\Container\Container</code>的又一层封装；</p>
+<h2 id="Application初始化"><a href="#Application初始化" class="headerlink" title="Application初始化"></a><code>Application</code>初始化</h2><p>那么实例化<code>Illuminate\Foundation/Application</code>时，做了什么呢？</p>
+<p><strong>第一步</strong>，设置应用的根目录，并同时注册核心目录到服务容器中；核心的目录有以下</p>
+<ul>
+<li><code>path</code>：目录<code>app</code>的位置</li>
+<li><code>path.base</code>：项目根目录的位置</li>
+<li><code>path.lang</code>：目录<code>resources/lang</code>的位置</li>
+<li><code>path.config</code>：目录<code>config</code>的位置</li>
+<li><code>path.public</code>：目录<code>public</code>的位置</li>
+<li><code>path.storage</code>：目录<code>storage</code>的位置</li>
+<li><code>path.database</code>：目录<code>database</code>的位置</li>
+<li><code>path.resources</code>：目录<code>resources</code>的位置</li>
+<li><code>path.bootstrap</code>：目录<code>bootstrap</code>的位置</li>
+</ul>
+<p><strong>第二步</strong>，将当前<code>Illuminate\Foundation/Application</code>实例保存到<code>$instance</code>类变量，并同时绑定到服务容器作单例绑定，绑定名为<code>app</code>或<code>Container::class</code>；</p>
+<p><strong>第三步</strong>，顺序分别执行注册<code>Illuminate\Events\EventServiceProvider</code>、<code>Illuminate\Log\LogServiceProvider</code>和<code>Illuminate\Routing\RoutingServiceProvider</code>三个服务提供者；</p>
+<p>注册服务提供者的顺序如下：</p>
+<ul>
+<li>如果类变量<code>$serviceProviders</code>已经存在该服务提供者并且不需要强制重新注册，则返回服务提供者实例<code>$provider</code>；</li>
+<li>未注册过当前服务提供者，则继续执行以下；</li>
+<li>如果存在<code>register</code>方法，执行服务提供者的<code>register</code>方法；</li>
+<li>将当前服务提供者<code>$provider</code>实例保存到类变量<code>$serviceProviders</code>数组中，同时标记类变量<code>$loadedProviders[get_class($provider)]</code>的值为<code>true</code>；</li>
+<li>判断类变量<code>$booted</code>是否为<code>true</code>，如果是<code>true</code>，则执行服务提供者的<code>boot</code>方法；（类变量<code>$booted</code>应该是标志是否所有服务提供者均注册，框架是否启动）</li>
+</ul>
+<p><strong>第四步</strong>，注册核心类别名；<br>比如<code>\Illuminate\Foundation\Application::class</code>、<code>\Illuminate\Contracts\Container\Container::class</code>起别名为<code>app</code>；</p>
+<h2 id="单元测试Application的bootstrap启动分析"><a href="#单元测试Application的bootstrap启动分析" class="headerlink" title="单元测试Application的bootstrap启动分析"></a>单元测试<code>Application</code>的<code>bootstrap</code>启动分析</h2><p>启动代码很简洁，<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">createApplication</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// require 初始化分析上面已经介绍了</span></span><br><span class="line">    $app = <span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/app.php'</span>;</span><br><span class="line">    <span class="comment">// 生成`Illuminate\Foundation\Console\Kernel`实例，执行bootstrap方法，完成启动</span></span><br><span class="line">    $app-&gt;make(Kernel::class)-&gt;bootstrap();</span><br><span class="line">    <span class="keyword">return</span> $app;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>构造函数主要干了一件事，注册一个<code>booted</code>完成后的回调函数，函数执行的内容为“注册 <code>Schedule</code>实例到服务提供者，同时加载用户定义的<code>Schedule</code>任务清单”；</p>
+<p><code>bootstrap</code>方法的执行内容如下：</p>
+<ol>
+<li><p>加载<code>Illuminate/Foundation/Console/Kernel</code>中<code>$bootstrappers</code>变量数组中的类，执行它们的<code>bootstrap</code>方法；</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">protected $bootstrappers = [</span><br><span class="line">    // 加载 .env 文件</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">    // 加载 config 目录下的配置文件</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\LoadConfiguration::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">    // 自定义错误报告，错误处理方法及呈现</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\HandleExceptions::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">    // 为 config/app.php 中的 aliases 数组注册类别名</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\RegisterFacades::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">    // 在服务容器中单例绑定一个 request 对象，控制台命令会用到</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\SetRequestForConsole::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">    // 注册 config\app.php 中的 providers 服务提供者</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\RegisterProviders::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">    // 项目启动，执行每个 ServiceProvider 的 boot 方法，</span><br><span class="line">    \Illuminate\Foundation\Bootstrap\BootProviders::<span class="class"><span class="keyword">class</span>,</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载延迟的服务提供者；</p>
+</li>
+</ol>
+<h2 id="Http访问Application的bootstrap启动分析"><a href="#Http访问Application的bootstrap启动分析" class="headerlink" title="Http访问Application的bootstrap启动分析"></a>Http访问<code>Application</code>的<code>bootstrap</code>启动分析</h2><p>启动入口文件在<code>public\index.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$app = <span class="keyword">require_once</span> <span class="keyword">__DIR__</span>.<span class="string">'/../bootstrap/app.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化 Illuminate/Foundation/Http/Kernel 对象</span></span><br><span class="line">$kernel = $app-&gt;make(Illuminate\Contracts\Http\Kernel::class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 中间件处理、业务逻辑处理</span></span><br><span class="line">$response = $kernel-&gt;handle(</span><br><span class="line">    <span class="comment">// 根据 Symfony 的 request 对象封装出 Illuminate\Http\Request</span></span><br><span class="line">    $request = Illuminate\Http\Request::capture() </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$response-&gt;send();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行所有中间件的 terminate 方法，执行 Application 中的 terminatingCallbacks 回调函数</span></span><br><span class="line">$kernel-&gt;terminate($request, $response);</span><br></pre></td></tr></table></figure></p>
+<h1 id="重要的类变量数组"><a href="#重要的类变量数组" class="headerlink" title="重要的类变量数组"></a>重要的类变量数组</h1><h2 id="aliases数组"><a href="#aliases数组" class="headerlink" title="aliases数组"></a><code>aliases</code>数组</h2><p>维护 类与别名 的数组；键名为 类的全限定类名，键值为 数组，每一个元素都是该类的别名；</p>
+<blockquote>
+<p>判断指定类是否有别名：<code>app()-&gt;isAlias($name)</code>；<br>  获取指定类的别名：<code>app()-&gt;getAlias($abstract)</code>；</p>
+</blockquote>
+<h2 id="abstractAliases数组"><a href="#abstractAliases数组" class="headerlink" title="abstractAliases数组"></a><code>abstractAliases</code>数组</h2><p>维护 类与别名 的数组；键名为 别名，键值为 类的全限定类名；</p>
+<h2 id="instances数组"><a href="#instances数组" class="headerlink" title="instances数组"></a><code>instances</code>数组</h2><p>维护 类与实例的数组；键名为 类的全限定类名，键值为该类的实例；</p>
+<blockquote>
+<p>移除绑定类：<code>app()-&gt;forgetInstance($abstract);</code><br>移除所有绑定类：<code>app()-&gt;forgetInstances();</code></p>
+</blockquote>
+<h2 id="bindings数组"><a href="#bindings数组" class="headerlink" title="bindings数组"></a><code>bindings</code>数组</h2><p>通过 <code>bind</code> 方法实现 接口类与实现的绑定；</p>
+<blockquote>
+<p>获取<code>bindings</code>数组中的内容：<code>app()-&gt;getBindings()</code></p>
+</blockquote>
+<h2 id="resolved数组"><a href="#resolved数组" class="headerlink" title="resolved数组"></a><code>resolved</code>数组</h2><p>键名为 类的全限定类名，键值为布尔值类型（<code>true</code>表示已解析过，<code>false</code>表示未解析过）；</p>
+<h2 id="with数组"><a href="#with数组" class="headerlink" title="with数组"></a><code>with</code>数组</h2><p>在<code>resolved</code>过程中，会有一些参数；<code>with</code>数组就是参数栈，开始解析时将参数入栈，结束解析时参数出栈；</p>
+<h2 id="contextual数组"><a href="#contextual数组" class="headerlink" title="contextual数组"></a><code>contextual</code>数组</h2><p>上下文绑定数组；第一维数组键名为 场合类（比如某个<code>Controller</code>类的类名），第二维数组键名为 抽象类（需要实现的接口类），键值为 <code>Closure</code> 或 某个具体类的类名；</p>
+<h2 id="tags数组"><a href="#tags数组" class="headerlink" title="tags数组"></a><code>tags</code>数组</h2><p>维护 标签与类 的数组；键名是 标签名，键值是 对应要绑定的类的名称；</p>
+<p>如果调用<code>tagged</code>方法，会将键值数组中的类都<code>make</code>出来，并以数组形式返回；</p>
+<h2 id="extenders数组"><a href="#extenders数组" class="headerlink" title="extenders数组"></a><code>extenders</code>数组</h2><p>在<code>make</code>或<code>resolve</code>出对象的时候，会执行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;getExtenders($abstract) <span class="keyword">as</span> $extender) &#123;</span><br><span class="line">    $object = $extender($object, <span class="keyword">$this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>能对解析出来的对象进行修饰；</p>
+<h2 id="methodBindings数组"><a href="#methodBindings数组" class="headerlink" title="methodBindings数组"></a><code>methodBindings</code>数组</h2><p>可以绑定类的一个方法到自定义的函数；用法可以参考<a href="http://www.leoyang90.cn/2017/05/06/Laravel-container/" target="_blank" rel="noopener">Laravel核心——Ioc服务容器 </a>中的相关章节；</p>
+<blockquote>
+<p>向容器绑定方法与及实现：<code>app()-&gt;bindMethod($method, $callback)</code><br>  判断容器内是否有指定方法的实现：<code>app()-&gt;hasMethodBinding($method)</code><br>  执行方法的实现：<code>app()-&gt;callMethodBinding($method, $instance)</code>或者<code>app()-&gt;call($method)</code></p>
+</blockquote>
+<h2 id="buildStack数组"><a href="#buildStack数组" class="headerlink" title="buildStack数组"></a><code>buildStack</code>数组</h2><p>调用<code>build</code>方法时维护的栈，栈中存放的是当前要<code>new</code>的类名；</p>
+<h2 id="reboundCallbacks数组"><a href="#reboundCallbacks数组" class="headerlink" title="reboundCallbacks数组"></a><code>reboundCallbacks</code>数组</h2><p>当调用<code>rebound</code>函数时，会触发<code>rebound</code>中为此<code>$abstract</code>设置的回调函数；</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;rebinding($abstract, Closure $callback);</code></p>
+</blockquote>
+<h2 id="serviceProviders数组"><a href="#serviceProviders数组" class="headerlink" title="serviceProviders数组"></a><code>serviceProviders</code>数组</h2><p>已在系统注册的服务提供者<code>ServiceProvider</code>；</p>
+<p>数组内存放的是<code>loadedProviders</code>键名对应类的实例；</p>
+<h2 id="loadedProviders数组"><a href="#loadedProviders数组" class="headerlink" title="loadedProviders数组"></a><code>loadedProviders</code>数组</h2><p>系统已加载的<code>ServiceProvider</code>的集合；键名为<code>ServiceProvider</code>的全限定类名，键值为布尔值（<code>true</code>表示已加载，<code>false</code>表示未加载）；</p>
+<blockquote>
+<p>获取延迟加载对象：<code>app()-&gt;getLoadedProviders()</code>;</p>
+</blockquote>
+<h2 id="deferredServices数组"><a href="#deferredServices数组" class="headerlink" title="deferredServices数组"></a><code>deferredServices</code>数组</h2><p>有些服务提供者是会延迟加载的；这时候会将这些服务提供者声明的服务登录在<code>deferredServices</code>数组，键名为延迟加载对象名 ，键值为该延迟加载对象所在的<code>ServiceProvider</code>；</p>
+<blockquote>
+<p>获取延迟加载对象：<code>app()-&gt;getDeferredServices()</code>;</p>
+</blockquote>
+<h2 id="bootingCallbacks数组"><a href="#bootingCallbacks数组" class="headerlink" title="bootingCallbacks数组"></a><code>bootingCallbacks</code>数组</h2><p>项目启动前执行的回调函数；（项目启动是在执行<code>\Illuminate\Foundation\Bootstrap\BootProviders::class</code>的时候）</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;booting($callback);</code></p>
+</blockquote>
+<h2 id="bootedCallbacks数组"><a href="#bootedCallbacks数组" class="headerlink" title="bootedCallbacks数组"></a><code>bootedCallbacks</code>数组</h2><p>项目启动后执行的回调函数；（项目启动是在执行<code>\Illuminate\Foundation\Bootstrap\BootProviders::class</code>的时候）</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;booted($callback);</code></p>
+</blockquote>
+<h2 id="resolvingCallbacks数组"><a href="#resolvingCallbacks数组" class="headerlink" title="resolvingCallbacks数组"></a><code>resolvingCallbacks</code>数组</h2><p>解析时回调函数集合；键名为 类名， 键值为 回调函数数组，每一个元素都是回调函数；</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;resolving($abstract, $callback);</code></p>
+</blockquote>
+<h2 id="afterResolvingCallbacks数组"><a href="#afterResolvingCallbacks数组" class="headerlink" title="afterResolvingCallbacks数组"></a><code>afterResolvingCallbacks</code>数组</h2><p>解析后回调函数集合；键名为 类名， 键值为 回调函数数组，每一个元素都是回调函数；</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;afterResolving($abstract, $callback);</code></p>
+</blockquote>
+<h2 id="globalResolvingCallbacks数组"><a href="#globalResolvingCallbacks数组" class="headerlink" title="globalResolvingCallbacks数组"></a><code>globalResolvingCallbacks</code>数组</h2><p>全局解析时回调函数集合；每一次<code>resolve</code>方法调用时都会执行的回调函数集合；</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;resolving($callback);</code></p>
+</blockquote>
+<h2 id="globalAfterResolvingCallbacks数组"><a href="#globalAfterResolvingCallbacks数组" class="headerlink" title="globalAfterResolvingCallbacks数组"></a><code>globalAfterResolvingCallbacks</code>数组</h2><p>全局解析后回调函数集合；每一次<code>resolve</code>方法调用后都会执行的回调函数集合；</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;afterResolving($callback);</code></p>
+</blockquote>
+<h2 id="terminatingCallbacks数组"><a href="#terminatingCallbacks数组" class="headerlink" title="terminatingCallbacks数组"></a><code>terminatingCallbacks</code>数组</h2><p>系统在返回<code>response</code>之后，会执行<code>terminate</code>方法，来做应用结束前的扫尾处理；</p>
+<p>这个数组就是执行<code>terminate</code>方法时会执行的回调函数集合；</p>
+<blockquote>
+<p>注册入口：<code>app()-&gt;terminating(Closure $callback)</code>; </p>
+</blockquote>
+<h1 id="常用方法的解析"><a href="#常用方法的解析" class="headerlink" title="常用方法的解析"></a>常用方法的解析</h1><h2 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a><code>bind</code>方法</h2><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bind</span></span>($<span class="class"><span class="keyword">abstract</span>, $</span>concrete = <span class="literal">null</span>, $shared = <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+<p>第一个参数是要注册的类名或接口名，第二个参数是返回类的实例的闭包（或类的实例类名），第三个参数是否是单例；</p>
+<p>方法内部流程：</p>
+<ol>
+<li><code>unset</code> 掉 <strong><code>instances</code></strong> 和 <strong><code>aliases</code></strong> 数组中键值为 <code>$abstract</code> 的元素；</li>
+<li>如果 <code>$concrete</code> 值为 <code>null</code> ，将 <code>$abstract</code> 赋值给 <code>$concrete</code>；</li>
+<li>如果 <code>$concrete</code> 不是 <code>Closure</code> 对象，则封装成闭包；</li>
+<li>将 <code>$concrete</code> 和 <code>$shared</code> 通过 <code>compact</code>，添加进 <strong><code>bindings</code></strong> 数组，键名为 <code>$abstract</code>；</li>
+<li>判断 <code>$abstract</code> 在 <strong><code>resolved</code></strong> 和 <strong><code>instances</code></strong> 数组中是否存在，如果存在，则执行第 6 步；</li>
+<li>触发 <code>rebound</code>回调函数；如果 <code>reboundCallbacks</code> 数组中注册以 <code>$abstract</code> 为键名的回调函数，则执行这些回调函数；</li>
+</ol>
+<blockquote>
+<p>涉及数组：<code>instances</code>和<code>aliases</code>（unset 操作）、<code>bindings</code>（add 操作）</p>
+</blockquote>
+<h2 id="singleton方法"><a href="#singleton方法" class="headerlink" title="singleton方法"></a><code>singleton</code>方法</h2><p>单例绑定；<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">singleton</span></span>($<span class="class"><span class="keyword">abstract</span>, $</span>concrete = <span class="literal">null</span>)</span><br><span class="line">    $<span class="built_in">this</span>-&gt;bind($<span class="class"><span class="keyword">abstract</span>, $</span>concrete, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>涉及数组：<code>instances</code>和<code>aliases</code>（unset 操作）、<code>bindings</code>（add 操作）</p>
+</blockquote>
+<h2 id="bindIf方法"><a href="#bindIf方法" class="headerlink" title="bindIf方法"></a><code>bindIf</code>方法</h2><p>单例绑定；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bindIf</span><span class="params">($abstract, $concrete = null, $shared = false)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (! <span class="keyword">$this</span>-&gt;bound($abstract)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;bind($abstract, $concrete, $shared);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>涉及数组：<code>instances</code>和<code>aliases</code>（unset 操作）、<code>bindings</code>（add 操作）</p>
+</blockquote>
+<h2 id="instance方法"><a href="#instance方法" class="headerlink" title="instance方法"></a><code>instance</code>方法</h2><p>绑定实例；<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">instance</span></span>($<span class="class"><span class="keyword">abstract</span>, $</span>instance)</span><br></pre></td></tr></table></figure></p>
+<p>方法内部流程：</p>
+<ol>
+<li>如果<code>$abstract</code>在<code>aliases</code>数组中存在，则从<code>abstractAliases</code>中所有的值数组中移除该类；</li>
+<li><code>unset</code> 掉 <code>aliases</code> 数组中键名为 <code>$abstract</code>的元素；</li>
+<li>赋值操作：<code>$this-&gt;instances[$abstract] = $instance;</code></li>
+<li>判断 <code>$abstract</code> 在 <strong><code>resolved</code></strong> 和 <strong><code>instances</code></strong> 数组中是否存在，如果存在，则执行第 5 步；</li>
+<li>触发 <code>rebound</code>回调函数；如果 <code>reboundCallbacks</code> 数组中注册以 <code>$abstract</code> 为键名的回调函数，则执行这些回调函数；</li>
+</ol>
+<blockquote>
+<p>涉及数组：<code>instances</code>（add 操作）、<code>aliases</code> 和 <code>abstractAliases</code>（unset 操作）</p>
+</blockquote>
+<h2 id="make方法"><a href="#make方法" class="headerlink" title="make方法"></a><code>make</code>方法</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">make</span><span class="params">($abstract)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;resolve($abstract);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="alias方法"><a href="#alias方法" class="headerlink" title="alias方法"></a><code>alias</code>方法</h2><p>给类起别名；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">alias</span><span class="params">($abstract, $alias)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;aliases[$alias] = $abstract;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">$this</span>-&gt;abstractAliases[$abstract][] = $alias;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>涉及数组：<code>aliases</code>和<code>abstractAliases</code>（add 操作）</p>
+</blockquote>
+<h1 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h1><ul>
+<li><a href="http://www.leoyang90.cn/2017/05/06/Laravel-container/" target="_blank" rel="noopener">leoyang90博客 - Laravel核心——Ioc服务容器</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-4/" rel="tag"><i class="fa fa-tag"></i> Laravel-5.4</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/21/laravel-broadcast/" rel="next" title="Laravel 大将之 广播 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 广播 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/14/mongo-exer1/" rel="prev" title="练习 MongoDB 操作 —— 数据操作（一）">
+                练习 MongoDB 操作 —— 数据操作（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架调用分析"><span class="nav-number">2.</span> <span class="nav-text">框架调用分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Application初始化"><span class="nav-number">2.1.</span> <span class="nav-text">Application初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试Application的bootstrap启动分析"><span class="nav-number">2.2.</span> <span class="nav-text">单元测试Application的bootstrap启动分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Http访问Application的bootstrap启动分析"><span class="nav-number">2.3.</span> <span class="nav-text">Http访问Application的bootstrap启动分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重要的类变量数组"><span class="nav-number">3.</span> <span class="nav-text">重要的类变量数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aliases数组"><span class="nav-number">3.1.</span> <span class="nav-text">aliases数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#abstractAliases数组"><span class="nav-number">3.2.</span> <span class="nav-text">abstractAliases数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instances数组"><span class="nav-number">3.3.</span> <span class="nav-text">instances数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bindings数组"><span class="nav-number">3.4.</span> <span class="nav-text">bindings数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#resolved数组"><span class="nav-number">3.5.</span> <span class="nav-text">resolved数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#with数组"><span class="nav-number">3.6.</span> <span class="nav-text">with数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#contextual数组"><span class="nav-number">3.7.</span> <span class="nav-text">contextual数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tags数组"><span class="nav-number">3.8.</span> <span class="nav-text">tags数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extenders数组"><span class="nav-number">3.9.</span> <span class="nav-text">extenders数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methodBindings数组"><span class="nav-number">3.10.</span> <span class="nav-text">methodBindings数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buildStack数组"><span class="nav-number">3.11.</span> <span class="nav-text">buildStack数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reboundCallbacks数组"><span class="nav-number">3.12.</span> <span class="nav-text">reboundCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#serviceProviders数组"><span class="nav-number">3.13.</span> <span class="nav-text">serviceProviders数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loadedProviders数组"><span class="nav-number">3.14.</span> <span class="nav-text">loadedProviders数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#deferredServices数组"><span class="nav-number">3.15.</span> <span class="nav-text">deferredServices数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bootingCallbacks数组"><span class="nav-number">3.16.</span> <span class="nav-text">bootingCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bootedCallbacks数组"><span class="nav-number">3.17.</span> <span class="nav-text">bootedCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#resolvingCallbacks数组"><span class="nav-number">3.18.</span> <span class="nav-text">resolvingCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#afterResolvingCallbacks数组"><span class="nav-number">3.19.</span> <span class="nav-text">afterResolvingCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#globalResolvingCallbacks数组"><span class="nav-number">3.20.</span> <span class="nav-text">globalResolvingCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#globalAfterResolvingCallbacks数组"><span class="nav-number">3.21.</span> <span class="nav-text">globalAfterResolvingCallbacks数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#terminatingCallbacks数组"><span class="nav-number">3.22.</span> <span class="nav-text">terminatingCallbacks数组</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用方法的解析"><span class="nav-number">4.</span> <span class="nav-text">常用方法的解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bind方法"><span class="nav-number">4.1.</span> <span class="nav-text">bind方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#singleton方法"><span class="nav-number">4.2.</span> <span class="nav-text">singleton方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bindIf方法"><span class="nav-number">4.3.</span> <span class="nav-text">bindIf方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instance方法"><span class="nav-number">4.4.</span> <span class="nav-text">instance方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#make方法"><span class="nav-number">4.5.</span> <span class="nav-text">make方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alias方法"><span class="nav-number">4.6.</span> <span class="nav-text">alias方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展阅读"><span class="nav-number">5.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MongoDB3.x," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="摘录书中关于地理位置索引章节的知识点">
+<meta name="keywords" content="MongoDB3.x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="练习 MongoDB 操作 —— 地理位置搜索 （六）">
+<meta property="og:url" content="http://yoursite.com/2018/02/07/mongo-exer6/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="摘录书中关于地理位置索引章节的知识点">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.530Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="练习 MongoDB 操作 —— 地理位置搜索 （六）">
+<meta name="twitter:description" content="摘录书中关于地理位置索引章节的知识点">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/07/mongo-exer6/"/>
+
+
+
+
+
+  <title>练习 MongoDB 操作 —— 地理位置搜索 （六） | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/07/mongo-exer6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">练习 MongoDB 操作 —— 地理位置搜索 （六）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-07T14:17:41+08:00">
+                2018-02-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NoSQL/" itemprop="url" rel="index">
+                    <span itemprop="name">NoSQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  摘录书中关于地理位置索引章节的知识点
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文摘自 《<code>Mongodb</code> 权威指南》特殊的索引和集合一章；</p>
+<p><code>MongoDB</code> 支持几种类型的地理空间索引。其中最常用的是 <code>2dsphere</code> 索引（用于地球表面类型的地图）和 <code>2d</code> 索引（用于平面地图和时间连续的数据）；</p>
+<p><code>2dsphere</code> 允许使用 <code>GeoJSON</code> 格式（<a href="http://geojson.org/" target="_blank" rel="noopener">http://geojson.org/</a>）指定点、线和多边形。点可以形如 [<code>longitude</code>， <code>latitude</code>] ([经度，纬度])的两个元素的数组表示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"New York City"</span>,</span><br><span class="line">    <span class="attr">"loc"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"Point"</span>,</span><br><span class="line">        <span class="attr">"coordinates"</span>: [<span class="number">50</span>, <span class="number">2</span>],</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>线可以用一个由点组成的数组来表示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"Hudson River"</span>,</span><br><span class="line">    <span class="attr">"loc"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"Line"</span>,</span><br><span class="line">        <span class="attr">"coordinates"</span>: [[<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">2</span>], [<span class="number">1</span>, <span class="number">2</span>]]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>多边形的表示方式与线一样（都是一个由点组成的数组）， 但是 <code>type</code> 不同：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"New England"</span>,</span><br><span class="line">    <span class="attr">"loc"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"Polygon"</span>,</span><br><span class="line">        <span class="attr">"coordinates"</span>: [[<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">2</span>], [<span class="number">1</span>, <span class="number">2</span>]]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>loc</code> 字段的名字可以是任意的，但是其中的子对象是由 <code>GeoJson</code> 指定的，不能改变；</p>
+<p>在 <code>ensureIndex</code> 中使用 <code>2dsphere</code> 选项就可以创建一个地理空间索引：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; db<span class="selector-class">.world</span><span class="selector-class">.ensureIndex</span>(&#123;<span class="string">"loc"</span>: <span class="string">"2dsphere"</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="地理空间查询的类型"><a href="#地理空间查询的类型" class="headerlink" title="地理空间查询的类型"></a>地理空间查询的类型</h1><p>可以使用多种不同类型的地理空间查询：交集（<code>intersection</code>）、包含（<code>within</code>）以及接近(<code>nearness</code>)。查询时，需要将希望找到的内容指定为形如 <code>{&quot;$geometry&quot;: geoJsonDesc}</code> 的 <code>GeoJson</code> 对象。</p>
+<p>例如，可以使用 <code>$geoIntersects</code> 操作符找出与查询位置相交的文档：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; var eastVillage = &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"Polygon"</span>,</span><br><span class="line">      <span class="string">"coordinates"</span>: <span class="string">[[</span></span><br><span class="line"><span class="string">           [-73.9917900, 40.7264100],</span></span><br><span class="line"><span class="string">           [-73.9917900, 40.7321400],</span></span><br><span class="line"><span class="string">           [-73.9829300, 40.7321400],</span></span><br><span class="line"><span class="string">           [-73.9829300, 40.7264100],</span></span><br><span class="line"><span class="string">           [-73.9917900, 40.7264100]</span></span><br><span class="line"><span class="string">    ]]</span></span><br><span class="line">  &#125;</span><br><span class="line">&gt; db.<span class="built_in">open</span>.street.map.<span class="built_in">find</span>(&#123;<span class="string">"loc"</span>: &#123;<span class="string">"$geoIntersects"</span>: &#123;<span class="string">"$geometry"</span>: eastVillage&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>可以使用 <code>$geoWithin</code> 查询完全包含在某个区域的文档，例如: <code>East Village</code> 有哪些餐馆？</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; db<span class="selector-class">.open</span><span class="selector-class">.street</span><span class="selector-class">.map</span><span class="selector-class">.find</span>(&#123;<span class="string">"loc"</span>: &#123;<span class="string">"$geoWithin"</span>: &#123;<span class="string">"$geometry"</span>: eastVillage&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>与第一个查询不同，这次不会返回那些只是经过 <code>East Village</code> （比如街道）或者部分重叠（比如用于表示曼哈顿的多边形）的文档。</p>
+<p>最后，可以使用 <code>$near</code> 查询附近的位置：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; db<span class="selector-class">.open</span><span class="selector-class">.street</span><span class="selector-class">.map</span><span class="selector-class">.find</span>(&#123;<span class="string">"loc"</span>: &#123;<span class="string">"$near"</span>: &#123;<span class="string">"$geometry"</span>: &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"Point"</span>,</span><br><span class="line">      <span class="string">"coordinates"</span>: [-<span class="number">73.9917900</span>, <span class="number">40.7264100</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>注意， <code>$near</code> 是唯一一个会对查询结果进行自动排序的地理空间操作符； <code>$near</code> 的返回结果是按照距离由近及远排序的。</p>
+<p>地理位置查询有一点非常有趣：不需要地理空间索引就可以使用 <code>$geoIntersects</code> 或者  <code>$within</code> （<code>$near</code>需要使用索引）。但是，建议在用于表示地理位置的字段上建立地理空间索引，这样可以显著提高查询速度。</p>
+<h1 id="复合地理空间索引"><a href="#复合地理空间索引" class="headerlink" title="复合地理空间索引"></a>复合地理空间索引</h1><p>如果有其他类型的索引，可以将地理空间索引与其他字段组合在一起使用，以便对更复杂的查询进行优化。上面提到过一种可能的查询： “<code>East Village</code>有哪些餐馆？”。如果仅仅使用地理空间索引，我们只能查找到 <code>East Village</code> 内的所有东西，但是如果要将 “<code>restaurants</code>“ 或者是 “<code>pizza</code>“ 单独查询出来，就需要使用其他索引中的字段了：</p>
+<blockquote>
+<p>db.open.street.map.ensureIndex({“tags”: 1, “loc”: “2dsphere”})</p>
+</blockquote>
+<p>然后就能够很快地找到 <code>East Village</code> 内的披萨店了：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; db<span class="selector-class">.open</span><span class="selector-class">.street</span><span class="selector-class">.map</span><span class="selector-class">.find</span>(&#123;<span class="string">"loc"</span>: &#123;<span class="string">"$geoWithin"</span>: &#123;<span class="string">"$geometry"</span>: eastVillage&#125;&#125;, <span class="string">"tags"</span>: <span class="string">"pizza"</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>其他索引字段可以放在 <code>2dsphere</code> 字段前面也可以放在后面，这取决于我们希望首先使用其他索引的字段进行过滤还是首先使用位置进行过滤。应该将那个能够尽可能多的结果的字段放在前面。</p>
+<h1 id="2d-索引"><a href="#2d-索引" class="headerlink" title="2d 索引"></a>2d 索引</h1><p>对于非球面地图（游戏地图、时间连续的数据等），可以使用 <code>2d</code> 索引代替 <code>2dsphere</code>；</p>
+<blockquote>
+<p>db.hyrule.ensureIndex({“tile”: “2d”})</p>
+</blockquote>
+<p><code>2d</code>索引用于扁平表面，而不是球体表面。 <code>2d</code>索引不应该用在球体表面上，否则极点附近会出现大量的扭曲变形；</p>
+<p>文档中应该使用包含两个元素的数组表示 <code>2d</code> 索引字段。示例如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"Water Temple"</span>,</span><br><span class="line">    <span class="attr">"tile"</span>: [<span class="number">32</span>, <span class="number">32</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>2d</code> 索引只能对点进行索引。可以保存一个由点组成的数组，但是它只会被保存为由点组成的数组，不会被当成线。特别是对于  <code>$geoWithin</code> 查询来说，这是一项重要的区别。如果将街道保存为由点组成的数组，那么如果其中的某个点位于给定的形状之内，这个文档就会与 <code>$geoWithin</code> 相匹配。但是，由这些点组成的线并不一定会完全包含在这个形状之内。</p>
+<p>默认情况下，地理空间索引是假设你的值都介于 -180 ~ 180。可以根据需要在 <code>ensureIndex</code> 中设置更大或更小的索引边界值：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; db<span class="selector-class">.star</span><span class="selector-class">.trek</span><span class="selector-class">.ensureIndex</span>(&#123;<span class="string">"light-years"</span>: <span class="string">"2d"</span>&#125;, &#123;<span class="string">"min"</span>: -<span class="number">1000</span>, <span class="string">"max"</span>: <span class="number">1000</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>这会创建一个 2000 * 2000 大小的空间索引。</p>
+<p>使用 <code>2d</code> 索引进行查询比使用 <code>2dsphere</code> 要简单许多。可以直接使用 <code>$near</code> 或者 <code>$geoWithin</code>， 而不必带有 <code>$geometry</code> 子对象。可以直接指定坐标：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; dy.hyrule.<span class="builtin-name">find</span>(&#123;<span class="string">"tile"</span>: &#123;<span class="string">"<span class="variable">$near</span>"</span>: [20, 21]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样会返回 <code>hyrule</code> 集合内的全部文档，按照距离（20，21）这个点的距离排序。如果没有指定文档数量限制，默认最多返回 100 个文档。如果不需要这么多的结果，应该根据需要设置返回文档的数量以节省服务器资源。例如，下面的代码只会返回距离（20，21）最近的 10 个文档：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> dy.hyrule.find(&#123;<span class="string">"tile"</span>: &#123;<span class="string">"<span class="variable">$near</span>"</span>: [20, 21]&#125;&#125;).<span class="built_in">limit</span>(10)</span></span><br></pre></td></tr></table></figure>
+<p><code>$geoWithin</code> 可以查询出某个形状（矩形、圆形或者是多边形）范围内的所有文档。如果要使用矩形，可以指定 <code>$box</code> 选项</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; dy.hyrule.<span class="built_in">find</span>(&#123;<span class="string">"tile"</span>: &#123;<span class="string">"$geoWithin"</span>: &#123;<span class="string">"$box"</span>: <span class="string">[[10, 20], [15, 30]]</span>&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>$box</code> 接受一个两元素的数组：第一个元素指定左下角的坐标，第二个元素指定右上角的坐标。</p>
+<p>类似地，可以使用 <code>$center</code> 选项返回圆形范围内的所有文档，这个选项也是接受一个两元素数组作为参数：第一个元素是一个点，用于指定圆心；第二个参数用于指定半径：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.hyrule.<span class="builtin-name">find</span>(&#123;<span class="string">"tile"</span>: &#123;<span class="string">"<span class="variable">$geoWithin</span>"</span>: &#123;<span class="string">"<span class="variable">$center</span>"</span>: [[12, 25], 5]&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>还可以使用多个点组成的数组来指定多边形：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.hyrule.<span class="built_in">find</span>(&#123;<span class="string">"tile"</span>: &#123;<span class="string">"$geoWithin"</span>: &#123;<span class="string">"$polygon"</span>: <span class="string">[[0, 20], [10, 0], [-10, 0]]</span>&#125;&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<p>这个例子会查询出包含给定三角形内的点的所有文档。列表中的最后一个点会被连接到第一个点，以便组成多边形；</p>
+<h1 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h1><ul>
+<li><a href="https://docs.mongodb.com/manual/reference/operator/query-geospatial/" target="_blank" rel="noopener">MongoDB 官方文档 geo 操作符</a></li>
+<li><a href="http://blog.csdn.net/yaoxiaochuang/article/details/53117379" target="_blank" rel="noopener">地理空间数据格式——GeoJSON</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MongoDB3-x/" rel="tag"><i class="fa fa-tag"></i> MongoDB3.x</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/06/docker-dockerfile/" rel="next" title="Docker Dockerfile">
+                <i class="fa fa-chevron-left"></i> Docker Dockerfile
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/26/arithmetic-sort/" rel="prev" title="算法之排序">
+                算法之排序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#地理空间查询的类型"><span class="nav-number">1.</span> <span class="nav-text">地理空间查询的类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复合地理空间索引"><span class="nav-number">2.</span> <span class="nav-text">复合地理空间索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2d-索引"><span class="nav-number">3.</span> <span class="nav-text">2d 索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考阅读"><span class="nav-number">4.</span> <span class="nav-text">参考阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

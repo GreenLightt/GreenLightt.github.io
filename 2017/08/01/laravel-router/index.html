@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel-5.4," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍如何使用路由模块">
+<meta name="keywords" content="Laravel-5.4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 大将之 路由 模块">
+<meta property="og:url" content="http://yoursite.com/2017/08/01/laravel-router/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="介绍如何使用路由模块">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/bVRYcN.png">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 大将之 路由 模块">
+<meta name="twitter:description" content="介绍如何使用路由模块">
+<meta name="twitter:image" content="http://owk2q4gs5.bkt.clouddn.com/bVRYcN.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/01/laravel-router/"/>
+
+
+
+
+
+  <title>Laravel 大将之 路由 模块 | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/01/laravel-router/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Laravel 大将之 路由 模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-01T17:57:41+08:00">
+                2017-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  介绍如何使用路由模块
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是基于<code>Laravel 5.4</code>版本的路由模块代码进行分析书写；</p>
+<p>官方 <code>API</code> 地址 <a href="https://laravel.com/api/5.4/Illuminate/Routing.html" target="_blank" rel="noopener">https://laravel.com/api/5.4/Illuminate/Routing.html</a></p>
+<h1 id="模块组成"><a href="#模块组成" class="headerlink" title="模块组成"></a>模块组成</h1><p>下图展示了路由模块中各个文件的关系，并进行简要说明；<br><img src="http://owk2q4gs5.bkt.clouddn.com/bVRYcN.png" alt="图片描述"></p>
+<h1 id="剖析"><a href="#剖析" class="headerlink" title="剖析"></a>剖析</h1><h2 id="服务提供者"><a href="#服务提供者" class="headerlink" title="服务提供者"></a>服务提供者</h2><p>看<code>Laravel</code>模块，首先找<code>ServiceProvider</code>文件，这是模块与<code>IOC</code>容器交互的入口，从这个文件，可以看出该模块提供向系统提供了哪些服务；</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 注册路由管理，提供路由注册，路由匹配的功能</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;registerRouter();</span><br><span class="line">    <span class="comment">// 注册 Url 生成器实例</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;registerUrlGenerator();</span><br><span class="line">    <span class="comment">// 注册跳转器</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;registerRedirector();</span><br><span class="line">    <span class="comment">// 绑定 PSR-7 请求实现到 ServerRequestInterface 接口</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;registerPsrRequest();</span><br><span class="line">    <span class="comment">// 绑定 PSR-7 Response 实现到 ResponseInterface 接口</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;registerPsrResponse();</span><br><span class="line">    <span class="comment">// 注册 ReponseFactory，提供各式各样的 Response，比如视图响应、Json响应、Jsonp响应、文件下载等</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;registerResponseFactory();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="路由管理"><a href="#路由管理" class="headerlink" title="路由管理"></a>路由管理</h2><p>“路由管理”服务有以下元素需要了解：</p>
+<ul>
+<li><code>Route</code>：路由；会记录 <code>Url</code>、<code>Http</code> 动作、<code>Action</code> (路由要执行的具体对象，可能是 <code>Closure</code>，也可以是某个 <code>Controller</code> 中的方法)，路由参数，路由参数的约束；</li>
+<li><code>RouteCollection</code>：路由集，用来存储所有<code>Route</code>对象的“盒子”；</li>
+<li><code>RouteGroup</code>：路由组；只有路由注册过程中会临时用到；存储一批路由公共的一些属性，属性包括<code>domain</code>、<code>prefix</code>、<code>as</code>、<code>middleware</code>、<code>namespace</code>、<code>where</code>；</li>
+<li><code>Resource</code>：资源路由；资源路由是一套路由的统称，包含列表（<code>index</code>）、显示增加（<code>create</code>）、保存增加（<code>store</code>）、显示详情（<code>show</code>）、显示编辑详情（<code>edit</code>）、更新编辑（<code>update</code>）、删除详情（<code>destory</code>）；同时可以通过调用<code>only</code>或<code>except</code>方法或参数的形式只生成部分路由；</li>
+<li><code>Action</code>：路由要执行的对象；有两种表现形式，一是<code>Closure</code>函数，二是类似<code>[&#39;uses&#39; =&gt; &#39;FooController@method&#39;, &#39;as&#39; =&gt; &#39;name&#39;]</code>这样的字符串；对于不同的表现形式，路由在执行时会调用不同的处理；</li>
+</ul>
+<h3 id="注册流程"><a href="#注册流程" class="headerlink" title="注册流程"></a>注册流程</h3><p>在项目启动后，会执行所有<code>ServiceProvider</code>的<code>loadRoutes</code>方法，也就是调用<code>map</code>方法，一般情况下<code>map</code>方法如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">map</span><span class="params">(Router $router)</span></span>&#123;</span><br><span class="line">    <span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">'/routes.php'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时候，项目就会执行很多<code>Route::get</code>、<code>Route::post</code>、<code>Route::group</code>方法；</p>
+<p>当遇到<code>Route::group</code>方法时，会实例化一个<code>RouteGroup</code>对象，<code>put</code>进<code>Router</code>管理类的路由组栈头部；而后当执行<code>get</code>、<code>post</code>这类具体的注册路由方法时，会把当前路由组栈中所有组的属性合并进新路由中，将新路由存储在<code>RouteCollection</code>这个大盒子里；当<code>Route::group</code>的<code>Closure</code>执行完毕时，会把头部的<code>RouteGroup</code>实例<code>pull</code>出去；</p>
+<p>当执行<code>Route::resource</code>时，<code>Router</code>管理类会调用<code>ResourceRegister</code>类来完成批量注册路由；</p>
+<blockquote>
+<p>对于 <code>Router::get</code>这类注册方法，<code>Illuminate\Foudation\helpers</code>提供了简写；<br><code>Router::get</code>     简化成 <code>get</code>，<br><code>Router::post</code>    简化成 <code>post</code>，<br><code>Router::put</code>     简化成 <code>put</code>，<br><code>Router::patch</code>   简化成 <code>patch</code>，<br><code>Router::delete</code>  简化成 <code>delete</code>，<br><code>Router::resource</code>简化成 <code>resource</code>，</p>
+</blockquote>
+<p>至此，<code>RouteCollection</code>大盒子就存放了所有要注册的路由；</p>
+<h3 id="request-请求匹配流程"><a href="#request-请求匹配流程" class="headerlink" title="request 请求匹配流程"></a>request 请求匹配流程</h3><p>首先，<code>request</code>请求会经过<code>Foundation/Http/Kernel</code>的<code>handle</code>方法，在这个方法中，请求会执行以下语句<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$this</span>-&gt;router-&gt;dispatch(<span class="variable">$request</span>)</span><br></pre></td></tr></table></figure></p>
+<p>这里的<code>$this-&gt;router</code>，就是<code>Router</code>管理类；<code>dispatch</code>方法如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dispatch</span><span class="params">(Request $request)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;currentRequest = $request;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;dispatchToRoute($request);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dispatchToRoute</span><span class="params">(Request $request)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据请求的 url 找到匹配的路由</span></span><br><span class="line">    $route = <span class="keyword">$this</span>-&gt;findRoute($request);</span><br><span class="line">    <span class="comment">// 将路由绑定到请求上</span></span><br><span class="line">    $request-&gt;setRouteResolver(<span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($route)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $route;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 触发 RouteMatched 事件</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;events-&gt;dispatch(<span class="keyword">new</span> Events\RouteMatched($route, $request));</span><br><span class="line">    <span class="comment">// 通过 Pipeline 流水线执行路由上绑定的中间件及对应的方法</span></span><br><span class="line">    $response = <span class="keyword">$this</span>-&gt;runRouteWithinStack($route, $request);</span><br><span class="line">    <span class="comment">// 根据 request 请求设置 response 的响应头</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;prepareResponse($request, $response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><em>根据请求找匹配的路由</em><br> <code>RouteCollection</code>根据请求的<code>http</code>动作缩小要匹配的路由范围；在筛选出来的这些路由中依次遍历，找出第一个符合验证的路由（需要进行较验的验证在<code>Route</code>中的<code>getValidators</code>方法中声明）；</li>
+<li><em>将路由绑定到请求上</em></li>
+<li><em>触发<code>RouteMatched</code>事件</em><br> 初始化的<code>Laravel</code>项目没有对<code>RouteMatched</code>路由匹配事件进行任何的监听器绑定，如有需要，可以自定义监听器，在模块的<code>EventServiceProvider</code>中注册该事件监听；这样一旦请求匹配上某个路由，就可以执行自定义方法了；</li>
+<li><em>通过 <code>Pipeline</code> 流水线执行路由上绑定的中间件及对应的方法</em><br> 在<code>runRouteWithinStack</code>方法中，系统会判断是否需要执行中间件，如果<code>IOC</code>容器中设置了<code>middleware.disable</code>的值为<code>true</code>，则需要执行的中间件数组为空；否则会找到所有的中间件，并按照<code>middlewarePriority</code>对必要的一些中间件进行排序调整；然后执行<code>$route-&gt;run()</code>方法；</li>
+<li><em>根据 request 请求设置 response 的响应头</em></li>
+</ol>
+<blockquote>
+<p>项目中会用到的一些方法</p>
+<ol>
+<li>获取路由集合 <code>app(&#39;router&#39;)-&gt;getRoutes()</code></li>
+<li>获取当前的请求 <code>$request = app(&#39;router&#39;)-&gt;getCurrentRequest()</code></li>
+<li>获取当前请求所对应的路由 <code>$route = $request-&gt;route()</code> 或 <code>$route = app(&#39;router&#39;)-&gt;getCurrentRoute()</code></li>
+<li>获取当前路由需要执行的中间件 <code>$middlewares = app(&#39;router&#39;)-&gt;gatherRouteMiddleware($route)</code></li>
+</ol>
+</blockquote>
+<h2 id="Url-生成器"><a href="#Url-生成器" class="headerlink" title="Url 生成器"></a>Url 生成器</h2><p>Url 生成器是什么？<br>举个例子，<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$url = <span class="literal">new</span> UrlGenerator(</span><br><span class="line">    $routes = <span class="literal">new</span> RouteCollection,</span><br><span class="line">    $request = Request<span class="type">::create</span>(<span class="string">'http://www.foo.com/'</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">$url-&gt;<span class="keyword">to</span>(<span class="string">'foo/bar'</span>); <span class="comment">// 输出 http://www.foo.com/foo/bar</span></span><br></pre></td></tr></table></figure></p>
+<p>像这种基于当前请求，生成指定路径的<code>Url</code>；</p>
+<p>这部分功能由两个文件完成，一个是<code>UrlGenerator.php</code>，另一个是<code>RouteUrlGenerator.php</code>；<code>UrlGenerator.php</code>处理根据路径名生成<code>Url</code>，<code>RouteUrlGenerator.php</code>处理根据路由生成<code>Url</code>；</p>
+<p>列一些常用的使用：</p>
+<h3 id="根据路径名生成"><a href="#根据路径名生成" class="headerlink" title="根据路径名生成"></a>根据路径名生成</h3><p>使用<code>to</code>方法，第一个参数为路径，第二个参数是数组，<code>implode</code>后会接着路径名，第三个参数决定用不用<code>https</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 路径名是 foo/bar，当前请求的根路径为 http://www.foo.com，所以输出是 http://www.foo.com/foo/bar</span></span><br><span class="line">$url-&gt;to(<span class="string">'foo/bar'</span>)</span><br><span class="line"><span class="comment">// 路径名是 foo/bar，当前请求的根路径为 http://www.foo.com，第三个参数决定 scheme 是 https，所以输出是 https://www.foo.com/foo/bar</span></span><br><span class="line">$url-&gt;to(<span class="string">'foo/bar'</span>, [], <span class="keyword">true</span>)</span><br><span class="line"><span class="comment">// 路径名是 foo/bar，第二个参数 是补充路径名，implode 后是 /baz/boom</span></span><br><span class="line"><span class="comment">// 第三个参数决定 scheme 是 https，所以输出是 https://www.foo.com/foo/bar/baz/boom</span></span><br><span class="line">$url-&gt;to(<span class="string">'foo/bar'</span>, [<span class="string">'baz'</span>, <span class="string">'boom'</span>], <span class="keyword">true</span>)</span><br><span class="line"><span class="comment">// 路径名是 foo/bar，查询参数是 ?foo=bar ，补充路径是 /baz，所以输出是 https://www.foo.com/foo/bar/baz?foo=bar</span></span><br><span class="line">$url-&gt;to(<span class="string">'foo/bar?foo=bar'</span>, [<span class="string">'baz'</span>], <span class="keyword">true</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="根据路由的-as-名生成"><a href="#根据路由的-as-名生成" class="headerlink" title="根据路由的 as 名生成"></a>根据路由的 as 名生成</h3><p>使用<code>route</code>方法，第一个参数为指定路由的 <code>as</code> 名，第二个参数是参数数组，第三个参数决定是否显示根目录（默认为 true）<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'foo/bar'</span>, [<span class="string">'as'</span> =&gt; <span class="string">'foo'</span>]);</span><br><span class="line">$routes-&gt;add($route);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出 'http://www.foo.com/foo/bar</span></span><br><span class="line">$url-&gt;route(<span class="string">'foo'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第三个参数为 false，表示不显示根目录，于是输出 /foo/bar</span></span><br><span class="line">$url-&gt;route(<span class="string">'foo'</span>, [], <span class="keyword">false</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由中的 url 本身不带参数，则第二参数中所有关联数组都将作为查询参数</span></span><br><span class="line"><span class="comment">// 输出 /foo/bar?foo=bar</span></span><br><span class="line">$url-&gt;route(<span class="string">'foo'</span>, [<span class="string">'foo'</span> =&gt; <span class="string">'bar'</span>], <span class="keyword">false</span>)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$route</span> = new Route([<span class="string">'GET'</span>], <span class="string">'foo/bar/&#123;baz&#125;/breeze/&#123;boom&#125;'</span>, [<span class="string">'as'</span> =&gt; <span class="string">'bar'</span>]);</span><br><span class="line"><span class="variable">$routes</span>-&gt;add(<span class="variable">$route</span>);</span><br><span class="line"></span><br><span class="line">/<span class="regexp">/ 路由上的 url 带参数，根据参数名找值；剩余多余的为查询参数；</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 输出 http:/</span><span class="regexp">/www.foo.com/foo</span><span class="regexp">/bar/otwell</span><span class="regexp">/breeze/taylor</span>?fly=wall</span><br><span class="line"><span class="variable">$url</span>-&gt;route(<span class="string">'bar'</span>, [<span class="string">'boom'</span> =&gt; <span class="string">'taylor'</span>, <span class="string">'baz'</span> =&gt; <span class="string">'otwell'</span>, <span class="string">'fly'</span> =&gt; <span class="string">'wall'</span>]);</span><br><span class="line"></span><br><span class="line">/<span class="regexp">/ 路由上的 url 带参数，找不到对应的参数值，则按顺序作值；剩余多余的为查询参数；</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 输出 http:/</span><span class="regexp">/www.foo.com/foo</span><span class="regexp">/bar/taylor</span><span class="regexp">/breeze/otwell</span>?fly=wall</span><br><span class="line"><span class="variable">$url</span>-&gt;route(<span class="string">'bar'</span>, [<span class="string">'taylor'</span>, <span class="string">'otwell'</span>, <span class="string">'fly'</span> =&gt; <span class="string">'wall'</span>]);</span><br></pre></td></tr></table></figure>
+<h3 id="根据路由的-action-名生成"><a href="#根据路由的-action-名生成" class="headerlink" title="根据路由的 action 名生成"></a>根据路由的 action 名生成</h3><p>使用<code>action</code>方法，第一个参数为指定路由的 <code>action</code> 名，第二个参数是参数数组，第三个参数决定是否显示根目录（默认为 true）<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'foo/bam'</span>, [<span class="string">'controller'</span> =&gt; <span class="string">'foo@bar'</span>]);</span><br><span class="line">$routes-&gt;add($route);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出 http://www.foo.com/foo/bam</span></span><br><span class="line">$url-&gt;action(<span class="string">'foo@bar'</span>);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'foo/invoke'</span>, [<span class="string">'controller'</span> =&gt; <span class="string">'InvokableActionStub'</span>]);</span><br><span class="line">$routes-&gt;add($route);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出 http://www.foo.com/foo/invoke</span></span><br><span class="line">$url-&gt;action(<span class="string">'InvokableActionStub'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="设置全局默认参数"><a href="#设置全局默认参数" class="headerlink" title="设置全局默认参数"></a>设置全局默认参数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$url-&gt;defaults([<span class="string">'locale'</span> =&gt; <span class="string">'en'</span>]);</span><br><span class="line"></span><br><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'foo'</span>, [<span class="string">'as'</span> =&gt; <span class="string">'defaults'</span>, <span class="string">'domain'</span> =&gt; <span class="string">'&#123;locale&#125;.example.com'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;&#125;]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由 url 有参数，但没有传参数值，则会找全局默认参数值；输出 http://en.example.com/foo</span></span><br><span class="line">$url-&gt;route(<span class="string">'defaults'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="设置全局命名空间"><a href="#设置全局命名空间" class="headerlink" title="设置全局命名空间"></a>设置全局命名空间</h3><p>这样调用的时候，不用在 action 上省略这部分命名空间<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置全局命名空间</span></span><br><span class="line">$url-&gt;setRootControllerNamespace(<span class="string">'namespace'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置添加路由</span></span><br><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'foo/bar'</span>, [<span class="string">'controller'</span> =&gt; <span class="string">'namespace\foo@bar'</span>]);</span><br><span class="line">$routes-&gt;add($route);</span><br><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'foo/invoke'</span>, [<span class="string">'controller'</span> =&gt; <span class="string">'namespace\InvokableActionStub'</span>]);</span><br><span class="line">$routes-&gt;add($route);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出 http://www.foo.com/foo/bar;  action 的值省略 namespace 这个命名空间</span></span><br><span class="line">$url-&gt;action(<span class="string">'foo@bar'</span>);</span><br><span class="line"><span class="comment">// 输出 http://www.foo.com/foo/invoke;  action 的值省略 namespace 这个命名空间</span></span><br><span class="line">$url-&gt;action(<span class="string">'InvokableActionStub'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置添加路由</span></span><br><span class="line">$route = <span class="keyword">new</span> Route([<span class="string">'GET'</span>], <span class="string">'something/else'</span>, [<span class="string">'controller'</span> =&gt; <span class="string">'something\foo@bar'</span>]);</span><br><span class="line">$routes-&gt;add($route);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出  http://www.foo.com/something/else； action 的最前面加了 `\`，全局命名空间下调用</span></span><br><span class="line">$url-&gt;action(<span class="string">'\something\foo@bar'</span>)；</span><br></pre></td></tr></table></figure></p>
+<h2 id="跳转器"><a href="#跳转器" class="headerlink" title="跳转器"></a>跳转器</h2><p>跳转器内部提供了以下跳转；</p>
+<p><strong>home</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;home()</code>会跳转至根目录下<code>\</code>；<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span></span> home($<span class="keyword">status</span> = <span class="number">302</span>)</span><br></pre></td></tr></table></figure></p>
+<p><strong>back</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;back()</code>会跳转至上一次访问页面；或者全局帮助函数<code>back()</code>也可以；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">back</span><span class="params">($status = <span class="number">302</span>, $headers = [], $fallback = false)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>第三个参数表示，如果没有前一次访问请求，访问哪个页面，具体源码如下：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($url) &#123;</span><br><span class="line">     <span class="keyword">return</span> $url<span class="comment">;</span></span><br><span class="line">&#125; <span class="keyword">elseif</span> ($fallback) &#123;</span><br><span class="line">    <span class="keyword">return</span> $this-&gt;<span class="keyword">to</span>($fallback)<span class="comment">;</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> $this-&gt;<span class="keyword">to</span>(<span class="string">'/'</span>)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>refresh</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;refresh()</code>会刷新当前访问页面；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">refresh</span><span class="params">($status = <span class="number">302</span>, $headers = [])</span></span></span><br></pre></td></tr></table></figure></p>
+<p><strong>to</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;to(&#39;path&#39;)</code>会跳转至指定路径页面；或者全局帮助函数<code>redirect(&#39;path&#39;)</code>也可以；</p>
+<p>这里的 <code>path</code> 路径是不包含根目录的，例如（<code>foo/bar</code>）；</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">to</span><span class="params">($path, $status = <span class="number">302</span>, $headers = [], $secure = null)</span></span></span><br></pre></td></tr></table></figure>
+<p>第四个参数表示是否使用<code>https</code>；</p>
+<p><strong>away</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;away(&#39;path&#39;)</code>会跳转至指定路径页面；</p>
+<p>这里的 <code>path</code> 路径是包含根目录的，例如（<code>http://xx.com/foo/bar</code>）；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">away</span><span class="params">($path, $status = <span class="number">302</span>, $headers = [])</span></span></span><br></pre></td></tr></table></figure></p>
+<p><strong>secure</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;secure(&#39;path&#39;)</code>会跳转至指定路径页面；这里的<code>path</code>路径是不包含根目录的；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">secure</span><span class="params">($path, $status = <span class="number">302</span>, $headers = [])</span></span></span><br></pre></td></tr></table></figure></p>
+<p>其本质是调用了<code>to</code>方法<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> $this-&gt;<span class="keyword">to</span>($path, $status, $headers, <span class="literal">true</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>route</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;route(&#39;route_as_name&#39;)</code>，根据路由的<code>as</code>名会跳转至与路由一致的<code>url</code>路径页；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">route</span><span class="params">($route, $parameters = [], $status = <span class="number">302</span>, $headers = [])</span></span></span><br></pre></td></tr></table></figure></p>
+<p><strong>action</strong><br>通过调用<code>app(&#39;redirect&#39;)-&gt;action(&#39;route_action&#39;)</code>，根据路由的<code>action</code>名会跳转至与路由一致的<code>url</code>路径页；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">action</span><span class="params">($action, $parameters = [], $status = <span class="number">302</span>, $headers = [])</span></span></span><br></pre></td></tr></table></figure></p>
+<p><strong>guest</strong><br>跳到指定的路径页的同时，将当前<code>url</code>存放至<code>session</code>中，键名为<code>url.intended</code>;<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">guest</span><span class="params">($path, $status = <span class="number">302</span>, $headers = [], $secure = null)</span></span></span><br></pre></td></tr></table></figure></p>
+<p><strong>intended</strong><br>跳转至<code>session</code>中键名为<code>url.intended</code>的值所对应的<code>Url</code>；如果不存在，则跳转至第一个参数所传的值；<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">intended</span><span class="params">($default = <span class="string">'/'</span>, $status = <span class="number">302</span>, $headers = [], $secure = null)</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="响应工厂（ResponseFactory）"><a href="#响应工厂（ResponseFactory）" class="headerlink" title="响应工厂（ResponseFactory）"></a>响应工厂（ResponseFactory）</h2><p><code>ResponseFactory</code>文件提供了两部分 <code>API</code>，分别是与响应类型相关和与跳转相关；</p>
+<h3 id="响应"><a href="#响应" class="headerlink" title="响应"></a>响应</h3><p><code>response()</code>会返回<code>ResponseFactory</code>实例；</p>
+<p><strong>视图响应</strong><br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response<span class="function"><span class="params">()</span>-&gt;</span>view(<span class="string">'hello'</span>, $data, <span class="number">200</span>);</span><br></pre></td></tr></table></figure></p>
+<p><strong><code>Jsop</code>响应</strong><br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response<span class="function"><span class="params">()</span>-&gt;</span>json([<span class="string">'name'</span> =&gt; <span class="string">'Abigail'</span>, <span class="string">'state'</span> =&gt; <span class="string">'CA'</span>]);</span><br></pre></td></tr></table></figure></p>
+<p><strong><code>Jsonp</code>响应</strong><br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response<span class="function"><span class="params">()</span>-&gt;</span>json<span class="function"><span class="params">([<span class="string">'name'</span> =&gt; <span class="string">'Abigail'</span>, <span class="string">'state'</span> =&gt; <span class="string">'CA'</span>])</span>-&gt;</span>withCallback($request-&gt;input(<span class="string">'callback'</span>));</span><br></pre></td></tr></table></figure></p>
+<p><strong>文件响应</strong><br>直接在浏览器显示文件，而不是下载，例如图片或<code>PDF</code>；<code>file</code>方法第一参数为文件路径，第二参数选填为头信息数组；<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">response()-&gt;</span><span class="bash">file(<span class="variable">$pathToFile</span>, <span class="variable">$headers</span>);</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>文件下载</strong><br><code>download</code>方法第一参数为文件路径，第二参数选填为文件名，第三参数选填为头信息数组；<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> response()-&gt;download(<span class="variable">$pathToFile</span>, <span class="variable">$name</span>, <span class="variable">$headers</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="跳转"><a href="#跳转" class="headerlink" title="跳转"></a>跳转</h3><p>这里的跳转方法，其实调用的还是跳转器中的方法，不过是在暴露更多的接口，方便调用与使用；</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>调用</th>
+<th>实际调用的是跳转器中的哪个方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>redirectTo</code></td>
+<td>response()-&gt;redirectTo(…)</td>
+<td><code>to</code>方法</td>
+</tr>
+<tr>
+<td><code>redirectToRoute</code></td>
+<td>response()-&gt;redirectToRoute(…)</td>
+<td><code>route</code>方法</td>
+</tr>
+<tr>
+<td><code>redirectToAction</code></td>
+<td>response()-&gt;redirectToAction(…)</td>
+<td><code>action</code>方法</td>
+</tr>
+<tr>
+<td><code>redirectGuest</code></td>
+<td>response()-&gt;redirectGuest(…)</td>
+<td><code>guest</code>方法</td>
+</tr>
+<tr>
+<td><code>redirectToIntended</code></td>
+<td>response()-&gt;redirectToIntended(…)</td>
+<td><code>intended</code>方法</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel-5-4/" rel="tag"><i class="fa fa-tag"></i> Laravel-5.4</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/01/laravel-trans/" rel="next" title="Laravel 大将之 本地化 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 本地化 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/16/laravel-auth/" rel="prev" title="Laravel 大将之 Auth 模块">
+                Laravel 大将之 Auth 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模块组成"><span class="nav-number">1.</span> <span class="nav-text">模块组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#剖析"><span class="nav-number">2.</span> <span class="nav-text">剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务提供者"><span class="nav-number">2.1.</span> <span class="nav-text">服务提供者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#路由管理"><span class="nav-number">2.2.</span> <span class="nav-text">路由管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册流程"><span class="nav-number">2.2.1.</span> <span class="nav-text">注册流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#request-请求匹配流程"><span class="nav-number">2.2.2.</span> <span class="nav-text">request 请求匹配流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Url-生成器"><span class="nav-number">2.3.</span> <span class="nav-text">Url 生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根据路径名生成"><span class="nav-number">2.3.1.</span> <span class="nav-text">根据路径名生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根据路由的-as-名生成"><span class="nav-number">2.3.2.</span> <span class="nav-text">根据路由的 as 名生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根据路由的-action-名生成"><span class="nav-number">2.3.3.</span> <span class="nav-text">根据路由的 action 名生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置全局默认参数"><span class="nav-number">2.3.4.</span> <span class="nav-text">设置全局默认参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置全局命名空间"><span class="nav-number">2.3.5.</span> <span class="nav-text">设置全局命名空间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跳转器"><span class="nav-number">2.4.</span> <span class="nav-text">跳转器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应工厂（ResponseFactory）"><span class="nav-number">2.5.</span> <span class="nav-text">响应工厂（ResponseFactory）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#响应"><span class="nav-number">2.5.1.</span> <span class="nav-text">响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳转"><span class="nav-number">2.5.2.</span> <span class="nav-text">跳转</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

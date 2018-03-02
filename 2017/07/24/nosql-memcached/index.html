@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Memcached," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/img/koala.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="关于 Memcahed 的一次入门教程">
+<meta name="keywords" content="Memcached">
+<meta property="og:type" content="article">
+<meta property="og:title" content="认识 Memcached">
+<meta property="og:url" content="http://yoursite.com/2017/07/24/nosql-memcached/index.html">
+<meta property="og:site_name" content="Redgo&#39;s Blog">
+<meta property="og:description" content="关于 Memcahed 的一次入门教程">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/bVRt2v.png">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/bVRt2P.png">
+<meta property="og:image" content="http://owk2q4gs5.bkt.clouddn.com/bVRt3k.png">
+<meta property="og:updated_time" content="2018-03-02T10:48:12.530Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="认识 Memcached">
+<meta name="twitter:description" content="关于 Memcahed 的一次入门教程">
+<meta name="twitter:image" content="http://owk2q4gs5.bkt.clouddn.com/bVRt2v.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/24/nosql-memcached/"/>
+
+
+
+
+
+  <title>认识 Memcached | Redgo's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Redgo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-anchor"></i> <br />
+            
+            日常链接
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            他山之石
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/24/nosql-memcached/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Redgo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Redgo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">认识 Memcached</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T17:57:41+08:00">
+                2017-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NoSQL/" itemprop="url" rel="index">
+                    <span itemprop="name">NoSQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  关于 Memcahed 的一次入门教程
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Memcached</code>是一个开源、免费、高性能的分布式对象缓存系统，通过减少对数据库的读取以提高<code>Web</code>应用的性能；<code>Memcached</code>基于一个存储键/值对的<code>hashmap</code>。其守护进程（<code>daemon</code> ）是用 C 写的，但是客户端可以用任何语言来编写，并通过<code>memcached</code>协议与守护进程通信。当某个服务器停止运行或崩溃了，所有存放在该服务器上的键/值对都将丢失。</p>
+<p><code>Memcached</code>的服务器端没有提供分布式功能，各个<code>Memcached</code>应用不会互相通信以共享信息。想要实现分布式通过，可以多搭建几个<code>Memcached</code>应用，通过算法实现此效果；</p>
+<p><code>Memcached</code>里有两个重要概念：</p>
+<ul>
+<li><code>slab</code>：为了防止内存碎片化，<code>Memcached</code>服务器端会预先将数据空间划分为一系列<code>slab</code>；举个例子，现在有一个100立方米的房间，为了合理规划这个房间放置东西，会在这个房间里放置 30 个 1 立方米的盒子、20 个 1.25 立方米的盒子、15 个 1.5 立方米的盒子…这些盒子就是<code>slab</code>；<ul>
+<li><code>LRU</code>：最近最少使用算法；当同一个<code>slat</code>的格子满了，这时需要新加一个值时，不会考虑将这个新数据放到比当前<code>slat</code>更大的空闲<code>slat</code>，而是使用<code>LRU</code>移除旧数据，放入这个新数据；</li>
+</ul>
+</li>
+</ul>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><p><code>Memcached</code>能够在大多数 <code>Linux</code> 和 <code>类 BSD</code> 系统上运行；官方没有给出<code>Windows</code>上安装<code>Memcached</code>的支持；</p>
+<p>对于<code>Debian</code> / <code>Ubuntu</code>系统：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="builtin-name">get</span> install memcached</span><br></pre></td></tr></table></figure></p>
+<p>对于<code>Redhat</code> / <code>Fedora</code> / <code>CentOs</code>系统：<br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum <span class="keyword">install</span> memcached</span><br></pre></td></tr></table></figure></p>
+<p>通过<code>memcached -h</code>查看帮助，同时也算是测试是否安装成功；<br>如果遇到错误，可参考官方上的<a href="https://github.com/memcached/memcached/wiki/Install#problems-with-packages" target="_blank" rel="noopener">FAQ</a>；</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="服务器端"><a href="#服务器端" class="headerlink" title="服务器端"></a>服务器端</h2><p>启动一个<code>Memcached</code>应用，常见的启动方式是这样的：<br>开启一个<code>memcached</code>应用作守护进程，<code>TCP</code>连接，端口号是 11211；<code>-u</code>参数是运行<code>Memcached</code>应用的用户（这个参数也只有 <code>root</code>用户才能使用）；<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memcached -u root -<span class="selector-tag">p</span> <span class="number">11211</span> -d -vvv</span><br></pre></td></tr></table></figure></p>
+<p>其他常见的参数也有</p>
+<ol>
+<li><code>-m &lt;num&gt;</code>：分配给<code>Memcached</code>应用使用的内存大小，默认是 64M；</li>
+<li><code>-l &lt;ip_addr&gt;</code>：设置能访问<code>Memcached</code>应用的<code>IP</code>(默认：所有都允许；无论内外网或者本机更换IP，有安全隐患；若设置为<code>127.0.0.1</code>就只能本机访问)；</li>
+<li><code>-c &lt;num&gt;</code>：设置最大运行的并发连接数，默认是 1024；</li>
+<li><code>-f &lt;factor&gt;</code>：设置<code>slat</code>大小增长因子；默认是 1.25；比如说 10号<code>slab</code>大小是752，那么11号<code>slab</code>大小就是 752 * 1.25；</li>
+</ol>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p><code>Memcached</code>客户端与服务器端的通信比较简单，使用的基于文本的协议，而不是二进制协议；因此可以通过<code>telnet</code>进行交互；<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet <span class="string">[host]</span> <span class="string">[port]</span></span><br></pre></td></tr></table></figure></p>
+<p>按下<code>Ctrl + ]</code>，并回车，即可回显；</p>
+<h3 id="Storage命令"><a href="#Storage命令" class="headerlink" title="Storage命令"></a>Storage命令</h3><p><code>set</code><br>存储数据。如果<code>set</code>的<code>key</code>已经存在，该命令可以更新该key所对应的原来的数据，也就是实现更新的作用。详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-set-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached set 命令</a>；</p>
+<p><code>add</code><br>只有在<code>set</code>的<code>key</code>不存在的情况下，才会存储数据；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-add-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached add 命令</a>；</p>
+<p><code>replace</code><br>只有在<code>set</code>的<code>key</code>存在的情况下，才会替换数据；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-replace-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached replace 命令</a>；</p>
+<p><code>append</code><br>向已存在的元素值后追加数据；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-append-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached append 命令</a>；</p>
+<p><code>prepend</code><br>向已存在的元素值的头部追加数据；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-prepend-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached prepend 命令</a>；</p>
+<p><code>cas</code><br>命令用于执行一个”检查并设置”的操作。它仅在当前客户端最后一次取值后，该key 对应的值没有被其他客户端修改的情况下，才能够将值写入。检查是通过<code>cas_token</code>参数进行的， 这个参数是<code>Memcach</code>指定给已经存在的元素的一个唯一的 64 位值。详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-cas.html" target="_blank" rel="noopener">菜鸟教程 - Memcached cas 命令</a>；</p>
+<h3 id="Retrive命令"><a href="#Retrive命令" class="headerlink" title="Retrive命令"></a>Retrive命令</h3><p><code>get</code><br>根据元素的键名获取值；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-get-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached get 命令</a>；</p>
+<p><code>gets</code><br>获取带有<code>CAS</code>令牌的数据值；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-get-cas-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached gets 命令</a>；</p>
+<p><code>delete</code><br>删除已存在的元素；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-delete-key.html" target="_blank" rel="noopener">菜鸟教程 - Memcached delete 命令</a>；</p>
+<p><code>incr/decr</code><br>对于已存在的键值进行自增或自减操作；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-incr-decr.html" target="_blank" rel="noopener">菜鸟教程 - Memcached incr/decr 命令</a>；</p>
+<h3 id="Statistics命令"><a href="#Statistics命令" class="headerlink" title="Statistics命令"></a>Statistics命令</h3><p><code>stats</code><br>查看<code>memcached</code>所有的统计信息；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-stats.html" target="_blank" rel="noopener">菜鸟教程 - Memcached stats 命令</a>；</p>
+<p><code>stats items</code><br>显示各个<code>slab</code>中<code>item</code>的数目和存储时长等其它信息；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-stats-items.html" target="_blank" rel="noopener">菜鸟教程 - Memcached stats items 命令</a>；</p>
+<p><code>stats slabs</code><br>显示各个<code>slab</code>的信息，包括<code>chunk</code>的大小、数目、使用情况等。详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-stats-slabs.html" target="_blank" rel="noopener">菜鸟教程 - Memcached stats slabs 命令</a>；</p>
+<p><code>stats sizes</code><br>用于显示所有item的大小和个数。该信息返回两列，第一列是 item 的大小，第二列是 item 的个数。详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-stats-sizes.html" target="_blank" rel="noopener">菜鸟教程 - Memcached stats sizes 命令</a>；</p>
+<p><code>flush_all</code><br>清除所有缓存数据；详细命令指南可参考<a href="http://www.runoob.com/memcached/memcached-clear-data.html" target="_blank" rel="noopener">菜鸟教程 - Memcached flush_all 命令</a>；</p>
+<h1 id="分布式算法"><a href="#分布式算法" class="headerlink" title="分布式算法"></a>分布式算法</h1><h2 id="取余算法"><a href="#取余算法" class="headerlink" title="取余算法"></a>取余算法</h2><p>根据服务器节点数的余数来进行分散，就是通过<code>hash</code>函数求得的<code>Key</code>的整数哈希值再除以服务器节点数并取余数来选择服务器。这种算法取余计算简单，分散效果好，但是缺点是如果某一台机器宕机，那么应该落在该机器的请求就无法得到正确的处理，这时需要将当掉的服务器从算法从去除，此时候会有 (N-1) / N 的服务器的缓存数据需要重新进行计算；如果新增一台机器，会有N / (N+1)的服务器的缓存数据需要进行重新计算。对于系统而言，这通常是不可接受的颠簸（因为这意味着大量缓存的失效或者数据需要转移）。</p>
+<p>【本段内容摘自<a href="http://blog.sina.com.cn/s/blog_7141f8900100nia9.html" target="_blank" rel="noopener">大脸猫的博客</a>】</p>
+<h2 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h2><p>表现为一个封闭的圆环，圆环上的点分别代表0 ~ 2^32。各个<code>memcached</code>节点根据<code>hash</code>算法，分别占据圆环上的一个点，当某<code>key</code>进行存储操作，会针对<code>key</code>进行<code>hash</code>操作，<code>hash</code>后也是圆环上的一个点，那么这个<code>key</code>将被存储在顺时针方向的第一个节点上。</p>
+<p><img src="http://owk2q4gs5.bkt.clouddn.com/bVRt2v.png" alt="图片描述"></p>
+<p>如上图：分配不均的节点，此时<code>key</code>将会被存储到节点C上。</p>
+<p>此时，我们新增节点D，如下图。受影响的部分只有节点A~节点D中间的部分，这边分数据不会再映射到节点B上，而是映射到新增节点D上。减掉一个节点同理，只影响顺时针后面一个节点。</p>
+<p><img src="http://owk2q4gs5.bkt.clouddn.com/bVRt2P.png" alt="图片描述"></p>
+<p>优点：动态的增删节点，服务器<code>down</code>机，影响的只是顺时针的下一个节点<br>缺点：当服务器进行hash后值较为接近会导致在圆环上分布不均匀，进而导致<code>key</code>的分布、服务器的压力不均匀。若中间某一权重较大的<code>serverdown</code>机，命中率下降明显；</p>
+<p>在一致性哈希算法的基础上引入虚拟节点</p>
+<p><img src="http://owk2q4gs5.bkt.clouddn.com/bVRt3k.png" alt="图片描述"></p>
+<p>引入虚拟节点的思想，解决一致性<code>hash</code>算法分布不均导致负载不均的问题。一个真实节点对应若干个虚拟节点，当<code>key</code>被映射到虚拟节点上时，则被认为映射到虚拟节点所对应的真实节点上。</p>
+<p>优点：引入虚拟节点的思想，每个物理节点对应圆环上若干个虚拟节点（比如200~300个），当<code>keyhash</code>到虚拟节点，就会存储到实际的物理节点上，有效的实现了负载均衡；</p>
+<p>【本段内容摘自<a href="http://www.cnblogs.com/douJiangYouTiao888/p/6267542.html" target="_blank" rel="noopener">鱼我所欲也的“memcached学习 - 分布式算法”文章</a>】</p>
+<h1 id="工作中常见的问题"><a href="#工作中常见的问题" class="headerlink" title="工作中常见的问题"></a>工作中常见的问题</h1><h2 id="缓存雪崩现象"><a href="#缓存雪崩现象" class="headerlink" title="缓存雪崩现象"></a>缓存雪崩现象</h2><p>缓存雪崩一般是由某个缓存节点失效，导致其他节点的缓存命中率下降，缓存中缺失的数据去数据库查询，短时间内，造成数据库服务器崩溃；</p>
+<p>重启<code>DB</code>，短期又被压垮，但缓存数据也多一些；<code>DB</code>反复多次启动多次，缓存重建完毕，<code>DB</code>才稳定运行；或者，是由于缓存周期性的失效，比如每 6 小时失效一次，那么每 6 小时，将有一个请求“峰值”，严重者甚至会令DB崩溃；</p>
+<h2 id="缓存的无底洞现象（multiget-hole）"><a href="#缓存的无底洞现象（multiget-hole）" class="headerlink" title="缓存的无底洞现象（multiget-hole）"></a>缓存的无底洞现象（multiget-hole）</h2><p>该问题由 <code>facebook</code> 的工作人员提出的, <code>facebook</code> 在 2010 年左右，<code>memcached</code>节点就已经达3000 个.缓存数千 G 内容。</p>
+<p>他们发现了一个问题，<code>memcached</code> 连接频率，效率下降了，于是加 <code>memcached</code> 节点，添加了后，发现因为连接频率导致的问题，仍然存在，并没有好转，称之为“无底洞现象”。</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>以用户为例: <code>user-133-age</code>， <code>user-133-name</code>，<code>user-133-height</code> …..N 个 key，当服务器增多，133 号用户的信息，也被散落在更多的节点，所以，同样是访问个人主页，得到相同的个人信息， 节点越多，要连接的节点也越多。</p>
+<p>对于 <code>memcached</code> 的连接数，并没有随着节点的增多，而降低。 于是问题出现。</p>
+<h3 id="multiget-hole-解决方案"><a href="#multiget-hole-解决方案" class="headerlink" title="multiget-hole 解决方案"></a>multiget-hole 解决方案</h3><p>把某一组<code>key</code>，按其共同前缀，来分布。比如 <code>user-133-age</code>， <code>user-133-name</code>，<code>user-133-height</code> 这 3 个 key，在用分布式算法求其节点时，应该以 ‘<code>user-133</code>’来计算，而不是以 <code>user-133-age/name/height</code> 来计算。</p>
+<p>这样，3 个关于个人信息的 key，都落在同 1 个节点上，访问个人主页时，只需要连接 1 个节点。</p>
+<h2 id="永久数据被踢现象"><a href="#永久数据被踢现象" class="headerlink" title="永久数据被踢现象"></a>永久数据被踢现象</h2><p>网上有人反馈为”<code>memcached</code> 数据丢失”，明明设为永久有效，却莫名其妙的丢失了。</p>
+<p>分析原因：</p>
+<ol>
+<li>如果 <code>slab</code> 里的很多 <code>chunk</code>，已经过期，但过期后没有被 <code>get</code> 过， 系统不知他们已经过期。</li>
+<li>永久数据很久没 <code>get</code> 了， 不活跃， 如果新增 <code>item</code>，则永久数据被踢了。</li>
+<li>当然，如果那些非永久数据被 <code>get</code>，也会被标识为 <code>expire</code>，从而不会再踢掉永久数据；</li>
+</ol>
+<p>解决方案：永久数据和非永久数据分开放；</p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+        
+            
+
+        
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Memcached/" rel="tag"><i class="fa fa-tag"></i> Memcached</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/13/laravel-paginate/" rel="next" title="Laravel 大将之 分页 模块">
+                <i class="fa fa-chevron-left"></i> Laravel 大将之 分页 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/01/laravel-trans/" rel="prev" title="Laravel 大将之 本地化 模块">
+                Laravel 大将之 本地化 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Redgo" />
+          <p class="site-author-name" itemprop="name">Redgo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://segmentfault.com/u/greenlightt" target="_blank" title="Segmentfault">
+                  
+                    <i class="fa fa-fw fa-vcard"></i>
+                  
+                    
+                      Segmentfault
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器端"><span class="nav-number">3.1.</span> <span class="nav-text">服务器端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端"><span class="nav-number">3.2.</span> <span class="nav-text">客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Storage命令"><span class="nav-number">3.2.1.</span> <span class="nav-text">Storage命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Retrive命令"><span class="nav-number">3.2.2.</span> <span class="nav-text">Retrive命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics命令"><span class="nav-number">3.2.3.</span> <span class="nav-text">Statistics命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式算法"><span class="nav-number">4.</span> <span class="nav-text">分布式算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#取余算法"><span class="nav-number">4.1.</span> <span class="nav-text">取余算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性哈希"><span class="nav-number">4.2.</span> <span class="nav-text">一致性哈希</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工作中常见的问题"><span class="nav-number">5.</span> <span class="nav-text">工作中常见的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存雪崩现象"><span class="nav-number">5.1.</span> <span class="nav-text">缓存雪崩现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存的无底洞现象（multiget-hole）"><span class="nav-number">5.2.</span> <span class="nav-text">缓存的无底洞现象（multiget-hole）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题分析"><span class="nav-number">5.2.1.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiget-hole-解决方案"><span class="nav-number">5.2.2.</span> <span class="nav-text">multiget-hole 解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#永久数据被踢现象"><span class="nav-number">5.3.</span> <span class="nav-text">永久数据被踢现象</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Redgo</span>
+  <span id="busuanzi_container_site_uv" style="margin-left: 1%;">
+    <i class="fa fa-user-md"></i>
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-count" style="margin-left: 1%;">
+      <i class="fa fa-pencil"></i>
+      博客全站共138.2k字
+  </span>
+</div>
+
+<!--
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
